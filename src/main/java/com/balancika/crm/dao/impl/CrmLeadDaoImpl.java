@@ -161,6 +161,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLead> getLeadBySpecificUser(String username) {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
