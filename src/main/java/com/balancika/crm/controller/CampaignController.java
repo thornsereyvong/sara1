@@ -124,6 +124,18 @@ public class CampaignController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/add/list", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> loadOnPageAddCampaign(){
+	
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("MESSAGE", "SUCCESS");
+		map.put("STATUS", HttpStatus.OK.value());
+		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
+		map.put("CAMP_TYPE", typeService.listAllCampaignType());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addCampaign(@RequestBody CrmCampaign campaign) {
 		Map<String, Object> map = new HashMap<String, Object>();
