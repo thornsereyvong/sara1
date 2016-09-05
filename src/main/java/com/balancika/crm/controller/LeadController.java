@@ -42,9 +42,9 @@ public class LeadController {
 		
 		if(arrLead.isEmpty()){
 			map.put("MESSAGE", "NOT_FOUND");
-			map.put("STATUS", HttpStatus.NOT_FOUND);
-	
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+			map.put("STATUS", HttpStatus.NOT_FOUND.value());
+			map.put("DATA", arrLead);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
