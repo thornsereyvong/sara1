@@ -77,10 +77,9 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmLead> getAllLead(String username) {
+	public List<CrmLead> getAllLead() {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		SQLQuery query = session.createSQLQuery("CALL listLeadWithSpecificUser(:username)");
-		query.setParameter("username", username);
+		SQLQuery query = session.createSQLQuery("CALL listCrmLeads()");
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return query.list();
 	}
@@ -160,5 +159,14 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	@Override
+	public List<CrmLead> getLeadBySpecificUser(String username) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		SQLQuery query = session.createSQLQuery("CALL listLeadWithSpecificUser(:username)");
+		query.setParameter("username", username);
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return query.list();
 	}
 }

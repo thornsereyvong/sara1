@@ -9,7 +9,8 @@ public interface CrmLeadService {
 	public boolean insertLead(CrmLead lead);
 	public boolean updateLead(CrmLead lead);
 	public boolean deleteLead(String leadID);
-	public List<CrmLead> getAllLead(String username);
+	public List<CrmLead> getAllLead();
+	public List<CrmLead> getLeadBySpecificUser(String username);
 	public Object findLeadById(String leadID);
 	CrmLead findLeadDetailById(String leadID);
 	public boolean convertLead(String json);

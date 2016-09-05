@@ -35,8 +35,8 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 	}
 
 	@Override
-	public List<CrmLead> getAllLead(String username) {
-		return dao.getAllLead(username);
+	public List<CrmLead> getAllLead() {
+		return dao.getAllLead();
 	}
 
 	@Override
@@ -52,6 +52,11 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 	@Override
 	public boolean convertLead(String json) {
 		return dao.convertLead(json);
+	}
+
+	@Override
+	public List<CrmLead> getLeadBySpecificUser(String username) {
+		return null;
 	}
 
 }

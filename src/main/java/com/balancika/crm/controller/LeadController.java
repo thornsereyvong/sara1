@@ -26,8 +26,25 @@ public class LeadController {
 	@Autowired
 	private CrmLeadService leadService;
 	
+	@RequestMapping(value = "/list_all", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getAllLead(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmLead> arrLead = leadService.getAllLead();
+		if(arrLead.isEmpty()){
+			map.put("MESSAGE", "NOT_FOUND");
+			map.put("STATUS", HttpStatus.NOT_FOUND.value());
+			map.put("DATA", arrLead);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "SUCCESS");
+		map.put("STATUS", HttpStatus.OK);
+		map.put("DATA", arrLead);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> getAllLead(@RequestBody String json){
+	public ResponseEntity<Map<String, Object>> getLeadBySpecificUser(@RequestBody String json){
 		
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, String> userMap = new HashMap<String, String>();
@@ -38,7 +55,7 @@ public class LeadController {
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmLead> arrLead = leadService.getAllLead(userMap.get("username").toString());
+		List<CrmLead> arrLead = leadService.getLeadBySpecificUser(userMap.get("username").toString());
 		
 		if(arrLead.isEmpty()){
 			map.put("MESSAGE", "NOT_FOUND");
