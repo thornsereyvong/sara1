@@ -50,6 +50,34 @@ public class CampaignController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/add/startup", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> startupAddPage(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CAMP_PARENT", campaignService.listCampaignParents());
+		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
+		map.put("CAMP_TYPE", typeService.listAllCampaignType());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/parent/list", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> listCampaignParents(){
+	
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<Object> arrCamp = campaignService.listCampaignParents();
+		if( arrCamp == null){
+			map.put("MESSAGE", "FAILED");
+			map.put("DATA", arrCamp);
+			map.put("STATUS", HttpStatus.NOT_FOUND.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
+		}
+		
+		map.put("MESSAGE", "SUCCESS");
+		map.put("STATUS", HttpStatus.OK.value());
+		map.put("DATA", arrCamp);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/list/{campID}", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> findCampaignById(@PathVariable("campID") String campID){
 	
