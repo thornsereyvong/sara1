@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCampaign;
-import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
+import com.balancika.crm.services.CrmCampaignStatusService;
+import com.balancika.crm.services.CrmCampaignTypeService;
  
 @RestController
 @RequestMapping("/api/campaign")
@@ -25,7 +26,10 @@ public class CampaignController {
 	private CrmCampaignService campaignService;
 	
 	@Autowired
-	private CrmCallStatusService statusService;
+	private CrmCampaignStatusService statusService;
+	
+	@Autowired
+	private CrmCampaignTypeService typeService;
 	
 
 	@RequestMapping(value="/list", method = RequestMethod.GET)
@@ -55,12 +59,15 @@ public class CampaignController {
 		if( camp == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("DATA", camp);
+		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
+		map.put("CAMP_TYPE", typeService.listAllCampaignType());
+		map.put("CAMP_PARENT", campaignService.listCampaignIsNotEqual(campID));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
