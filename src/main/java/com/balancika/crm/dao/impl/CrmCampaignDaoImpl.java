@@ -2,10 +2,14 @@ package com.balancika.crm.dao.impl;
 
 import java.util.List;
 
+import javax.xml.crypto.dsig.TransformService;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
@@ -132,5 +136,23 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@Override
 	public CrmCampaign findCampaignDetailsById(String campID) {
 		return (CrmCampaign)transactionManager.getSessionFactory().getCurrentSession().get(CrmCampaign.class, campID);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> listCampaignParents() {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmCampaign.class);
+			criteria.setProjection(Projections.projectionList().add(Projections.property("campID"), "campID")
+																 .add(Projections.property("campName"), "camName"));
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			criteria.add(Restrictions.isNull("parent"));
+			return criteria.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

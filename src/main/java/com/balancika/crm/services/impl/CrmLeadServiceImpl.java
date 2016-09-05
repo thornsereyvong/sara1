@@ -56,7 +56,7 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 
 	@Override
 	public List<CrmLead> getLeadBySpecificUser(String username) {
-		return null;
+		return dao.getLeadBySpecificUser(username);
 	}
 
 }
