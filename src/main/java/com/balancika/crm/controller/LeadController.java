@@ -1,5 +1,6 @@
 package com.balancika.crm.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.services.CrmLeadService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/lead")
@@ -23,12 +26,19 @@ public class LeadController {
 	@Autowired
 	private CrmLeadService leadService;
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> getAllLead(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> getAllLead(@RequestBody String json){
 		
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> userMap = new HashMap<String, String>();
+		try {
+			userMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmLead> arrLead = leadService.getAllLead();
+		List<CrmLead> arrLead = leadService.getAllLead(userMap.get("username").toString());
 		
 		if(arrLead.isEmpty()){
 			map.put("MESSAGE", "NOT_FOUND");

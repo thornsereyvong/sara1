@@ -35,8 +35,8 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 	}
 
 	@Override
-	public List<CrmLead> getAllLead() {
-		return dao.getAllLead();
+	public List<CrmLead> getAllLead(String username) {
+		return dao.getAllLead(username);
 	}
 
 	@Override

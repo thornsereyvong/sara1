@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCampaign;
+import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
  
 @RestController
@@ -22,6 +23,10 @@ public class CampaignController {
 	 
 	@Autowired 
 	private CrmCampaignService campaignService;
+	
+	@Autowired
+	private CrmCallStatusService statusService;
+	
 
 	@RequestMapping(value="/list", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> allCampaign(){
