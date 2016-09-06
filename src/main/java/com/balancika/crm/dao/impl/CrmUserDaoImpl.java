@@ -12,7 +12,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
-import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -124,12 +123,14 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		
 		DetachedCriteria subCriteria = DetachedCriteria.forClass(CrmUser.class);
 		subCriteria.add(Restrictions.eq("username", username));
-		subCriteria.setProjection((Projections.projectionList().add(Projections.property("userID"))))
-				   .setResultTransformer(Transformers.aliasToBean(CrmUser.class));
-		Criteria criteria = session.createCriteria(CrmUser.class);
+		subCriteria.setProjection((Projections.projectionList().add(Projections.property("userID"), "userID")))
+				   .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		Criteria criteria = session.createCriteria(CrmUser.class, "user");
+		criteria.setProjection(Projections.projectionList().add(Projections.property("user.userID"), "userID")
+				   											.add(Projections.property("user.username"), "username"));
 		criteria.add(Subqueries.propertyEq("parentID", subCriteria))
 				.addOrder(Order.asc("userID"))
-				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return criteria.list();
 	}
 

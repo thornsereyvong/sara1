@@ -1,5 +1,6 @@
 package com.balancika.crm.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmCampaignStatusService;
 import com.balancika.crm.services.CrmCampaignTypeService;
 import com.balancika.crm.services.CrmUserService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
  
 @RestController
 @RequestMapping("/api/campaign")
@@ -54,13 +57,20 @@ public class CampaignController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/add/startup", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> startupAddPage(){
+	@RequestMapping(value="/add/startup", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> startupAddPage(@RequestBody String json){
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> jsonMap = new HashMap<String, String>();
+		try {
+			jsonMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("CAMP_PARENT", campaignService.listCampaignParents());
 		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
 		map.put("CAMP_TYPE", typeService.listAllCampaignType());
-		//map.put("ASSIGN_TO", userService.findUserByUsername(username));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(jsonMap.get("username").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

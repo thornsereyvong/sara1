@@ -3,8 +3,6 @@ package com.balancika.crm.services.impl;
 import java.util.List;
 
 import javax.transaction.Transactional;
-
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,84 +21,42 @@ public class CrmUserServiceImpl implements CrmUserService{
 	
 	@Override
 	public boolean isInserted(CrmUser user) {
-		
-		try{
-			return userDao.isInserted(user);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return userDao.isInserted(user);
 		
 	}
 
 	@Override
 	public boolean isUpdated(CrmUser user) {
-		try{
-			return userDao.isUpdated(user);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return userDao.isUpdated(user);
 	}
 
 	@Override
 	public boolean isDeleted(String userId) {
-		try{
-			return userDao.isDeleted(userId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return userDao.isDeleted(userId);
 	}
 
 	@Override
 	public CrmUser findUserByUsername(String username) {
-		try{
-			return userDao.findUserByUsername(username);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return userDao.findUserByUsername(username);
 	}
 
 	@Override
 	public List<CrmUser> listAllUsers() {
-		try{
-			return userDao.listAllUsers();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return userDao.listAllUsers();
 	}
 
 	@Override
 	public CrmUser findUserById(String userId) {
-		try{
-			return userDao.findUserById(userId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return userDao.findUserById(userId);
 	}
 
 	@Override
 	public List<CrmUser> listSubordinateUserByUsername(String username) {
-		try{
-			return userDao.listSubordinateUserByUsername(username);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return userDao.listSubordinateUserByUsername(username);
 	}
 
 	@Override
 	public CrmUser webLogin(String username) {
-		
-		try{
-			return userDao.webLogin(username);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return userDao.webLogin(username);
 	}
 }
