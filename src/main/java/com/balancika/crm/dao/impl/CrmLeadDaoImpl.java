@@ -183,7 +183,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		leadMap.put("EVENTS", listEventActivitiesRelatedToLead(leadId));
 		leadMap.put("TASKS", listTaskActivitiesRelatedToLead(leadId));
 		leadMap.put("NOTES", listNoteActivitiesRelatedToLead(leadId));
-		leadMap.put("Lead", findLeadById(leadId));
+		leadMap.put("LEAD", findLeadById(leadId));
 		return leadMap;
 	}
 	
