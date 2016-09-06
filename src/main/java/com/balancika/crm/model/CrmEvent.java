@@ -77,6 +77,12 @@ public class CrmEvent implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="EV_MDate", insertable = false, updatable = false)
 	private Date evModifiedDate;
+	
+	@Column(name="EV_RToType")
+	private String evRelatedToType;
+	
+	@Column(name="EV_RToID")
+	private String evRelatedToID;
 
 	public String getEvId() {
 		return evId;
@@ -180,5 +186,21 @@ public class CrmEvent implements Serializable{
 
 	public void setEvModifiedDate(Date evModifiedDate) {
 		this.evModifiedDate = evModifiedDate;
+	}
+
+	public String getEvRelatedToType() {
+		return evRelatedToType;
+	}
+
+	public void setEvRelatedToType(String evRelatedToType) {
+		this.evRelatedToType = evRelatedToType;
+	}
+
+	public String getEvRelatedToID() {
+		return evRelatedToID;
+	}
+
+	public void setEvRelatedToID(String evRelatedToID) {
+		this.evRelatedToID = evRelatedToID;
 	}
 }

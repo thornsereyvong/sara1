@@ -11,5 +11,4 @@ public interface CrmLeadSourceDao {
 	public String deleteLeadSource(int sourceID);
 	public List<CrmLeadSource> getAllLeadSource();
 	public CrmLeadSource findLeadSourceById(int sourceID);
-	
 }

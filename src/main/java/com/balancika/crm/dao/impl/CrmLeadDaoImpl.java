@@ -1,9 +1,11 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,9 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmLeadDao;
+import com.balancika.crm.model.CrmCall;
 import com.balancika.crm.model.CrmLead;
+import com.balancika.crm.model.CrmMeeting;
 import com.balancika.crm.utilities.CrmIdGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -169,5 +173,87 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		query.setParameter("username", username);
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return query.list();
+	}
+
+	@Override
+	public Map<String,Object> viewActivitiesOfLeadById(String leadId) {
+		Map<String, Object> leadMap = new HashMap<String, Object>();
+		leadMap.put("CALLS", listCallActivitiesRelatedToLead(leadId));
+		leadMap.put("METTINGS", listMeetingActivitiesRelatedToLead(leadId));
+		leadMap.put("EVENTS", listEventActivitiesRelatedToLead(leadId));
+		leadMap.put("TASKS", listTaskActivitiesRelatedToLead(leadId));
+		leadMap.put("NOTES", listNoteActivitiesRelatedToLead(leadId));
+		leadMap.put("Lead", findLeadById(leadId));
+		return leadMap;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmCall> listCallActivitiesRelatedToLead(String leadId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToLead(:leadId)");
+			query.setParameter("leadId", leadId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmMeeting> listMeetingActivitiesRelatedToLead(String leadId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToLead(:leadId)");
+				query.setParameter("leadId", leadId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmMeeting> listTaskActivitiesRelatedToLead(String leadId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToLead(:leadId)");
+				query.setParameter("leadId", leadId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmMeeting> listEventActivitiesRelatedToLead(String leadId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedToLead(:leadId)");
+				query.setParameter("leadId", leadId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmMeeting> listNoteActivitiesRelatedToLead(String leadId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listNotesRelatedToLead(:leadId)");
+				query.setParameter("leadId", leadId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

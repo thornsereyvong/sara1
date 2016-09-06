@@ -90,6 +90,15 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/view/{leadID}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> viewActivitiesOfLeadById(@PathVariable("leadID") String leadID){
+		
+		Map<String, Object> map = leadService.viewActivitiesOfLeadById(leadID);
+		map.put("MESSAGE", "SUCCESS");
+		map.put("STATUS", HttpStatus.OK);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/list/details/{leadID}", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> findLeadDetailsById(@PathVariable("leadID") String leadID){
 		

@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -57,6 +58,11 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 	@Override
 	public List<CrmLead> getLeadBySpecificUser(String username) {
 		return dao.getLeadBySpecificUser(username);
+	}
+
+	@Override
+	public Map<String, Object> viewActivitiesOfLeadById(String leadId) {
+		return dao.viewActivitiesOfLeadById(leadId);
 	}
 
 }
