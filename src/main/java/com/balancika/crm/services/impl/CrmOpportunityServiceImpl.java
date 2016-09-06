@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,62 +21,37 @@ public class CrmOpportunityServiceImpl implements CrmOpportunityService{
 	
 	@Override
 	public boolean isInsertOpportunity(CrmOpportunity opportunity) {
-		try{
-			return opDao.isInsertOpportunity(opportunity);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return opDao.isInsertOpportunity(opportunity);
 	}
 
 	@Override
 	public boolean isUpdateOpportunity(CrmOpportunity opportunity) {
-		try{
-			return opDao.isUpdateOpportunity(opportunity);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return opDao.isUpdateOpportunity(opportunity);
 	}
 
 	@Override
 	public boolean isDeleteOpportunity(String opId) {
-		try{
-			return opDao.isDeleteOpportunity(opId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return opDao.isDeleteOpportunity(opId);
 	}
 
 	@Override
 	public Object findOpportunityById(String opId) {
-		try{
-			return opDao.findOpportunityById(opId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return opDao.findOpportunityById(opId);
 	}
 
 	@Override
 	public List<CrmOpportunity> listOpportunities() {
-		try{
-			return opDao.listOpportunities();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return opDao.listOpportunities();
 	}
 
 	@Override
 	public CrmOpportunity findOpportunityDetailsById(String opId) {
-		try{
-			return opDao.findOpportunityDetailsById(opId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return opDao.findOpportunityDetailsById(opId);
+	}
+
+	@Override
+	public List<Object> listOpportunitiesWithSpecificUser(String username) {
+		return opDao.listOpportunitiesWithSpecificUser(username);
 	}
 
 }

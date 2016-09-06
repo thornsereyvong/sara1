@@ -3,6 +3,7 @@ package com.balancika.crm.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,21 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@Override
 	public CrmOpportunity findOpportunityDetailsById(String opId) {
 		return (CrmOpportunity)transactionManager.getSessionFactory().getCurrentSession().get(CrmOpportunity.class, opId);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> listOpportunitiesWithSpecificUser(String username) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listOpportunityWithSpecificUser(:username)");
+			query.setParameter("username", username);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

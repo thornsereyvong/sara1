@@ -11,4 +11,5 @@ public interface CrmOpportunityService {
 	CrmOpportunity findOpportunityDetailsById(String opId);
 	Object findOpportunityById(String opId);
 	List<CrmOpportunity> listOpportunities();
+	List<Object> listOpportunitiesWithSpecificUser(String username);
 }

@@ -1,5 +1,6 @@
 package com.balancika.crm.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.services.CrmOpportunityService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/opportunity")
@@ -23,7 +26,7 @@ public class OpportunityController {
 	@Autowired
 	private CrmOpportunityService opService;
 
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value="/list_all", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listOpportunties(){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -39,6 +42,31 @@ public class OpportunityController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listOpportuntiesWithSpecificUser(@RequestBody String json){
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> jsonMap = new HashMap<String, String>();
+		try {
+			jsonMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> arrOpportunities = opService.listOpportunitiesWithSpecificUser(jsonMap.get("username").toString());
+		
+		if(arrOpportunities != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", arrOpportunities);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/{opId}", method = RequestMethod.GET, produces = "application/json")

@@ -12,4 +12,5 @@ public interface CrmOpportunityDao {
 	CrmOpportunity findOpportunityDetailsById(String opId);
 	Object findOpportunityById(String opId);
 	List<CrmOpportunity> listOpportunities();
+	List<Object> listOpportunitiesWithSpecificUser(String username);
 }
