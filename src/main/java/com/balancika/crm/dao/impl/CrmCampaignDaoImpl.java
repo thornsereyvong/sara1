@@ -142,7 +142,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCampaign.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("campID"), "campID")
-																 .add(Projections.property("campName"), "camName"));
+																 .add(Projections.property("campName"), "campName"));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			criteria.add(Restrictions.isNull("parent"));
 			return criteria.list();
