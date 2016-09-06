@@ -17,6 +17,7 @@ import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmCampaignStatusService;
 import com.balancika.crm.services.CrmCampaignTypeService;
+import com.balancika.crm.services.CrmUserService;
  
 @RestController
 @RequestMapping("/api/campaign")
@@ -30,6 +31,9 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmCampaignTypeService typeService;
+	
+	@Autowired
+	private CrmUserService userService;
 	
 
 	@RequestMapping(value="/list", method = RequestMethod.GET)
@@ -56,6 +60,7 @@ public class CampaignController {
 		map.put("CAMP_PARENT", campaignService.listCampaignParents());
 		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
 		map.put("CAMP_TYPE", typeService.listAllCampaignType());
+		//map.put("ASSIGN_TO", userService.findUserByUsername(username));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
