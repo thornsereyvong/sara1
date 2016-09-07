@@ -12,6 +12,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="crm_note")
@@ -41,7 +42,8 @@ public class CrmNote implements Serializable{
 	private String noteCreateBy;
 	
 	@Type(type = "date")
-	@Column(name="N_CDate", updatable = false)
+	@Column(name="N_CDate", updatable = false , columnDefinition="DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date noteCreateDate;
 	
 	@Column(name="N_MBy")

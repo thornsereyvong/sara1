@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -26,6 +27,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 		try {
 			session.beginTransaction();
 			note.setNoteId(IdAutoGenerator("AC_NO"));
+			note.setNoteCreateDate(new Date());
 			session.save(note);
 			session.getTransaction().commit();
 			return true;
