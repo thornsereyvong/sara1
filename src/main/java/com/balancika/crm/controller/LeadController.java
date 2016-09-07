@@ -15,7 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmLead;
+import com.balancika.crm.services.CrmCampaignService;
+import com.balancika.crm.services.CrmIndustryService;
 import com.balancika.crm.services.CrmLeadService;
+import com.balancika.crm.services.CrmLeadSourceService;
+import com.balancika.crm.services.CrmLeadStatusService;
+import com.balancika.crm.services.CrmUserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,6 +30,21 @@ public class LeadController {
 	
 	@Autowired
 	private CrmLeadService leadService;
+	
+	@Autowired
+	private CrmLeadStatusService leadStatusService;
+	
+	@Autowired
+	private CrmLeadSourceService leadSourceService;
+	
+	@Autowired
+	private CrmIndustryService industryService;
+	
+	@Autowired
+	private CrmCampaignService campaignService;
+	
+	@Autowired
+	private CrmUserService userService;
 	
 	@RequestMapping(value = "/list_all", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getAllLead(){
@@ -70,6 +90,26 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/edit/startup", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> editLeadOnStartup(@RequestBody String json){
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> leadMap = new HashMap<String, String>();
+		try {
+			leadMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("LEAD", leadService.findLeadById(leadMap.get("leadId").toString()));
+		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
+		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
+		map.put("INDUSTRY", industryService.listIndustries());
+		map.put("CAMPAIGN", campaignService.listCampaigns());
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/list/{leadID}", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> findLeadById(@PathVariable("leadID") String leadID){
 		
@@ -80,8 +120,7 @@ public class LeadController {
 		if(Lead == null){
 			map.put("MESSAGE", "NOT_FOUND");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-	
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
