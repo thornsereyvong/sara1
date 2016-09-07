@@ -53,6 +53,22 @@ public class NoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
+	@RequestMapping(value="/view/{leadId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listNoteRelatedToLead(@PathVariable("leadId") String leadId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmNote> note = noteService.listNoteRelatedToLead(leadId);
+		if(note != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", note);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", note);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addNote(@RequestBody CrmNote note){
 		Map<String, Object> map = new HashMap<String, Object>();

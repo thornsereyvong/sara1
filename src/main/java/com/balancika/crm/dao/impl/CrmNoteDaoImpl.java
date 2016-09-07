@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -91,5 +93,20 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 		criteria.add(Restrictions.eq("noteId", noteId));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return (CrmNote) criteria.uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmNote> listNoteRelatedToLead(String leadId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listNotesRelatedToLead(:leadId)");
+				query.setParameter("leadId", leadId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

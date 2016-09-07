@@ -13,7 +13,9 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmLeadDao;
+import com.balancika.crm.dao.CrmNoteDao;
 import com.balancika.crm.model.CrmCall;
+import com.balancika.crm.model.CrmEvent;
 import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.CrmMeeting;
 import com.balancika.crm.utilities.CrmIdGenerator;
@@ -25,6 +27,9 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 
 	@Autowired
 	private HibernateTransactionManager transactionManager;
+	
+	@Autowired
+	private CrmNoteDao noteDao;
 
 	@Override
 	public boolean insertLead(CrmLead lead) {
@@ -182,7 +187,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		leadMap.put("METTINGS", listMeetingActivitiesRelatedToLead(leadId));
 		leadMap.put("EVENTS", listEventActivitiesRelatedToLead(leadId));
 		leadMap.put("TASKS", listTaskActivitiesRelatedToLead(leadId));
-		leadMap.put("NOTES", listNoteActivitiesRelatedToLead(leadId));
+		leadMap.put("NOTES", noteDao.listNoteRelatedToLead(leadId));
 		leadMap.put("LEAD", findLeadById(leadId));
 		return leadMap;
 	}
@@ -230,7 +235,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<CrmMeeting> listEventActivitiesRelatedToLead(String leadId){
+	private List<CrmEvent> listEventActivitiesRelatedToLead(String leadId){
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedToLead(:leadId)");
@@ -242,18 +247,5 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		}
 		return null;
 	}
-	
-	@SuppressWarnings("unchecked")
-	private List<CrmMeeting> listNoteActivitiesRelatedToLead(String leadId){
-		Session session = transactionManager.getSessionFactory().openSession();
-		try {
-			SQLQuery query = session.createSQLQuery("CALL listNotesRelatedToLead(:leadId)");
-				query.setParameter("leadId", leadId);
-				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-				return query.list();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+
 }

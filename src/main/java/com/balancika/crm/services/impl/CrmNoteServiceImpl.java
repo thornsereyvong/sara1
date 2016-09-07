@@ -63,4 +63,9 @@ public class CrmNoteServiceImpl implements CrmNoteService{
 		}
 	}
 
+	@Override
+	public List<CrmNote> listNoteRelatedToLead(String leadId) {
+		return noteDao.listNoteRelatedToLead(leadId);
+	}
+
 }

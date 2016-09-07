@@ -11,4 +11,5 @@ public interface CrmNoteService {
 	boolean deleteNote(String noteId);
 	List<CrmNote> listNotes();
 	CrmNote findNoteById(String noteId);
+	List<CrmNote> listNoteRelatedToLead(String leadId);
 }
