@@ -1,9 +1,11 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -12,6 +14,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
 @Table(name="crm_note")
@@ -40,10 +44,9 @@ public class CrmNote implements Serializable{
 	@Column(name="N_CBy", updatable = false)
 	private String noteCreateBy;
 	
-	@Type(type = "date")
-	@Column(name="N_CDate", updatable = false , columnDefinition="DATETIME")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date noteCreateDate;
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
+	@Column(name="N_CDate", updatable = false)
+	private LocalDateTime noteCreateDate;
 	
 	@Column(name="N_MBy")
 	private String noteModifiedBy;
@@ -100,17 +103,17 @@ public class CrmNote implements Serializable{
 	public void setNoteCreateBy(String noteCreateBy) {
 		this.noteCreateBy = noteCreateBy;
 	}
+	
+	public String getNoteModifiedBy() {
+		return noteModifiedBy;
+	}
 
-	public Date getNoteCreateDate() {
+	public LocalDateTime getNoteCreateDate() {
 		return noteCreateDate;
 	}
 
-	public void setNoteCreateDate(Date noteCreateDate) {
+	public void setNoteCreateDate(LocalDateTime noteCreateDate) {
 		this.noteCreateDate = noteCreateDate;
-	}
-
-	public String getNoteModifiedBy() {
-		return noteModifiedBy;
 	}
 
 	public void setNoteModifiedBy(String noteModifiedBy) {
