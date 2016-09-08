@@ -62,4 +62,9 @@ public class CrmCampaignServiceImpl implements CrmCampaignService{
 		return dao.listCampaignParents();
 	}
 
+	@Override
+	public List<Object> listIdAndNameOfCompaign() {
+		return dao.listIdAndNameOfCompaign();
+	}
+
 }

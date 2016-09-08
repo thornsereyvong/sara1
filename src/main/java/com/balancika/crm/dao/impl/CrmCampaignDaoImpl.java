@@ -151,4 +151,21 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> listIdAndNameOfCompaign() {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmCampaign.class);
+			criteria.setProjection(Projections.projectionList().add(Projections.property("campID"), "campID")
+																 .add(Projections.property("campName"), "campName"));
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return criteria.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

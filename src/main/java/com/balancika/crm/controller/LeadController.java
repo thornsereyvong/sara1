@@ -145,7 +145,7 @@ public class LeadController {
 		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
 		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
 		map.put("INDUSTRY", industryService.listIndustries());
-		map.put("CAMPAIGN", campaignService.listCampaigns());
+		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
@@ -184,7 +184,7 @@ public class LeadController {
 		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
 		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
 		map.put("INDUSTRY", industryService.listIndustries());
-		map.put("CAMPAIGN", campaignService.listCampaigns());
+		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
@@ -207,9 +207,7 @@ public class LeadController {
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	public ResponseEntity<Map<String, Object>> updateList(@RequestBody CrmLead lead){
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		if(leadService.updateLead(lead) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());

@@ -15,4 +15,5 @@ public interface CrmCampaignDao {
 	boolean isCampaignNameExist(String campName);
 	List<CrmCampaign> listCampaignIsNotEqual(String campID);
 	List<Object> listCampaignParents();
+	List<Object> listIdAndNameOfCompaign();
 }
