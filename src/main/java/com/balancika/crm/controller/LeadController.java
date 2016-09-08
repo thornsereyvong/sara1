@@ -107,6 +107,7 @@ public class LeadController {
 		map.put("INDUSTRY", industryService.listIndustries());
 		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
+		map.put("CHILD", userService.checkChildOfUser(leadMap.get("username").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -186,6 +187,7 @@ public class LeadController {
 		map.put("INDUSTRY", industryService.listIndustries());
 		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
+		map.put("CHILD", userService.checkChildOfUser(leadMap.get("username").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

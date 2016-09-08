@@ -1,6 +1,7 @@
 package com.balancika.crm.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,7 @@ public class CampaignController {
 		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
 		map.put("CAMP_TYPE", typeService.listAllCampaignType());
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(jsonMap.get("username").toString()));
+		map.put("CHILD", userService.checkChildOfUser(jsonMap.get("username").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -108,9 +110,6 @@ public class CampaignController {
 		map.put("MESSAGE", "SUCCESS");
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("DATA", camp);
-		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
-		map.put("CAMP_TYPE", typeService.listAllCampaignType());
-		map.put("CAMP_PARENT", campaignService.listCampaignIsNotEqual(campID));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -137,12 +136,12 @@ public class CampaignController {
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmCampaign> camp = campaignService.listCampaignIsNotEqual(campID);
+		List<Object> camp = campaignService.listCampaignIsNotEqual(campID);
 		if( camp == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			map.put("DATA", "");
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
+			map.put("DATA", new ArrayList<Object>());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
@@ -167,18 +166,6 @@ public class CampaignController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/add/list", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> loadOnPageAddCampaign(){
-	
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("MESSAGE", "SUCCESS");
-		map.put("STATUS", HttpStatus.OK.value());
-		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
-		map.put("CAMP_TYPE", typeService.listAllCampaignType());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
-	}
-	
 	@RequestMapping(value="/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addCampaign(@RequestBody CrmCampaign campaign) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -190,6 +177,30 @@ public class CampaignController {
 		map.put("MESSAGE", "INSERTED");
 		map.put("STATUS", HttpStatus.CREATED.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
+	}
+	
+	@RequestMapping(value="/edit/startup", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> editCampaignOnStartup(@RequestBody String json) {
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> jsonMap = new HashMap<String, String>();
+		try {
+			jsonMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CAMPAIGN", campaignService.findCampaignById(jsonMap.get("campID").toString()));
+		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
+		map.put("CAMP_TYPE", typeService.listAllCampaignType());
+		List<Object> arrCampParent = campaignService.listCampaignIsNotEqual(jsonMap.get("campID").toString());
+		if(arrCampParent == null){
+			map.put("CAMP_PARENT", new ArrayList<Object>());
+		}else{
+			map.put("CAMP_PARENT", arrCampParent);
+		}
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(jsonMap.get("username").toString()));
+		map.put("CHILD", userService.checkChildOfUser(jsonMap.get("username").toString()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/edit", method = RequestMethod.PUT)

@@ -114,15 +114,15 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCampaign> listCampaignIsNotEqual(String campID) {
+	public List<Object> listCampaignIsNotEqual(String campID) {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmParentCampaigns(:campID)");
 			query.setParameter("campID", campID);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return query.list();
-		} catch (Exception e) {
-			e.getMessage();
+		} catch (HibernateException e) {
+			e.printStackTrace();
 		} finally {
 			session.close();
 		}

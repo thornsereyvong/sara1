@@ -14,4 +14,5 @@ public interface CrmUserService {
 	CrmUser findUserById(String userId);
 	List<CrmUser> listSubordinateUserByUsername(String username);
 	CrmUser webLogin(String username);
+	String checkChildOfUser(String username);
 }

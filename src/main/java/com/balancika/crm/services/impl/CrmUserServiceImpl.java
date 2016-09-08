@@ -3,6 +3,7 @@ package com.balancika.crm.services.impl;
 import java.util.List;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,10 @@ public class CrmUserServiceImpl implements CrmUserService{
 	@Override
 	public CrmUser webLogin(String username) {
 		return userDao.webLogin(username);
+	}
+
+	@Override
+	public String checkChildOfUser(String username) {
+		return userDao.checkChildOfUser(username);
 	}
 }

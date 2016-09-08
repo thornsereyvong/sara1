@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -145,5 +146,25 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 				return user;
 			}
 		return null;
+	}
+
+	@Override
+	public String checkChildOfUser(String username) {
+		session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("CALL checkChildOfUser(:username)");
+			query.setParameter("username", username);
+			
+			if(((Number)query.uniqueResult()).intValue() 	> 0){
+				return "EXIST";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return "NOT_EXIST";
 	}
 }

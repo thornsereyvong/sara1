@@ -13,7 +13,7 @@ public interface CrmCampaignService {
 	Object findCampaignById(String campID);
 	CrmCampaign findCampaignDetailsById(String campID);
 	boolean isCampaignNameExist(String campName);
-	List<CrmCampaign> listCampaignIsNotEqual(String campID);
+	List<Object> listCampaignIsNotEqual(String campID);
 	List<Object> listCampaignParents();
 	List<Object> listIdAndNameOfCompaign();
 }

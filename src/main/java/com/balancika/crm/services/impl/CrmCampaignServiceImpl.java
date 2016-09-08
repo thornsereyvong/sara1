@@ -48,7 +48,7 @@ public class CrmCampaignServiceImpl implements CrmCampaignService{
 	}
 
 	@Override
-	public List<CrmCampaign> listCampaignIsNotEqual(String campID) {
+	public List<Object> listCampaignIsNotEqual(String campID) {
 		return dao.listCampaignIsNotEqual(campID);
 	}
 
