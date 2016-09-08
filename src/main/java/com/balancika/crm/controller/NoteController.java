@@ -60,7 +60,7 @@ public class NoteController {
 		if(note != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("DATA", note);
+			map.put("NOTES", note);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
