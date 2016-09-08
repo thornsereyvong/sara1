@@ -53,7 +53,7 @@ public class NoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/view/{leadId}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listNoteRelatedToLead(@PathVariable("leadId") String leadId){
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<CrmNote> note = noteService.listNoteRelatedToLead(leadId);
