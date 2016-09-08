@@ -129,12 +129,24 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/view/{leadID}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> viewActivitiesOfLeadById(@PathVariable("leadID") String leadID){
+	@RequestMapping(value = "/view", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> viewActivitiesOfLeadById(@RequestBody String json){
 		
-		Map<String, Object> map = leadService.viewActivitiesOfLeadById(leadID);
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> leadMap = new HashMap<String, String>();
+		try {
+			leadMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = leadService.viewActivitiesOfLeadById(leadMap.get("leadId").toString());
 		map.put("MESSAGE", "SUCCESS");
-		map.put("STATUS", HttpStatus.OK);
+		map.put("STATUS", HttpStatus.OK.value());
+		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
+		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
+		map.put("INDUSTRY", industryService.listIndustries());
+		map.put("CAMPAIGN", campaignService.listCampaigns());
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -155,6 +167,25 @@ public class LeadController {
 		map.put("MESSAGE", "SUCCESS");
 		map.put("STATUS", HttpStatus.OK);
 		map.put("DATA", Lead);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/add/startup", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> addLeadOnStartup(@RequestBody String json){
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> leadMap = new HashMap<String, String>();
+		try {
+			leadMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
+		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
+		map.put("INDUSTRY", industryService.listIndustries());
+		map.put("CAMPAIGN", campaignService.listCampaigns());
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
