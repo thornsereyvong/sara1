@@ -189,6 +189,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		leadMap.put("TASKS", listTaskActivitiesRelatedToLead(leadId));
 		leadMap.put("NOTES", noteDao.listNoteRelatedToLead(leadId));
 		leadMap.put("LEAD", findLeadById(leadId));
+		leadMap.put("ALL_ACTIVITIES", listActivitesRelatedToLead(leadId));
 		return leadMap;
 	}
 	
@@ -239,6 +240,21 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedToLead(:leadId)");
+				query.setParameter("leadId", leadId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	private List<Object> listActivitesRelatedToLead(String leadId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listAllActivitiesRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
 				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 				return query.list();
