@@ -20,56 +20,42 @@ public class CrmTaskServiceImpl implements CrmTaskService{
 	
 	@Override
 	public boolean insertTask(CrmTask task) {
-		try{
-			return taskDao.insertTask(task);
-		}catch(Exception e){
-			return false;
-		}
+		return taskDao.insertTask(task);
 	}
 
 	@Override
 	public boolean updateTask(CrmTask task) {
-		try{
-			return taskDao.updateTask(task);
-		}catch(Exception e){
-			return false;
-		}
+		return taskDao.updateTask(task);
 	}
 
 	@Override
 	public boolean deleteTask(String taskId) {
-		try{
-			return taskDao.deleteTask(taskId);
-		}catch(Exception e){
-			return false;
-		}
+		return taskDao.deleteTask(taskId);
 	}
 
 	@Override
 	public List<CrmTask> listTasks() {
-		try{
-			return taskDao.listTasks();
-		}catch(Exception e){
-			return null;
-		}
+		return taskDao.listTasks();
 	}
 
 	@Override
 	public Object findTaskById(String taskId) {
-		try{
-			return taskDao.findTaskById(taskId);
-		}catch(Exception e){
-			return null;
-		}
+		return taskDao.findTaskById(taskId);
 	}
 
 	@Override
 	public CrmTask findTaskDetailsById(String taskId) {
-		try{
-			return taskDao.findTaskDetailsById(taskId);
-		}catch(Exception e){
-			return null;
-		}
+		return taskDao.findTaskDetailsById(taskId);
+	}
+
+	@Override
+	public List<CrmTask> listTasksRelatedToLead(String leadId) {
+		return taskDao.listTasksRelatedToLead(leadId);
+	}
+
+	@Override
+	public List<CrmTask> listTasksRelatedToOpportunity(String opId) {
+		return taskDao.listTasksRelatedToOpportunity(opId);
 	}
 
 }

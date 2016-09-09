@@ -3,6 +3,7 @@ package com.balancika.crm.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,36 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 	@Override
 	public CrmTask findTaskDetailsById(String taskId) {
 		return (CrmTask)transactionManager.getSessionFactory().getCurrentSession().get(CrmTask.class, taskId);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmTask> listTasksRelatedToLead(String leadId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToLead(:leadId)");
+				query.setParameter("leadId", leadId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmTask> listTasksRelatedToOpportunity(String opId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToOpportunity(:opId)");
+				query.setParameter("opId", opId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

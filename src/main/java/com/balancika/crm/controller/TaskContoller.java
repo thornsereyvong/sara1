@@ -57,6 +57,38 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTaskRelatedToOpportunity(@PathVariable("leadId") String leadId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmTask> tasks = taskService.listTasksRelatedToLead(leadId);
+		if(tasks != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", tasks);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", tasks);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTaskRelatedToLead(@PathVariable("opId") String opId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmTask> note = taskService.listTasksRelatedToOpportunity(opId);
+		if(note != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", note);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", note);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/list/details/{taskId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findTaskDetailsById(@PathVariable("taskId") String taskId){
 		

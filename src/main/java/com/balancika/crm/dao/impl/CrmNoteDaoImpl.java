@@ -109,4 +109,19 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmNote> listNotesRelatedToOpportunity(String opId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listNotesRelatedToOpportunity(:opId)");
+				query.setParameter("opId", opId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

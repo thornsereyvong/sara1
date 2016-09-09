@@ -3,6 +3,7 @@ package com.balancika.crm.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -88,6 +89,36 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		Criteria criteria = session.createCriteria(CrmEvent.class);
 		criteria.add(Restrictions.eq("evId", evId));
 		return (CrmEvent) criteria.uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmEvent> listEventsRelatedToLead(String leadId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedToLead(:leadId)");
+				query.setParameter("leadId", leadId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmEvent> listEventsRelatedToOpportunity(String opId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedOpportuntiy(:opId)");
+				query.setParameter("opId", opId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

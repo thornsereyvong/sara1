@@ -20,56 +20,41 @@ public class CrmEventServiceImpl implements CrmEventService{
 	
 	@Override
 	public boolean insertEvent(CrmEvent event) {
-		try {
-			return eventDao.insertEvent(event);
-		} catch (Exception e) {
-			return false;
-		}	
+		return eventDao.insertEvent(event);	
 	}
 
 	@Override
 	public boolean updateEvent(CrmEvent event) {
-		try {
-			return eventDao.updateEvent(event);
-		} catch (Exception e) {
-			return false;
-		}
+		return eventDao.updateEvent(event);
 	}
 
 	@Override
 	public boolean deleteEnvent(String evId) {
-		try {
-			return eventDao.deleteEnvent(evId);
-		} catch (Exception e) {
-			return false;
-		}
+		return eventDao.deleteEnvent(evId);
 	}
 
 	@Override
 	public List<CrmEvent> listEvents() {
-		try {
-			return eventDao.listEvents();
-		} catch (Exception e) {
-			return null;
-		}
-		
+		return eventDao.listEvents();
 	}
 
 	@Override
 	public Object findEventById(String evId) {
-		try {
-			return eventDao.findEventById(evId);
-		} catch (Exception e) {
-			return null;
-		}
+		return eventDao.findEventById(evId);
 	}
 
 	@Override
 	public CrmEvent findEventDetailsById(String evId) {
-		try {
-			return eventDao.findEventDetailsById(evId);
-		} catch (Exception e) {
-			return null;
-		}
+		return eventDao.findEventDetailsById(evId);
+	}
+
+	@Override
+	public List<CrmEvent> listEventsRelatedToLead(String leadId) {
+		return eventDao.listEventsRelatedToLead(leadId);
+	}
+
+	@Override
+	public List<CrmEvent> listEventsRelatedToOpportunity(String opId) {
+		return eventDao.listEventsRelatedToOpportunity(opId);
 	}
 }

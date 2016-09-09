@@ -107,4 +107,34 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmCall> listCallsRelatedToLead(String leadId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToLead(:leadId)");
+			query.setParameter("leadId", leadId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmCall> listCallsRelatedToOpportunity(String opId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToOpportunity(:opId)");
+			query.setParameter("opId", opId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

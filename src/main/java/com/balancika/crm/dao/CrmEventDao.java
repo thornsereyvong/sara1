@@ -11,4 +11,6 @@ public interface CrmEventDao {
 	List<CrmEvent> listEvents();
 	Object findEventById(String evId);
 	CrmEvent findEventDetailsById(String evId);
+	List<CrmEvent> listEventsRelatedToLead(String leadId);
+	List<CrmEvent> listEventsRelatedToOpportunity(String opId);
 }

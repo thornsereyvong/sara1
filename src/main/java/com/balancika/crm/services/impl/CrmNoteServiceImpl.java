@@ -20,52 +20,37 @@ public class CrmNoteServiceImpl implements CrmNoteService{
 	
 	@Override
 	public boolean insertNote(CrmNote note) {
-		try {
-			return noteDao.insertNote(note);
-		} catch (Exception e) {
-			return false;
-		}
+		return noteDao.insertNote(note);
 	}
 
 	@Override
 	public boolean updateNote(CrmNote note) {
-		try {
-			return noteDao.updateNote(note);
-		} catch (Exception e) {
-			return false;
-		}
+		return noteDao.updateNote(note);
 	}
 
 	@Override
 	public boolean deleteNote(String noteId) {
-		try {
-			return noteDao.deleteNote(noteId);
-		} catch (Exception e) {
-			return false;
-		}
+		return noteDao.deleteNote(noteId);
 	}
 
 	@Override
 	public List<CrmNote> listNotes() {
-		try {
-			return noteDao.listNotes();
-		} catch (Exception e) {
-			return null;
-		}
+		return noteDao.listNotes();
 	}
 
 	@Override
 	public CrmNote findNoteById(String noteId) {
-		try {
-			return noteDao.findNoteById(noteId);
-		} catch (Exception e) {
-			return null;
-		}
+		return noteDao.findNoteById(noteId);
 	}
 
 	@Override
 	public List<CrmNote> listNoteRelatedToLead(String leadId) {
 		return noteDao.listNoteRelatedToLead(leadId);
+	}
+
+	@Override
+	public List<CrmNote> listNotesRelatedToOpportunity(String opId) {
+		return noteDao.listNotesRelatedToOpportunity(opId);
 	}
 
 }

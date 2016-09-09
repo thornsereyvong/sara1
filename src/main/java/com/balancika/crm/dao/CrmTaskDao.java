@@ -12,4 +12,6 @@ public interface CrmTaskDao {
 	List<CrmTask> listTasks();
 	Object findTaskById(String taskId);
 	CrmTask findTaskDetailsById(String taskId);
+	List<CrmTask> listTasksRelatedToLead(String leadId);
+	List<CrmTask> listTasksRelatedToOpportunity(String opId);
 }

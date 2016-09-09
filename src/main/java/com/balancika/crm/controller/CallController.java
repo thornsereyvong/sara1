@@ -57,6 +57,38 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCallsRelatedToLead(@PathVariable("leadId") String leadId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmCall> calls = callService.listCallsRelatedToLead(leadId);
+		if(calls != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", calls);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", calls);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCallsRelatedToOpportunity(@PathVariable("opId") String opId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmCall> calls = callService.listCallsRelatedToOpportunity(opId);
+		if(calls != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", calls);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", calls);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/list/details/{callId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findCallDetailsById(@PathVariable("callId") String callId){
 		Map<String, Object> map = new HashMap<String, Object>();

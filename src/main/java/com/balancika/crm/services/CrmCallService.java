@@ -11,4 +11,6 @@ public interface CrmCallService {
 	List<CrmCall> listCalls();
 	Object findCallById(String callId);
 	CrmCall listCallStructureDetailsById(String callId);
+	List<CrmCall> listCallsRelatedToLead(String leadId);
+	List<CrmCall> listCallsRelatedToOpportunity(String opId);
 }

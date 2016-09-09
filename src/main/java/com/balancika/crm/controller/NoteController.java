@@ -69,6 +69,22 @@ public class NoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listNoteRelatedToOpportuntity(@PathVariable("opId") String opId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmNote> note = noteService.listNotesRelatedToOpportunity(opId);
+		if(note != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", note);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", note);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addNote(@RequestBody CrmNote note){
 		Map<String, Object> map = new HashMap<String, Object>();

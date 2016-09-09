@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.balancika.crm.model.CrmMeeting;
 import com.balancika.crm.services.CrmMeetingService;
 
@@ -51,6 +50,38 @@ public class MeetingController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToLead(@PathVariable("leadId") String leadId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmMeeting> meetings = meetingService.listTasksRelatedToLead(leadId);
+		if(meetings != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", meetings);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", meetings);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToOpportunity(@PathVariable("opId") String opId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmMeeting> meetings = meetingService.listTasksRelatedToOpportunity(opId);
+		if(meetings != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", meetings);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", meetings);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/details/{meetingId}", method = RequestMethod.GET, produces = "application/json")

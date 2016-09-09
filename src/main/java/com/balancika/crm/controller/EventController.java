@@ -55,6 +55,38 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.NOT_FOUND);
 	}
 	
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listEventRelatedToLead(@PathVariable("leadId") String leadId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmEvent> events = eventService.listEventsRelatedToLead(leadId);
+		if(events != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", events);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", events);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listEventRelatedToOpportuntity(@PathVariable("opId") String opId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmEvent> events = eventService.listEventsRelatedToOpportunity(opId);
+		if(events != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("NOTES", events);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("DATA", events);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/list/details/{evId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findEventDetailsById(@PathVariable("evId") String evId){
 		Map<String, Object> map = new HashMap<String, Object>();

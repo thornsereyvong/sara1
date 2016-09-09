@@ -20,56 +20,42 @@ public class CrmMeetingServiceImpl implements CrmMeetingService{
 
 	@Override
 	public List<CrmMeeting> listMeetings() {
-		try{
-			return meetingDao.listMeetings();
-		}catch(Exception e){
-			return null;
-		}
+		return meetingDao.listMeetings();
 	}
 
 	@Override
 	public boolean insertMeeting(CrmMeeting meeting) {
-		try{
-			return meetingDao.insertMeeting(meeting);
-		}catch(Exception e){
-			return false;
-		}
+		return meetingDao.insertMeeting(meeting);
 	}
 
 	@Override
 	public boolean updateMeeting(CrmMeeting meeting) {
-		try{
-			return meetingDao.updateMeeting(meeting);
-		}catch(Exception e){
-			return false;
-		}
+		return meetingDao.updateMeeting(meeting);
 	}
 
 	@Override
 	public boolean deleteMeeting(String meetingId) {
-		try{
-			return meetingDao.deleteMeeting(meetingId);
-		}catch(Exception e){
-			return false;
-		}
+		return meetingDao.deleteMeeting(meetingId);
 	}
 
 	@Override
 	public Object findMeetingById(String meetingId) {
-		try{
-			return meetingDao.findMeetingById(meetingId);
-		}catch(Exception e){
-			return null;
-		}
+		return meetingDao.findMeetingById(meetingId);
 	}
 
 	@Override
 	public CrmMeeting findMeetingDetailsById(String meetingId) {
-		try{
-			return meetingDao.findMeetingDetailsById(meetingId);
-		}catch(Exception e){
-			return null;
-		}
+		return meetingDao.findMeetingDetailsById(meetingId);
+	}
+
+	@Override
+	public List<CrmMeeting> listTasksRelatedToLead(String leadId) {
+		return meetingDao.listTasksRelatedToLead(leadId);
+	}
+
+	@Override
+	public List<CrmMeeting> listTasksRelatedToOpportunity(String opId) {
+		return meetingDao.listTasksRelatedToOpportunity(opId);
 	}
 	
 	

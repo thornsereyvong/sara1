@@ -12,4 +12,5 @@ public interface CrmNoteService {
 	List<CrmNote> listNotes();
 	CrmNote findNoteById(String noteId);
 	List<CrmNote> listNoteRelatedToLead(String leadId);
+	List<CrmNote> listNotesRelatedToOpportunity(String opId);
 }
