@@ -64,11 +64,11 @@ public class CallController {
 		if(calls != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("NOTES", calls);
+			map.put("CALLS", calls);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
-		map.put("DATA", calls);
+		map.put("CALLS", calls);
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
@@ -80,12 +80,12 @@ public class CallController {
 		if(calls != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("NOTES", calls);
+			map.put("CALLS", calls);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("DATA", calls);
-		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		map.put("CALLS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

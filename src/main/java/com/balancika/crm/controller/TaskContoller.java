@@ -64,11 +64,11 @@ public class TaskContoller {
 		if(tasks != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("NOTES", tasks);
+			map.put("TASKS", tasks);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
-		map.put("DATA", tasks);
+		map.put("TASKS", tasks);
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
@@ -80,11 +80,11 @@ public class TaskContoller {
 		if(note != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("NOTES", note);
+			map.put("TASKS", note);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
-		map.put("DATA", note);
+		map.put("TASKS", note);
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}

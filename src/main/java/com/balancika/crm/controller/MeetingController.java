@@ -59,11 +59,11 @@ public class MeetingController {
 		if(meetings != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("NOTES", meetings);
+			map.put("MEETINGS", meetings);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
-		map.put("DATA", meetings);
+		map.put("MEETINGS", meetings);
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
@@ -75,11 +75,11 @@ public class MeetingController {
 		if(meetings != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("NOTES", meetings);
+			map.put("MEETINGS", meetings);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
-		map.put("DATA", meetings);
+		map.put("MEETINGS", meetings);
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
