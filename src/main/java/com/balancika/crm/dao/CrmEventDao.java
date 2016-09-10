@@ -5,7 +5,7 @@ import java.util.List;
 import com.balancika.crm.model.CrmEvent;
 
 public interface CrmEventDao {
-	boolean insertEvent(CrmEvent event);
+	boolean insertEvent(String eventjson);
 	boolean updateEvent(CrmEvent event);
 	boolean deleteEnvent(String evId);
 	List<CrmEvent> listEvents();

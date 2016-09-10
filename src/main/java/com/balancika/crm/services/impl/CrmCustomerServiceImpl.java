@@ -3,8 +3,6 @@ package com.balancika.crm.services.impl;
 import java.util.List;
 
 import javax.transaction.Transactional;
-
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,52 +19,32 @@ public class CrmCustomerServiceImpl implements CrmCustomerService{
 
 	@Override
 	public boolean insertCustomer(CrmCustomer customer) {
-		try{
-			return customerDao.insertCustomer(customer);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return customerDao.insertCustomer(customer);
 	}
 
 	@Override
 	public boolean updateCustomer(CrmCustomer customer) {
-		try{
-			return customerDao.updateCustomer(customer);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return customerDao.updateCustomer(customer);
 	}
 
 	@Override
 	public boolean deleteCustomer(String custID) {
-		try{
-			return customerDao.deleteCustomer(custID);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return customerDao.deleteCustomer(custID);
 	}
 
 	@Override
 	public List<CrmCustomer> listCustomers() {
-		try{
-			return customerDao.listCustomers();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return customerDao.listCustomers();
 	}
 
 	@Override
 	public CrmCustomer findCustomerById(String custID) {
-		try{
-			return customerDao.findCustomerById(custID);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return customerDao.findCustomerById(custID);
+	}
+
+	@Override
+	public List<Object> listCustomerIdAndName() {
+		return customerDao.listCustomerIdAndName();
 	}
 
 }

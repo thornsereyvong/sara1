@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.spel.ast.OpInc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,14 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.balancika.crm.model.CrmMeeting;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.services.CrmCallService;
+import com.balancika.crm.services.CrmCampaignService;
+import com.balancika.crm.services.CrmCustomerService;
 import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmOpportunityService;
+import com.balancika.crm.services.CrmOpportunityStageService;
+import com.balancika.crm.services.CrmOpportunityTypeService;
 import com.balancika.crm.services.CrmTaskService;
+import com.balancika.crm.services.CrmUserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,7 +50,22 @@ public class OpportunityController {
 	
 	@Autowired
 	private CrmMeetingService meetingService;
+	
+	@Autowired
+	private CrmUserService userService;
+	
+	@Autowired
+	private CrmOpportunityTypeService typeService;
+	
+	@Autowired
+	private CrmOpportunityStageService stageService;
+	
+	@Autowired
+	private CrmCustomerService customerService;
 
+	@Autowired
+	private CrmCampaignService campaignService;
+	
 	@RequestMapping(value="/list_all", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listOpportunties(){
 		
@@ -110,6 +128,11 @@ public class OpportunityController {
 		map.put("MEETINGS",meetingService.listTasksRelatedToOpportunity(jsonMap.get("opId").toString()));
 		map.put("NOTES", noteService.listNotesRelatedToOpportunity(jsonMap.get("opId").toString()));
 		map.put("EVENTS", eventService.listEventsRelatedToOpportunity(jsonMap.get("opId").toString()));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(jsonMap.get("username").toString()));
+		map.put("OPP_TYPES", typeService.listOpportunityTypes());
+		map.put("OPP_STAGES", stageService.listOpportunityStages());
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("CAMPAIGNS", campaignService.listIdAndNameOfCompaign());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 	}

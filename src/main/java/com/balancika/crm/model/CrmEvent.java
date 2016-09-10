@@ -1,9 +1,12 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -17,6 +20,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
 @Table(name="crm_event")
@@ -33,20 +38,18 @@ public class CrmEvent implements Serializable{
 	@Column(name="EV_Name", unique = true)
 	private String evName;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="EV_LocationID", nullable = true)
 	private CrmEventLocation evlocation;
 	
-	@Type(type="date")
-	@Temporal(TemporalType.DATE)
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="EV_StartDate")
-	private Date evStartDate;
+	private LocalDateTime evStartDate;
 	
-	@Type(type="date")
 	@Column(name="EV_EndDate")
-	@Temporal(TemporalType.DATE)
-	private Date evEndDate;
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
+	private LocalDateTime evEndDate;
 	
 	@Column(name="EV_Duration")
 	private String evDuration;
@@ -57,7 +60,7 @@ public class CrmEvent implements Serializable{
 	@Column(name="EV_Description")
 	private String evDes;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="EV_AssignTo")
 	private CrmUser assignTo;
@@ -65,10 +68,9 @@ public class CrmEvent implements Serializable{
 	@Column(name="EV_CBy", updatable = false)
 	private String evCreateBy;
 	
-	@Type(type="date")
-	@Temporal(TemporalType.DATE)
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="EV_CDate", updatable = false)
-	private Date evCreateDate;
+	private LocalDateTime evCreateDate;
 	
 	@Column(name="EV_MBy")
 	private String evModifiedBy;
@@ -108,19 +110,19 @@ public class CrmEvent implements Serializable{
 		this.evlocation = evlocation;
 	}
 
-	public Date getEvStartDate() {
+	public LocalDateTime getEvStartDate() {
 		return evStartDate;
 	}
 
-	public void setEvStartDate(Date evStartDate) {
+	public void setEvStartDate(LocalDateTime evStartDate) {
 		this.evStartDate = evStartDate;
 	}
 
-	public Date getEvEndDate() {
+	public LocalDateTime getEvEndDate() {
 		return evEndDate;
 	}
 
-	public void setEvEndDate(Date evEndDate) {
+	public void setEvEndDate(LocalDateTime evEndDate) {
 		this.evEndDate = evEndDate;
 	}
 
@@ -164,11 +166,11 @@ public class CrmEvent implements Serializable{
 		this.evCreateBy = evCreateBy;
 	}
 
-	public Date getEvCreateDate() {
+	public LocalDateTime getEvCreateDate() {
 		return evCreateDate;
 	}
 
-	public void setEvCreateDate(Date evCreateDate) {
+	public void setEvCreateDate(LocalDateTime evCreateDate) {
 		this.evCreateDate = evCreateDate;
 	}
 

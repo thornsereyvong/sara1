@@ -38,7 +38,6 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmUserService userService;
-	
 
 	@RequestMapping(value="/list", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> allCampaign(){

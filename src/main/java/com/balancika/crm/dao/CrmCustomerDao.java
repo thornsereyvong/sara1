@@ -11,4 +11,5 @@ public interface CrmCustomerDao {
 	boolean deleteCustomer(String custID);
 	List<CrmCustomer> listCustomers();
 	CrmCustomer findCustomerById(String custID);
+	List<Object> listCustomerIdAndName();
 }

@@ -1,6 +1,10 @@
 package com.balancika.crm.dao.impl;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -13,7 +17,14 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmEventDao;
 import com.balancika.crm.model.CrmEvent;
+import com.balancika.crm.model.CrmEventLocation;
+import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.utilities.ConvertStringToLocalDateTime;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
@@ -22,15 +33,43 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 	private HibernateTransactionManager transactionManager;
 
 	@Override
-	public boolean insertEvent(CrmEvent event) {
+	public boolean insertEvent(String json) {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			event.setEvId(IdAutoGenerator("AC_EV"));
+			ObjectMapper mapper = new ObjectMapper();
+			Map<String, Object> eventMap = new HashMap<String, Object>();
+			CrmEvent event = new CrmEvent();
+			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			try {
+				eventMap = mapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+				event.setEvId(IdAutoGenerator("AC_EV"));
+				event.setEvName(eventMap.get("evName").toString());
+				CrmEventLocation location = new CrmEventLocation();
+				location.setLoId(eventMap.get("evLocation").toString());
+				event.setEvlocation(location);
+				event.setEvBudget(Double.parseDouble(eventMap.get("evBudget").toString()));
+				event.setEvDes(eventMap.get("evDes").toString());
+				event.setEvCreateBy(eventMap.get("evCreateBy").toString());
+				event.setEvDuration(eventMap.get("evDuration").toString());
+				event.setEvStartDate(toLocalDateTime.convertStringToLocalDateTime(eventMap.get("evStartDate").toString()));
+				event.setEvEndDate(toLocalDateTime.convertStringToLocalDateTime(eventMap.get("evEndDate").toString()));
+				CrmUser user = new CrmUser();
+				user.setUserID(eventMap.get("assignTo").toString());
+				event.setAssignTo(user);
+				event.setEvCreateDate(LocalDateTime.now());
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			session.save(event);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.close();
