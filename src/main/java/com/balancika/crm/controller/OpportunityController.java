@@ -19,6 +19,7 @@ import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmCustomerService;
 import com.balancika.crm.services.CrmEventService;
+import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmOpportunityService;
@@ -65,6 +66,9 @@ public class OpportunityController {
 
 	@Autowired
 	private CrmCampaignService campaignService;
+	
+	@Autowired
+	private CrmLeadSourceService sourceService;
 	
 	@RequestMapping(value="/list_all", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listOpportunties(){
@@ -133,6 +137,7 @@ public class OpportunityController {
 		map.put("OPP_STAGES", stageService.listOpportunityStages());
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
 		map.put("CAMPAIGNS", campaignService.listIdAndNameOfCompaign());
+		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 	}
