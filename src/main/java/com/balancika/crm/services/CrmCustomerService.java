@@ -3,6 +3,7 @@ package com.balancika.crm.services;
 import java.util.List;
 
 import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.PriceCode;
 
 public interface CrmCustomerService {
 
@@ -12,4 +13,5 @@ public interface CrmCustomerService {
 	List<CrmCustomer> listCustomers();
 	CrmCustomer findCustomerById(String custID);
 	List<Object> listCustomerIdAndName();
+	List<PriceCode> listPriceCode();
 }

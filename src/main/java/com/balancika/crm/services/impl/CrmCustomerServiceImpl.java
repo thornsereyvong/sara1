@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCustomerDao;
 import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.services.CrmCustomerService;
 
 @Service
@@ -45,6 +46,11 @@ public class CrmCustomerServiceImpl implements CrmCustomerService{
 	@Override
 	public List<Object> listCustomerIdAndName() {
 		return customerDao.listCustomerIdAndName();
+	}
+
+	@Override
+	public List<PriceCode> listPriceCode() {
+		return customerDao.listPriceCode();
 	}
 
 }

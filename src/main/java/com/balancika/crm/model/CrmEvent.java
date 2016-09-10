@@ -4,20 +4,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -38,10 +32,9 @@ public class CrmEvent implements Serializable{
 	@Column(name="EV_Name", unique = true)
 	private String evName;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name="EV_LocationID", nullable = true)
-	private CrmEventLocation evlocation;
+
+	@Column(name="EV_LocationID", nullable = true)
+	private String evlocation;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="EV_StartDate")
@@ -60,10 +53,8 @@ public class CrmEvent implements Serializable{
 	@Column(name="EV_Description")
 	private String evDes;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name="EV_AssignTo")
-	private CrmUser assignTo;
+	@Column(name="EV_AssignTo")
+	private String assignTo;
 	
 	@Column(name="EV_CBy", updatable = false)
 	private String evCreateBy;
@@ -102,11 +93,11 @@ public class CrmEvent implements Serializable{
 		this.evName = evName;
 	}
 
-	public CrmEventLocation getEvlocation() {
+	public String getEvlocation() {
 		return evlocation;
 	}
 
-	public void setEvlocation(CrmEventLocation evlocation) {
+	public void setEvlocation(String evlocation) {
 		this.evlocation = evlocation;
 	}
 
@@ -150,11 +141,11 @@ public class CrmEvent implements Serializable{
 		this.evDes = evDes;
 	}
 
-	public CrmUser getAssignTo() {
+	public String getAssignTo() {
 		return assignTo;
 	}
 
-	public void setAssignTo(CrmUser assignTo) {
+	public void setAssignTo(String assignTo) {
 		this.assignTo = assignTo;
 	}
 

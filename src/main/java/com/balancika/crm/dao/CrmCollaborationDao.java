@@ -10,4 +10,5 @@ public interface CrmCollaborationDao {
 	boolean updateCollaboration(CrmCollaboration collaboration);
 	boolean deleteCollaboration(int colId);
 	List<CrmCollaboration> listCollaborations();
+	CrmCollaboration findCollaborationById(int collapId);
 }

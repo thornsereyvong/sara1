@@ -80,5 +80,12 @@ public class CrmCollaboration implements Serializable{
 	public void setColCreateDate(LocalDateTime colCreateDate) {
 		this.colCreateDate = colCreateDate;
 	}
-	
+
+	public List<CrmCollaborationTags> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<CrmCollaborationTags> tags) {
+		this.tags = tags;
+	}
 }

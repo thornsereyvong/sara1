@@ -5,13 +5,17 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmCustomerDao;
 import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -97,6 +101,24 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			criteria.setProjection(Projections.projectionList().add(Projections.property("custID"),"custID").add(Projections.property("custName"),"custName"));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		}finally{
+			session.close();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PriceCode> listPriceCode() {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(PriceCode.class);
+			criteria.addOrder(Order.asc("priceCode"));
+			return (List<PriceCode>)criteria.list();
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();

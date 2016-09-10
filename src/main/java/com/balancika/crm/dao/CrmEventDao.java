@@ -6,7 +6,7 @@ import com.balancika.crm.model.CrmEvent;
 
 public interface CrmEventDao {
 	boolean insertEvent(String eventjson);
-	boolean updateEvent(CrmEvent event);
+	boolean updateEvent(String eventjson);
 	boolean deleteEnvent(String evId);
 	List<CrmEvent> listEvents();
 	Object findEventById(String evId);
