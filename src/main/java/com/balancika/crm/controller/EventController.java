@@ -104,9 +104,9 @@ public class EventController {
 	}
 	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> addEvent(@RequestBody String json){
+	public ResponseEntity<Map<String, Object>> addEvent(@RequestBody CrmEvent event){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(eventService.insertEvent(json) == true){
+		if(eventService.insertEvent(event) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.CREATED);
@@ -118,7 +118,7 @@ public class EventController {
 	}
 	
 	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> updateEvent(@RequestBody String event){
+	public ResponseEntity<Map<String, Object>> updateEvent(@RequestBody CrmEvent event){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(eventService.updateEvent(event) == true){
 			map.put("MESSAGE", "UPDATED");

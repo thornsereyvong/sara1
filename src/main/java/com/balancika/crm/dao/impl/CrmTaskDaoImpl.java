@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmTaskDao;
 import com.balancika.crm.model.CrmTask;
+import com.balancika.crm.utilities.ConvertStringToLocalDateTime;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -25,11 +27,16 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
 			task.setTaskId(IdAutoGenerator("AC_TA"));
+			task.setTaskStartDate(toLocalDateTime.convertStringToLocalDateTime(task.getStartDate()));
+			task.setTaskDueDate(toLocalDateTime.convertStringToLocalDateTime(task.getDueDate()));
+			task.setTaskCreateDate(LocalDateTime.now());
 			session.save(task);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.close();
@@ -42,11 +49,15 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			task.setTaskStartDate(toLocalDateTime.convertStringToLocalDateTime(task.getStartDate()));
+			task.setTaskDueDate(toLocalDateTime.convertStringToLocalDateTime(task.getDueDate()));
 			session.update(task);
 			session.getTransaction().commit();
 			return true;
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			session.getTransaction().rollback();
+			e.printStackTrace();
 		} finally {
 			session.close();
 		}

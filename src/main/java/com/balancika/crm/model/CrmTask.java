@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -13,17 +14,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
+
 
 @Entity
 @Table(name="crm_task")
@@ -40,17 +39,19 @@ public class CrmTask implements Serializable{
 	@Column(name="TA_Subject", nullable = false, unique = true)
 	private String taskSubject;
 	
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm a")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="TA_StartDate")
 	private LocalDateTime taskStartDate;
 	
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm a")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="TA_DueDate")
 	private LocalDateTime taskDueDate;
+	
+	@Transient
+	private String startDate;
+
+	@Transient
+	private String dueDate;
 	
 	@NotEmpty
 	@Column(name="TA_Priority", nullable = false)
@@ -83,9 +84,9 @@ public class CrmTask implements Serializable{
 	@Column(name="TA_CBy", updatable = false)
 	private String taskCreateBy;
 	
-	@Type(type="date")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="TA_CDate", updatable = false)
-	private Date taskCreateDate;
+	private LocalDateTime taskCreateDate;
 	
 	@Column(name="TA_MBy")
 	private String taskModifiedBy;
@@ -191,11 +192,11 @@ public class CrmTask implements Serializable{
 		this.taskCreateBy = taskCreateBy;
 	}
 
-	public Date getTaskCreateDate() {
+	public LocalDateTime getTaskCreateDate() {
 		return taskCreateDate;
 	}
 
-	public void setTaskCreateDate(Date taskCreateDate) {
+	public void setTaskCreateDate(LocalDateTime taskCreateDate) {
 		this.taskCreateDate = taskCreateDate;
 	}
 
@@ -214,5 +215,20 @@ public class CrmTask implements Serializable{
 	public void setTaskModifiedDate(Date taskModifiedDate) {
 		this.taskModifiedDate = taskModifiedDate;
 	}
-	
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(String dueDate) {
+		this.dueDate = dueDate;
+	}
 }

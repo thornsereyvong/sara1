@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmMeetingDao;
 import com.balancika.crm.model.CrmMeeting;
+import com.balancika.crm.utilities.ConvertStringToLocalDateTime;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -35,7 +37,11 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
 			meeting.setMeetingId(IdAutoGenerator("AC_ME"));
+			meeting.setMeetingStartDate(toLocalDateTime.convertStringToLocalDateTime(meeting.getStartDate()));
+			meeting.setMeetingEndDate(toLocalDateTime.convertStringToLocalDateTime(meeting.getEndDate()));
+			meeting.setMeetingCreateDate(LocalDateTime.now());
 			session.save(meeting);
 			session.getTransaction().commit();
 			return true;
@@ -52,10 +58,14 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			meeting.setMeetingStartDate(toLocalDateTime.convertStringToLocalDateTime(meeting.getStartDate()));
+			meeting.setMeetingEndDate(toLocalDateTime.convertStringToLocalDateTime(meeting.getEndDate()));
 			session.update(meeting);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.close();

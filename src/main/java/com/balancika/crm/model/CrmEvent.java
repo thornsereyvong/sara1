@@ -7,11 +7,17 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -32,17 +38,24 @@ public class CrmEvent implements Serializable{
 	@Column(name="EV_Name", unique = true)
 	private String evName;
 	
-
-	@Column(name="EV_LocationID", nullable = true)
-	private String evlocation;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="EV_LocationID", nullable = true)
+	private CrmEventLocation evlocation;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="EV_StartDate")
 	private LocalDateTime evStartDate;
 	
-	@Column(name="EV_EndDate")
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
+	@Column(name="EV_EndDate")
 	private LocalDateTime evEndDate;
+	
+	@Transient
+	private String startDate;
+	
+	@Transient
+	private String endDate;
 	
 	@Column(name="EV_Duration")
 	private String evDuration;
@@ -53,8 +66,10 @@ public class CrmEvent implements Serializable{
 	@Column(name="EV_Description")
 	private String evDes;
 	
-	@Column(name="EV_AssignTo")
-	private String assignTo;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="EV_AssignTo")
+	private CrmUser assignTo;
 	
 	@Column(name="EV_CBy", updatable = false)
 	private String evCreateBy;
@@ -70,12 +85,6 @@ public class CrmEvent implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="EV_MDate", insertable = false, updatable = false)
 	private Date evModifiedDate;
-	
-	@Column(name="EV_RToType")
-	private String evRelatedToType;
-	
-	@Column(name="EV_RToID")
-	private String evRelatedToID;
 
 	public String getEvId() {
 		return evId;
@@ -93,11 +102,11 @@ public class CrmEvent implements Serializable{
 		this.evName = evName;
 	}
 
-	public String getEvlocation() {
+	public CrmEventLocation getEvlocation() {
 		return evlocation;
 	}
 
-	public void setEvlocation(String evlocation) {
+	public void setEvlocation(CrmEventLocation evlocation) {
 		this.evlocation = evlocation;
 	}
 
@@ -141,11 +150,11 @@ public class CrmEvent implements Serializable{
 		this.evDes = evDes;
 	}
 
-	public String getAssignTo() {
+	public CrmUser getAssignTo() {
 		return assignTo;
 	}
 
-	public void setAssignTo(String assignTo) {
+	public void setAssignTo(CrmUser assignTo) {
 		this.assignTo = assignTo;
 	}
 
@@ -181,19 +190,32 @@ public class CrmEvent implements Serializable{
 		this.evModifiedDate = evModifiedDate;
 	}
 
-	public String getEvRelatedToType() {
-		return evRelatedToType;
+	/**
+	 * @return the startDate
+	 */
+	public String getStartDate() {
+		return startDate;
 	}
 
-	public void setEvRelatedToType(String evRelatedToType) {
-		this.evRelatedToType = evRelatedToType;
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
 	}
 
-	public String getEvRelatedToID() {
-		return evRelatedToID;
+	/**
+	 * @return the endDate
+	 */
+	public String getEndDate() {
+		return endDate;
 	}
 
-	public void setEvRelatedToID(String evRelatedToID) {
-		this.evRelatedToID = evRelatedToID;
+	/**
+	 * @param endDate the endDate to set
+	 */
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
+	
 }

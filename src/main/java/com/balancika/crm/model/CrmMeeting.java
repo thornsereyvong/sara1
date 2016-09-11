@@ -1,9 +1,11 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -12,11 +14,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
 @Table(name="crm_meeting")
@@ -33,13 +38,19 @@ public class CrmMeeting implements Serializable{
 	@Column(name="M_Subject", unique = true, nullable = false)
 	private String meetingSubject;
 	
-	@Type(type="date")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="M_StartDate", nullable = false)
-	private Date meetingStartDate;
+	private LocalDateTime meetingStartDate;
 	
-	@Type(type="date")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="M_EndDate", nullable = false)
-	private Date meetingEndDate;
+	private LocalDateTime meetingEndDate;
+	
+	@Transient
+	private String startDate;
+	
+	@Transient
+	private String endDate;
 	
 	@Column(name="M_Duration")
 	private String meetingDuration;
@@ -69,9 +80,9 @@ public class CrmMeeting implements Serializable{
 	@Column(name="M_CBy", updatable = false)
 	private String meetingCreateBy;
 	
-	@Type(type="date")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="M_CDate", updatable = false)
-	private Date meetingCreateDate;
+	private LocalDateTime meetingCreateDate;
 	
 	@Column(name="M_MBy")
 	private String meetingModifiedBy;
@@ -97,19 +108,19 @@ public class CrmMeeting implements Serializable{
 		this.meetingSubject = meetingSubject;
 	}
 
-	public Date getMeetingStartDate() {
+	public LocalDateTime getMeetingStartDate() {
 		return meetingStartDate;
 	}
 
-	public void setMeetingStartDate(Date meetingStartDate) {
+	public void setMeetingStartDate(LocalDateTime meetingStartDate) {
 		this.meetingStartDate = meetingStartDate;
 	}
 
-	public Date getMeetingEndDate() {
+	public LocalDateTime getMeetingEndDate() {
 		return meetingEndDate;
 	}
 
-	public void setMeetingEndDate(Date meetingEndDate) {
+	public void setMeetingEndDate(LocalDateTime meetingEndDate) {
 		this.meetingEndDate = meetingEndDate;
 	}
 
@@ -177,11 +188,11 @@ public class CrmMeeting implements Serializable{
 		this.meetingCreateBy = meetingCreateBy;
 	}
 
-	public Date getMeetingCreateDate() {
+	public LocalDateTime getMeetingCreateDate() {
 		return meetingCreateDate;
 	}
 
-	public void setMeetingCreateDate(Date meetingCreateDate) {
+	public void setMeetingCreateDate(LocalDateTime meetingCreateDate) {
 		this.meetingCreateDate = meetingCreateDate;
 	}
 
@@ -200,4 +211,22 @@ public class CrmMeeting implements Serializable{
 	public void setMeetingModifiedDate(Date meetingModifiedDate) {
 		this.meetingModifiedDate = meetingModifiedDate;
 	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	
+	
 }

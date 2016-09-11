@@ -19,13 +19,13 @@ public class CrmEventServiceImpl implements CrmEventService{
 	private CrmEventDao eventDao;
 	
 	@Override
-	public boolean insertEvent(String Jsonevent) {
-		return eventDao.insertEvent(Jsonevent);	
+	public boolean insertEvent(CrmEvent event) {
+		return eventDao.insertEvent(event);	
 	}
 
 	@Override
-	public boolean updateEvent(String eventJson) {
-		return eventDao.updateEvent(eventJson);
+	public boolean updateEvent(CrmEvent event) {
+		return eventDao.updateEvent(event);
 	}
 
 	@Override

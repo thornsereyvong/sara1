@@ -1,9 +1,11 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -12,11 +14,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
 @Table(name="crm_call")
@@ -32,10 +37,12 @@ public class CrmCall implements Serializable{
 	@Column(name="CL_Subject", nullable = false, unique = true)
 	private String callSubject;
 	
-	@Type(type = "date")
-	@Temporal(TemporalType.TIME)
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="CL_SDate")
-	private Date callStartDate;
+	private LocalDateTime callStartDate;
+	
+	@Transient
+	private String startDate;
 	
 	@Column(name="CL_Duration", nullable = false)
 	private String callDuration;
@@ -62,9 +69,9 @@ public class CrmCall implements Serializable{
 	@Column(name="CL_CBy", updatable = false)
 	private String callCreateBy;
 	
-	@Type(type="date")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="CL_CDate", updatable = false)
-	private Date callCreateDate;
+	private LocalDateTime callCreateDate;
 	
 	@Column(name="CL_MBy")
 	private String callModifiedBy;
@@ -86,10 +93,17 @@ public class CrmCall implements Serializable{
 	public void setCallSubject(String callSubject) {
 		this.callSubject = callSubject;
 	}
-	public Date getCallStartDate() {
+		
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public LocalDateTime getCallStartDate() {
 		return callStartDate;
 	}
-	public void setCallStartDate(Date callStartDate) {
+	public void setCallStartDate(LocalDateTime callStartDate) {
 		this.callStartDate = callStartDate;
 	}
 	public String getCallDuration() {
@@ -134,10 +148,10 @@ public class CrmCall implements Serializable{
 	public void setCallCreateBy(String callCreateBy) {
 		this.callCreateBy = callCreateBy;
 	}
-	public Date getCallCreateDate() {
+	public LocalDateTime getCallCreateDate() {
 		return callCreateDate;
 	}
-	public void setCallCreateDate(Date callCreateDate) {
+	public void setCallCreateDate(LocalDateTime callCreateDate) {
 		this.callCreateDate = callCreateDate;
 	}
 	public String getCallModifiedBy() {
