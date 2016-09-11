@@ -43,7 +43,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 				eventMap = mapper.readValue(json, new TypeReference<Map<String, Object>>() {});
 				event.setEvId(IdAutoGenerator("AC_EV"));
 				event.setEvName(eventMap.get("evName").toString());
-				if(eventMap.get("evLocation") == null){
+				if(eventMap.get("evLocation") == null || eventMap.get("evLocation").equals("")){
 					event.setEvlocation(null);
 				}else{
 					event.setEvlocation(eventMap.get("evLocation").toString());
@@ -54,7 +54,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 				event.setEvDuration(eventMap.get("evDuration").toString());
 				event.setEvStartDate(toLocalDateTime.convertStringToLocalDateTime(eventMap.get("evStartDate").toString()));
 				event.setEvEndDate(toLocalDateTime.convertStringToLocalDateTime(eventMap.get("evEndDate").toString()));
-				if(eventMap.get("assignTo") == null){
+				if(eventMap.get("assignTo") == null || eventMap.get("assignTo").equals("")){
 					event.setAssignTo(null);
 				}else{
 					event.setAssignTo(eventMap.get("assignTo").toString());
@@ -90,19 +90,20 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
 			try {
 				eventMap = mapper.readValue(json, new TypeReference<Map<String, Object>>() {});
-				event.setEvId(IdAutoGenerator("AC_EV"));
+				event.setEvId(eventMap.get("evId").toString());
 				event.setEvName(eventMap.get("evName").toString());
-				if(eventMap.get("evLocation") == null){
+				if(eventMap.get("evLocation") == null || eventMap.get("evLocation").equals("")){
 					event.setEvlocation(null);
 				}else{
 					event.setEvlocation(eventMap.get("evLocation").toString());
 				}
+				System.out.println(event.getEvlocation());
 				event.setEvBudget(Double.parseDouble(eventMap.get("evBudget").toString()));
 				event.setEvDes(eventMap.get("evDes").toString());
 				event.setEvDuration(eventMap.get("evDuration").toString());
 				event.setEvStartDate(toLocalDateTime.convertStringToLocalDateTime(eventMap.get("evStartDate").toString()));
 				event.setEvEndDate(toLocalDateTime.convertStringToLocalDateTime(eventMap.get("evEndDate").toString()));
-				if(eventMap.get("assignTo") == null){
+				if(eventMap.get("assignTo") == null || eventMap.get("assignTo").equals("")){
 					event.setAssignTo(null);
 				}else{
 					event.setAssignTo(eventMap.get("assignTo").toString());

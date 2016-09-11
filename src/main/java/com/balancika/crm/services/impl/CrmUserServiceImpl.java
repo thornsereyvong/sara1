@@ -65,4 +65,9 @@ public class CrmUserServiceImpl implements CrmUserService{
 	public String checkChildOfUser(String username) {
 		return userDao.checkChildOfUser(username);
 	}
+
+	@Override
+	public List<Object> listAllUsernameAndId() {
+		return userDao.listAllUsernameAndId();
+	}
 }

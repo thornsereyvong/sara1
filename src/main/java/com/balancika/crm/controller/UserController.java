@@ -40,6 +40,24 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
+	@RequestMapping(value="/list/user_tags", method = RequestMethod.GET, produces="application/json")
+	public ResponseEntity<Map<String, Object>> listAllUsernameAndId(){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> arrUser = userService.listAllUsernameAndId();
+		if(arrUser != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", arrUser);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		map.put("DATA", arrUser);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/list/{username}", method = RequestMethod.GET, produces="application/json")
 	public ResponseEntity<Map<String, Object>> findUserByUsername(@PathVariable("username") String username){
 		

@@ -15,4 +15,5 @@ public interface CrmUserDao {
 	List<CrmUser> listSubordinateUserByUsername(String username);
 	CrmUser webLogin(String username);
 	String checkChildOfUser(String username);
+	List<Object> listAllUsernameAndId();
 }

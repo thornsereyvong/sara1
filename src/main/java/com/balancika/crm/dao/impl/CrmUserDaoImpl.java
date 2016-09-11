@@ -10,6 +10,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
@@ -166,5 +167,17 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			session.close();
 		}
 		return "NOT_EXIST";
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> listAllUsernameAndId() {
+		session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmUser.class);
+		criteria.setProjection(Projections.projectionList().add(Projections.property("userID"), "userID").add(Projections.property("username"), "username"));
+		criteria.add(Restrictions.eq("status", 1));
+		criteria.addOrder(Order.asc("userID"));
+		criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return criteria.list();
 	}
 }

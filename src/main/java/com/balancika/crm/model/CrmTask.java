@@ -1,6 +1,7 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -17,6 +18,12 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 @Entity
 @Table(name="crm_task")
@@ -33,13 +40,17 @@ public class CrmTask implements Serializable{
 	@Column(name="TA_Subject", nullable = false, unique = true)
 	private String taskSubject;
 	
-	@Type(type="date")
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm a")
 	@Column(name="TA_StartDate")
-	private Date taskStartDate;
+	private LocalDateTime taskStartDate;
 	
-	@Type(type="date")
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm a")
 	@Column(name="TA_DueDate")
-	private Date taskDueDate;
+	private LocalDateTime taskDueDate;
 	
 	@NotEmpty
 	@Column(name="TA_Priority", nullable = false)
@@ -100,19 +111,19 @@ public class CrmTask implements Serializable{
 		this.taskSubject = taskSubject;
 	}
 
-	public Date getTaskStartDate() {
+	public LocalDateTime getTaskStartDate() {
 		return taskStartDate;
 	}
 
-	public void setTaskStartDate(Date taskStartDate) {
+	public void setTaskStartDate(LocalDateTime taskStartDate) {
 		this.taskStartDate = taskStartDate;
 	}
 
-	public Date getTaskDueDate() {
+	public LocalDateTime getTaskDueDate() {
 		return taskDueDate;
 	}
 
-	public void setTaskDueDate(Date taskDueDate) {
+	public void setTaskDueDate(LocalDateTime taskDueDate) {
 		this.taskDueDate = taskDueDate;
 	}
 
