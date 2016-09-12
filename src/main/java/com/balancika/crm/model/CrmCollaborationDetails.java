@@ -23,10 +23,10 @@ public class CrmCollaborationDetails implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="CBS_ID")
 	private int colDelId;
-	
+	/*
 	@NotEmpty
 	@Column(name="CBS_CBID")
-	private int collapId;
+	private int collapId;*/
 	
 	@NotEmpty
 	@Column(name = "CBS_Des")
@@ -51,13 +51,13 @@ public class CrmCollaborationDetails implements Serializable{
 		this.colDelId = colDelId;
 	}
 
-	public int getCollapId() {
+	/*public int getCollapId() {
 		return collapId;
 	}
 
 	public void setCollapId(int collapId) {
 		this.collapId = collapId;
-	}
+	}*/
 
 	public String getColDelDes() {
 		return colDelDes;

@@ -1,5 +1,6 @@
 package com.balancika.crm.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCollaboration;
 import com.balancika.crm.services.CrmCollaborationService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/collaboration")
@@ -24,10 +27,18 @@ public class CollaborationController {
 	private CrmCollaborationService collaborationService;
 	
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCollaborations(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCollaborations(@RequestBody String json){
+		Map<String, String> jsonMap = new HashMap<String, String>();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			jsonMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCollaboration> collaborations = collaborationService.listCollaborations();
+		List<CrmCollaboration> collaborations = collaborationService.listCollaborations(jsonMap.get("moduleId").toString());
 		if(collaborations != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -40,7 +51,6 @@ public class CollaborationController {
 		map.put("DATA", collaborations);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
-	
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addCollaboration(@RequestBody CrmCollaboration collaboration){

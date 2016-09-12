@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -34,13 +35,18 @@ public class CrmCollaborationServiceImpl implements CrmCollaborationService{
 	}
 
 	@Override
-	public List<CrmCollaboration> listCollaborations() {
-		return dao.listCollaborations();
+	public List<CrmCollaboration> listCollaborations(String moduleId) {
+		return dao.listCollaborations(moduleId);
 	}
 
 	@Override
 	public CrmCollaboration findCollaborationById(int collapId) {
 		return dao.findCollaborationById(collapId);
+	}
+
+	@Override
+	public List<Map<String, Object>> listAllCollaboration(String username, String moduleType, String moduleId) {
+		return dao.listAllCollaboration(username, moduleType, moduleId);
 	}
 
 }

@@ -60,7 +60,6 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 	public Integer countLike(int collapId) {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmLike.class);
 			criteria.setProjection(Projections.property("likeId"));
 			criteria.add(Restrictions.eq("collapId", collapId));
@@ -72,4 +71,20 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 		return null;
 	}
 
+	@Override
+	public boolean checkUserLike(String username) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmLike.class);
+			criteria.setProjection(Projections.property("likeId"));
+			criteria.add(Restrictions.eq("LK_UserName", username));
+			criteria.setProjection(Projections.rowCount());
+			if(((Number)criteria.uniqueResult()).intValue() > 0){
+				return true;
+			}
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
