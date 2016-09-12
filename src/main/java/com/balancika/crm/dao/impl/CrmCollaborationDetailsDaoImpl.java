@@ -3,8 +3,10 @@ package com.balancika.crm.dao.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -38,27 +40,58 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 
 	@Override
 	public boolean updateCollaborationDetails(CrmCollaborationDetails details) {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			session.update(details);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			session.close();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteCollaborationDetails(int detailsId) {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			CrmCollaborationDetails details = new CrmCollaborationDetails();
+			details.setColDelId(detailsId);
+			details.setColDelCreateDate(LocalDateTime.now());
+			session.save(details);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			session.close();
+		}
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCollaborationDetails> listCollaborationDetails() {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmCollaborationDetails.class);
+			criteria.addOrder(Order.desc("collapId"));
+			return criteria.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public CrmCollaborationDetails findCollaborationDetailsById(int detailsId) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		return (CrmCollaborationDetails) session.get(CrmCollaborationDetails.class, detailsId);
 	}
-
-	
 }
