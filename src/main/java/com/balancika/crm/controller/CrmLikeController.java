@@ -54,7 +54,7 @@ public class CrmLikeController {
 				map.put("MESSAGE", "FAILED");
 			}
 		}else if(jsonMap.get("likeStatus").equals(false)){
-			if(likeService.deleteLike(Integer.parseInt(jsonMap.get("likeId"))) == true){
+			if(likeService.deleteLike(jsonMap.get("username").toString()) == true){
 				map.put("MESSAGE", "UNLIKED");
 			}else{
 				map.put("MESSAGE", "FAILED");

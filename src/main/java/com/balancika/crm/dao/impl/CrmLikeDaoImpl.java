@@ -2,6 +2,7 @@ package com.balancika.crm.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -36,16 +37,17 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 	}
 
 	@Override
-	public boolean deleteLike(int likeId) {
+	public boolean deleteLike(String username) {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			CrmLike like = new CrmLike();
-			like.setLikeId(likeId);
-			session.delete(like);
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_user_like_collaboration WHERE LK_UserName = :username");
+			query.setParameter("username", username);
 			session.getTransaction().commit();
-			session.close();
-			return true;
+			if(query.executeUpdate() > 0){
+				session.close();
+				return true;
+			}
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
