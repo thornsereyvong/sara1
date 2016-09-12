@@ -40,9 +40,9 @@ public class CrmCollaboration implements Serializable{
 	@Column(name="CB_UName", nullable = false)
 	private String colUser;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Fetch(FetchMode.JOIN)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="collapId")
+	@Fetch(FetchMode.JOIN)
 	private List<CrmCollaborationTags> tags;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)

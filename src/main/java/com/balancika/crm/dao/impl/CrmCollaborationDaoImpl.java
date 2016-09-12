@@ -1,11 +1,14 @@
 package com.balancika.crm.dao.impl;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -28,16 +31,11 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			session.persist(collaboration);
-			if(tagsService.insertCollaborationTags(collaboration.getTags()) == true){
-				session.flush();
-				session.getTransaction().commit();
-				session.close();
-				return true;
-			}else{
-				session.getTransaction().rollback();
-				session.close();
-			}
+			collaboration.setColCreateDate(LocalDateTime.now());
+			session.save(collaboration);
+			session.getTransaction().commit();
+			session.close();
+			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 			session.close();
@@ -48,13 +46,37 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 
 	@Override
 	public boolean updateCollaboration(CrmCollaboration collaboration) {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			session.update(collaboration);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+			session.close();
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteCollaboration(int colId) {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			CrmCollaboration collaboration = new CrmCollaboration();
+			collaboration.setColId(colId);
+			session.delete(collaboration);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+			session.close();
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -62,11 +84,14 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 	@Override
 	public List<CrmCollaboration> listCollaborations() {
 		Session session = transactionManager.getSessionFactory().openSession();
+		List<CrmCollaboration> collaborations = new ArrayList<CrmCollaboration>();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
-			criteria.setResultTransformer(Transformers.aliasToBean(CrmCollaboration.class));
-			return criteria.list();
+			criteria.addOrder(Order.asc("colCreateDate"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			collaborations = criteria.list();
+			return collaborations;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		} finally {
@@ -77,7 +102,17 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 
 	@Override
 	public CrmCollaboration findCollaborationById(int collapId) {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmCollaboration.class);
+			criteria.add(Restrictions.eq("colId", collapId));
+			return (CrmCollaboration)criteria.uniqueResult();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 		return null;
 	}
 

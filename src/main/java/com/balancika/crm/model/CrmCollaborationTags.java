@@ -7,26 +7,25 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="crm_collaboration_tags")
+@Table(name="crm_colllaboration_tags")
 public class CrmCollaborationTags implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="tageId")
+	@Column(name="tagId")
 	private int tagId;
 	
 	@Column(name="username")
 	private String username;
 	
-	
-	@JoinColumn(name="collapId")
-	private int collapId;
+	/*@ManyToOne
+	@JoinColumn(name="collapId", insertable=false, updatable=false, nullable=false)
+	private CrmCollaboration collaboration;*/
 
 	public int getTagId() {
 		return tagId;
@@ -42,13 +41,5 @@ public class CrmCollaborationTags implements Serializable{
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public int getCollapId() {
-		return collapId;
-	}
-
-	public void setCollapId(int collapId) {
-		this.collapId = collapId;
 	}
 }
