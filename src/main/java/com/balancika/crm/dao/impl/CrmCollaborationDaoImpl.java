@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.balancika.crm.dao.CrmCollaborationDao;
 import com.balancika.crm.model.CrmCollaboration;
 import com.balancika.crm.services.CrmCollaborationTagsService;
+import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
@@ -91,6 +92,9 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			criteria.addOrder(Order.asc("colCreateDate"));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			collaborations = criteria.list();
+			for(CrmCollaboration col : collaborations){
+				col.setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(col.getColCreateDate()));
+			}
 			return collaborations;
 		} catch (HibernateException e) {
 			e.printStackTrace();

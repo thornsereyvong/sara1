@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmEventDao;
 import com.balancika.crm.model.CrmEvent;
-import com.balancika.crm.utilities.ConvertStringToLocalDateTime;
+import com.balancika.crm.utilities.DateTimeOperation;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -29,7 +29,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		try {
 			session.beginTransaction();
 			event.setEvId(IdAutoGenerator("AC_EV"));
-			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			DateTimeOperation toLocalDateTime = new DateTimeOperation();
 			event.setEvStartDate(toLocalDateTime.convertStringToLocalDateTime(event.getStartDate()));
 			event.setEvEndDate(toLocalDateTime.convertStringToLocalDateTime(event.getEndDate()));
 			event.setEvCreateDate(LocalDateTime.now());
@@ -50,7 +50,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			DateTimeOperation toLocalDateTime = new DateTimeOperation();
 			event.setEvStartDate(toLocalDateTime.convertStringToLocalDateTime(event.getStartDate()));
 			event.setEvEndDate(toLocalDateTime.convertStringToLocalDateTime(event.getEndDate()));
 			session.update(event);

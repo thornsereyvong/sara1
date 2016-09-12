@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -48,6 +49,9 @@ public class CrmCollaboration implements Serializable{
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="CB_CreateDate")
 	private LocalDateTime colCreateDate;
+	
+	@Transient
+	private String createDate;
 
 	public int getColId() {
 		return colId;
@@ -87,5 +91,13 @@ public class CrmCollaboration implements Serializable{
 
 	public void setTags(List<CrmCollaborationTags> tags) {
 		this.tags = tags;
+	}
+	
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
 	}
 }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmCallDao;
 import com.balancika.crm.model.CrmCall;
-import com.balancika.crm.utilities.ConvertStringToLocalDateTime;
+import com.balancika.crm.utilities.DateTimeOperation;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -30,7 +30,7 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			DateTimeOperation toLocalDateTime = new DateTimeOperation();
 			call.setCallId(IdAutoGenerator("AC_CL"));
 			call.setCallStartDate(toLocalDateTime.convertStringToLocalDateTime(call.getStartDate()));
 			call.setCallCreateDate(LocalDateTime.now());
@@ -53,7 +53,7 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			DateTimeOperation toLocalDateTime = new DateTimeOperation();
 			call.setCallStartDate(toLocalDateTime.convertStringToLocalDateTime(call.getStartDate()));
 			session.update(call);
 			session.getTransaction().commit();

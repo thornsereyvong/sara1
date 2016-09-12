@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmTaskDao;
 import com.balancika.crm.model.CrmTask;
-import com.balancika.crm.utilities.ConvertStringToLocalDateTime;
+import com.balancika.crm.utilities.DateTimeOperation;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -27,7 +27,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			DateTimeOperation toLocalDateTime = new DateTimeOperation();
 			task.setTaskId(IdAutoGenerator("AC_TA"));
 			task.setTaskStartDate(toLocalDateTime.convertStringToLocalDateTime(task.getStartDate()));
 			task.setTaskDueDate(toLocalDateTime.convertStringToLocalDateTime(task.getDueDate()));
@@ -49,7 +49,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			ConvertStringToLocalDateTime toLocalDateTime = new ConvertStringToLocalDateTime();
+			DateTimeOperation toLocalDateTime = new DateTimeOperation();
 			task.setTaskStartDate(toLocalDateTime.convertStringToLocalDateTime(task.getStartDate()));
 			task.setTaskDueDate(toLocalDateTime.convertStringToLocalDateTime(task.getDueDate()));
 			session.update(task);
