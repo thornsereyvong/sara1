@@ -78,11 +78,11 @@ public class EventController {
 		if(events != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("NOTES", events);
+			map.put("EVENTS", events);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
-		map.put("DATA", events);
+		map.put("EVENTS", events);
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
