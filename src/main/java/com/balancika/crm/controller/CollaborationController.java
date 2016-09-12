@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCollaboration;
 import com.balancika.crm.services.CrmCollaborationService;
+import com.balancika.crm.services.CrmUserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,6 +26,9 @@ public class CollaborationController {
 	
 	@Autowired
 	private CrmCollaborationService collaborationService;
+	
+	@Autowired
+	private CrmUserService userService;
 	
 	
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
@@ -43,6 +47,7 @@ public class CollaborationController {
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("DATA", collaborations);
+			map.put("TAG_TO", userService.listAllUsernameAndId());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		

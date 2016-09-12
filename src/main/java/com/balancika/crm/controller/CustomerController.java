@@ -1,5 +1,6 @@
 package com.balancika.crm.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.CrmIndustry;
 import com.balancika.crm.model.PriceCode;
+import com.balancika.crm.services.CrmAccountTypeService;
 import com.balancika.crm.services.CrmCustomerService;
+import com.balancika.crm.services.CrmIndustryService;
+import com.balancika.crm.services.CustomerGroupService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RestController
@@ -24,6 +31,15 @@ public class CustomerController {
 
 	@Autowired
 	private CrmCustomerService customerService;
+	
+	@Autowired
+	private CustomerGroupService groupService;
+	
+	@Autowired
+	private CrmIndustryService industryService;
+	
+	@Autowired
+	private CrmAccountTypeService typeService;
 	
 	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCustomers(){
@@ -61,6 +77,16 @@ public class CustomerController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value="/add/startup", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> addStartupPage(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("GROUP", groupService.listCustomerGroups());
+		map.put("PRICE_CODE", customerService.listPriceCode());
+		map.put("INDUSTRY", industryService.listIndustries());
+		map.put("TYPE", typeService.listAccountTypes());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces = "application/json")
