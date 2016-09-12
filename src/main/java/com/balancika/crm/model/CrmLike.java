@@ -23,7 +23,7 @@ public class CrmLike implements Serializable{
 	@Column(name="LK_CBID")
 	private int collapId;
 	
-	@Column(name="username")
+	@Column(name="LK_UserName")
 	private String username;
 
 	public int getLikeId() {

@@ -100,10 +100,16 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			criteria.addOrder(Order.asc("colCreateDate"));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			collaborations = criteria.list();
-			for(CrmCollaboration col : collaborations){
-				col.setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(col.getColCreateDate()));
-				col.setLike(likeDao.countLike(col.getColId()));
-				col.setCheckLike(likeDao.checkUserLike(col.getColUser()));
+			for(int i = 0; i < collaborations.size(); i++){
+				collaborations.get(i).setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(collaborations.get(i).getColCreateDate()));
+				collaborations.get(i).getDetails().get(i).setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(collaborations.get(i).getDetails().get(i).getColDelCreateDate()));
+				//col.setLike(likeDao.countLike(col.getColId()));
+				/*if(col.getColUser().equals(null)){
+					col.setCheckLike(false);
+				}else{
+					col.setCheckLike(likeDao.checkUserLike(col.getColUser()));
+				}*/
+				
 			}
 			return collaborations;
 		} catch (HibernateException e) {

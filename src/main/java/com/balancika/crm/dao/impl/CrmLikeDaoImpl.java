@@ -76,8 +76,7 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLike.class);
-			criteria.setProjection(Projections.property("likeId"));
-			criteria.add(Restrictions.eq("LK_UserName", username));
+			criteria.add(Restrictions.eq("username", username));
 			criteria.setProjection(Projections.rowCount());
 			if(((Number)criteria.uniqueResult()).intValue() > 0){
 				return true;
