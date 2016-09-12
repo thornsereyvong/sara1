@@ -51,6 +51,12 @@ public class CrmEvent implements Serializable{
 	@Column(name="EV_EndDate")
 	private LocalDateTime evEndDate;
 	
+	@Column(name="EV_RToType")
+	private String evRelatedToModuleType;
+	
+	@Column(name="EV_RToID")
+	private String evRelatedToModuleId;
+	
 	@Transient
 	private String startDate;
 	
@@ -190,32 +196,35 @@ public class CrmEvent implements Serializable{
 		this.evModifiedDate = evModifiedDate;
 	}
 
-	/**
-	 * @return the startDate
-	 */
 	public String getStartDate() {
 		return startDate;
 	}
-
-	/**
-	 * @param startDate the startDate to set
-	 */
+	
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	/**
-	 * @return the endDate
-	 */
 	public String getEndDate() {
 		return endDate;
 	}
-
-	/**
-	 * @param endDate the endDate to set
-	 */
+	
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	
+
+	public String getEvRelatedToModuleType() {
+		return evRelatedToModuleType;
+	}
+
+	public void setEvRelatedToModuleType(String evRelatedToModuleType) {
+		this.evRelatedToModuleType = evRelatedToModuleType;
+	}
+
+	public String getEvRelatedToModuleId() {
+		return evRelatedToModuleId;
+	}
+
+	public void setEvRelatedToModuleId(String evRelatedToModuleId) {
+		this.evRelatedToModuleId = evRelatedToModuleId;
+	}
 }
