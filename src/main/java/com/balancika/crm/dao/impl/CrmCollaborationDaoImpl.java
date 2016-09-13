@@ -19,6 +19,7 @@ import com.balancika.crm.dao.CrmCollaborationDao;
 import com.balancika.crm.dao.CrmCollaborationTagsDao;
 import com.balancika.crm.dao.CrmLikeDao;
 import com.balancika.crm.model.CrmCollaboration;
+import com.balancika.crm.model.CrmCollaborationDetails;
 import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
@@ -102,14 +103,11 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			collaborations = criteria.list();
 			for(int i = 0; i < collaborations.size(); i++){
 				collaborations.get(i).setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(collaborations.get(i).getColCreateDate()));
-				collaborations.get(i).getDetails().get(i).setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(collaborations.get(i).getDetails().get(i).getColDelCreateDate()));
-				//col.setLike(likeDao.countLike(col.getColId()));
-				/*if(col.getColUser().equals(null)){
-					col.setCheckLike(false);
-				}else{
-					col.setCheckLike(likeDao.checkUserLike(col.getColUser()));
-				}*/
-				
+				for(CrmCollaborationDetails details : collaborations.get(i).getDetails()){
+					details.setFormatCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(details.getCreateDate()));
+				}
+				collaborations.get(i).setLike(likeDao.countLike(collaborations.get(i).getColId()));
+				collaborations.get(i).setCheckLike(likeDao.checkUserLike(collaborations.get(i).getColUser()));
 			}
 			return collaborations;
 		} catch (HibernateException e) {

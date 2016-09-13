@@ -2,7 +2,7 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,12 +44,12 @@ public class CrmCollaboration implements Serializable{
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="collapId")
 	@Fetch(FetchMode.JOIN)
-	private List<CrmCollaborationTags> tags;
+	private Set<CrmCollaborationTags> tags;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinColumn(name="CBS_CBID", insertable = false, updatable = false)
-	@Fetch(FetchMode.SUBSELECT)
-	private List<CrmCollaborationDetails> details;
+	@JoinColumn(name="PostID")
+	@Fetch(FetchMode.JOIN)
+	private Set<CrmCollaborationDetails> details;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="CB_CreateDate")
@@ -111,11 +111,11 @@ public class CrmCollaboration implements Serializable{
 		this.colCreateDate = colCreateDate;
 	}
 
-	public List<CrmCollaborationTags> getTags() {
+	public Set<CrmCollaborationTags> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<CrmCollaborationTags> tags) {
+	public void setTags(Set<CrmCollaborationTags> tags) {
 		this.tags = tags;
 	}
 	
@@ -167,11 +167,11 @@ public class CrmCollaboration implements Serializable{
 		this.colOwn = colOwn;
 	}
 
-	public List<CrmCollaborationDetails> getDetails() {
+	public Set<CrmCollaborationDetails> getDetails() {
 		return details;
 	}
 
-	public void setDetails(List<CrmCollaborationDetails> details) {
+	public void setDetails(Set<CrmCollaborationDetails> details) {
 		this.details = details;
 	}
 

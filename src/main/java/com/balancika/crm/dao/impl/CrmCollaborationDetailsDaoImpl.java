@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -25,7 +24,7 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			details.setColDelCreateDate(LocalDateTime.now());
+			details.setCreateDate(LocalDateTime.now());
 			session.save(details);
 			session.getTransaction().commit();
 			session.close();
@@ -61,9 +60,8 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 		try {
 			session.beginTransaction();
 			CrmCollaborationDetails details = new CrmCollaborationDetails();
-			details.setColDelId(detailsId);
-			details.setColDelCreateDate(LocalDateTime.now());
-			session.save(details);
+			details.setCommentId(detailsId);
+			session.delete(details);
 			session.getTransaction().commit();
 			session.close();
 			return true;
@@ -81,7 +79,6 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCollaborationDetails.class);
-			criteria.addOrder(Order.desc("collapId"));
 			return criteria.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();

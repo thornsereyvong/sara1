@@ -36,7 +36,6 @@ public class CollaborationDetailsController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		map.put("DATA", details);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

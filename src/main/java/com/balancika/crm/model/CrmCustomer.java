@@ -69,6 +69,11 @@ public class CrmCustomer implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	private CrmAccountType accountTypeID;
 	
+	@Column(name = "")
+	private String priceCode;
+	
+	private String custGroupId;
+	
 	public String getCustID() {
 		return custID;
 	}
