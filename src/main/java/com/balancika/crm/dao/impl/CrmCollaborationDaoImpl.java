@@ -107,7 +107,7 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 					details.setFormatCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(details.getCreateDate()));
 				}
 				collaborations.get(i).setLike(likeDao.countLike(collaborations.get(i).getColId()));
-				collaborations.get(i).setCheckLike(likeDao.checkUserLike(collaborations.get(i).getColUser()));
+				collaborations.get(i).setCheckLike(likeDao.checkUserLike(collaborations.get(i).getColUser(),collaborations.get(i).getColId()));
 			}
 			return collaborations;
 		} catch (HibernateException e) {

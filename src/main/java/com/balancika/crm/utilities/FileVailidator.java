@@ -1,10 +1,12 @@
 package com.balancika.crm.utilities;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.balancika.crm.model.FileUpload;
 
+@Component
 public class FileVailidator implements Validator{
 
 	@Override

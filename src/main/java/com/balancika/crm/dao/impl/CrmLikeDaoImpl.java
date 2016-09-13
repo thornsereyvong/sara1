@@ -72,11 +72,12 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 	}
 
 	@Override
-	public boolean checkUserLike(String username) {
+	public boolean checkUserLike(String username, int postId) {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLike.class);
 			criteria.add(Restrictions.eq("username", username));
+			criteria.add(Restrictions.eq("collapId", postId));
 			criteria.setProjection(Projections.rowCount());
 			if(((Number)criteria.uniqueResult()).intValue() > 0){
 				return true;
