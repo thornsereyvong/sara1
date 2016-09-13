@@ -53,7 +53,7 @@ public class CrmLikeController {
 			}else{
 				map.put("MESSAGE", "FAILED");
 			}
-		}else if(jsonMap.get("likeStatus").equals(false)){
+		}else {
 			if(likeService.deleteLike(jsonMap.get("username").toString()) == true){
 				map.put("MESSAGE", "UNLIKED");
 			}else{
