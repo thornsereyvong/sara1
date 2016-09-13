@@ -98,7 +98,6 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
 			criteria.add(Restrictions.eq("colRelatedToModuleId", moduleId));
-			criteria.addOrder(Order.asc("colCreateDate"));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			criteria.addOrder(Order.desc("colCreateDate"));
 			collaborations = criteria.list();
