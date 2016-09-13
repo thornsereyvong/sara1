@@ -62,6 +62,7 @@ public class CollaborationDetailsController {
 		if(detailsService.insertCollaborationDetails(details) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			map.put("COMMENTS", detailsService.findCollaborationDetailsById(details.getCommentId()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		

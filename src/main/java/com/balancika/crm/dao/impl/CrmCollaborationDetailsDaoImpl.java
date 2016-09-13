@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmCollaborationDetailsDao;
 import com.balancika.crm.model.CrmCollaborationDetails;
+import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDao{
@@ -89,6 +90,8 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 	@Override
 	public CrmCollaborationDetails findCollaborationDetailsById(int detailsId) {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		return (CrmCollaborationDetails) session.get(CrmCollaborationDetails.class, detailsId);
+		CrmCollaborationDetails details = (CrmCollaborationDetails) session.get(CrmCollaborationDetails.class, detailsId);
+		details.setFormatCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(details.getCreateDate()));
+		return details;
 	}
 }
