@@ -44,7 +44,7 @@ public class CrmLikeController {
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(jsonMap.get("likeStatus").equals(true)){
+		if(jsonMap.get("likeStatus").equalsIgnoreCase("true")){
 			CrmLike like = new CrmLike();
 			like.setCollapId(Integer.parseInt(jsonMap.get("collapId")));
 			like.setUsername(jsonMap.get("username").toString());
