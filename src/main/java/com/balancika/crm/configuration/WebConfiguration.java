@@ -29,13 +29,6 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
 		return resolver;
 	}
 	
-	/*@Bean
-	public MessageSource messageSource() {
-	    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-	    messageSource.setBasename("messages");
-	    return messageSource;
-	}*/
-	
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
 	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();

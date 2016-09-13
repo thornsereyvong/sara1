@@ -32,7 +32,7 @@ public class CrmLikeController {
 		return new ResponseEntity<Map<String,Object>>(map , HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/like", method = RequestMethod.GET)
+	@RequestMapping(value = "/like", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> likeOperation(@RequestBody String json){
 		
 		ObjectMapper mapper = new ObjectMapper();
