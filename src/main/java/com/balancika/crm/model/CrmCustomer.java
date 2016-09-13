@@ -69,10 +69,17 @@ public class CrmCustomer implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	private CrmAccountType accountTypeID;
 	
-	@Column(name = "")
+	@Column(name = "PriceCode")
 	private String priceCode;
 	
+	@Column(name="CustGroupID")
 	private String custGroupId;
+	
+	@Column(name="CrmApproval")
+	private int approval;
+	
+	@Column(name="CrmImageName")
+	private String imageName;
 	
 	public String getCustID() {
 		return custID;
@@ -186,4 +193,61 @@ public class CrmCustomer implements Serializable{
 		this.accountTypeID = accountTypeID;
 	}
 
+	/**
+	 * @return the priceCode
+	 */
+	public String getPriceCode() {
+		return priceCode;
+	}
+
+	/**
+	 * @param priceCode the priceCode to set
+	 */
+	public void setPriceCode(String priceCode) {
+		this.priceCode = priceCode;
+	}
+
+	/**
+	 * @return the custGroupId
+	 */
+	public String getCustGroupId() {
+		return custGroupId;
+	}
+
+	/**
+	 * @param custGroupId the custGroupId to set
+	 */
+	public void setCustGroupId(String custGroupId) {
+		this.custGroupId = custGroupId;
+	}
+
+	/**
+	 * @return the approval
+	 */
+	public int getApproval() {
+		return approval;
+	}
+
+	/**
+	 * @param approval the approval to set
+	 */
+	public void setApproval(int approval) {
+		this.approval = approval;
+	}
+
+	/**
+	 * @return the imageName
+	 */
+	public String getImageName() {
+		return imageName;
+	}
+
+	/**
+	 * @param imageName the imageName to set
+	 */
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	
 }

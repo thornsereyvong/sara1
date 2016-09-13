@@ -63,6 +63,7 @@ public class CollaborationController {
 		if(collaborationService.insertCollaboration(collaboration) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			map.put("COLLABORATION", collaborationService.findCollaborationById(collaboration.getColId()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
