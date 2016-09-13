@@ -4,6 +4,6 @@ import com.balancika.crm.model.CrmLike;
 
 public interface CrmLikeService {
 	boolean insertLike(CrmLike like);
-	boolean deleteLike(String username);
+	boolean deleteLike(int collapId);
 	Integer countLike(int collapId);
 }

@@ -22,8 +22,8 @@ public class CrmLikeServiceImpl implements CrmLikeService{
 	}
 
 	@Override
-	public boolean deleteLike(String username) {
-		return likeDao.deleteLike(username);
+	public boolean deleteLike(int collapId) {
+		return likeDao.deleteLike(collapId);
 	}
 
 	@Override

@@ -37,12 +37,12 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 	}
 
 	@Override
-	public boolean deleteLike(String username) {
+	public boolean deleteLike(int collapId) {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_user_like_collaboration WHERE LK_UserName = :username");
-			query.setParameter("username", username);
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_user_like_collaboration WHERE LK_CBID = :collapId");
+			query.setParameter("collapId", collapId);
 			session.getTransaction().commit();
 			if(query.executeUpdate() > 0){
 				session.close();
