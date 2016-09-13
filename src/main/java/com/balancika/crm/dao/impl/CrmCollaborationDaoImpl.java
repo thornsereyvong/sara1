@@ -100,6 +100,7 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			criteria.add(Restrictions.eq("colRelatedToModuleId", moduleId));
 			criteria.addOrder(Order.asc("colCreateDate"));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			criteria.addOrder(Order.desc("colCreateDate"));
 			collaborations = criteria.list();
 			for(int i = 0; i < collaborations.size(); i++){
 				collaborations.get(i).setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(collaborations.get(i).getColCreateDate()));
@@ -125,7 +126,9 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
 			criteria.add(Restrictions.eq("colId", collapId));
-			return (CrmCollaboration)criteria.uniqueResult();
+			CrmCollaboration collaboration = (CrmCollaboration)criteria.uniqueResult();
+			collaboration.setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(collaboration.getColCreateDate()));
+			return collaboration;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		} finally {
