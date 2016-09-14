@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -49,6 +50,7 @@ public class CrmCollaboration implements Serializable{
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name="PostID")
 	@Fetch(FetchMode.JOIN)
+	@OrderBy(value = "CommentID ASC")
 	private Set<CrmCollaborationDetails> details;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
