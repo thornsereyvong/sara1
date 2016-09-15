@@ -26,6 +26,8 @@ import com.balancika.crm.services.CrmLeadService;
 import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmLeadStatusService;
 import com.balancika.crm.services.CrmOpportunityService;
+import com.balancika.crm.services.CrmOpportunityStageService;
+import com.balancika.crm.services.CrmOpportunityTypeService;
 import com.balancika.crm.services.CrmUserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,6 +62,12 @@ public class LeadController {
 	
 	@Autowired
 	private CrmOpportunityService opportunityService;
+	
+	@Autowired
+	private CrmOpportunityTypeService typeService;
+	
+	@Autowired
+	private CrmOpportunityStageService stageService;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -256,11 +264,18 @@ public class LeadController {
 		}
 	}
 	
-	@RequestMapping(value = "/convert/startup", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> convertLeadStartup(){
+	@RequestMapping(value = "/convert/startup/{username}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> convertLeadStartup(@PathVariable("username") String username){
 		Map<String , Object> map = new HashMap<String, Object>();
 		map.put("CUSTOMER", customerService.listCustomerIdAndName());
 		map.put("CONTACT", contactService.listContactRelatedToModule());
+		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
+		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
+		map.put("INDUSTRY", industryService.listIndustries());
+		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
+		map.put("OPP_TYPES", typeService.listOpportunityTypes());
+		map.put("OPP_STAGES", stageService.listOpportunityStages());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
