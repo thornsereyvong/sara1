@@ -41,7 +41,6 @@ public class CrmOpportunity implements Serializable{
 	@Type(type="date")
 	@Column(name="OP_CloseDate", nullable = false)
 	private Date opCloseDate;
-	
 
 	@JoinColumn(name="OP_TypeID", nullable = true)
 	@ManyToOne(optional = true, targetEntity = CrmOpportunityType.class)
