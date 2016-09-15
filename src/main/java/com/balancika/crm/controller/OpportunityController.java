@@ -70,6 +70,9 @@ public class OpportunityController {
 	@Autowired
 	private CrmLeadSourceService sourceService;
 	
+	@Autowired
+	private ObjectMapper mapper;
+	
 	@RequestMapping(value="/list_all", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listOpportunties(){
 		
@@ -116,7 +119,6 @@ public class OpportunityController {
 	@RequestMapping(value="/view", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listInformationRelatedToOpportunity(@RequestBody String json){
 		
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, String> jsonMap = new HashMap<String, String>();
 		try {
 			jsonMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
@@ -178,6 +180,25 @@ public class OpportunityController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
+	@RequestMapping(value="/add/startup", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> addOnStartupPage(@RequestBody String json){
+		
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		try {
+			jsonMap = mapper.readValue(json, new TypeReference<Map<String, Object>>(){});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(jsonMap.get("username").toString()));
+		map.put("OPP_TYPES", typeService.listOpportunityTypes());
+		map.put("OPP_STAGES", stageService.listOpportunityStages());
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("CAMPAIGNS", campaignService.listIdAndNameOfCompaign());
+		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addNewOpportunity(@RequestBody CrmOpportunity opportunity){
 		
@@ -192,6 +213,26 @@ public class OpportunityController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@RequestMapping(value="/edit/startup", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> editOnStartupPage(@RequestBody String json){
+		
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		try {
+			jsonMap = mapper.readValue(json, new TypeReference<Map<String, Object>>(){});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(jsonMap.get("username").toString()));
+		map.put("OPP_TYPES", typeService.listOpportunityTypes());
+		map.put("OPP_STAGES", stageService.listOpportunityStages());
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("CAMPAIGNS", campaignService.listIdAndNameOfCompaign());
+		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
+		map.put("OPPORTUNITY", opService.findOpportunityById(jsonMap.get("opId").toString()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")

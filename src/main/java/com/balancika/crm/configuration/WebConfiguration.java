@@ -9,6 +9,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages="com.balancika.crm")
@@ -34,6 +36,11 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
 	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
 	    multipartResolver.setMaxUploadSize(5242880);
 	    return new CommonsMultipartResolver();
+	}
+	
+	@Bean
+	public ObjectMapper mapper(){
+		return new ObjectMapper();
 	}
 	
 }

@@ -14,7 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.services.CrmCasePriorityService;
 import com.balancika.crm.services.CrmCaseService;
+import com.balancika.crm.services.CrmCaseStatusService;
+import com.balancika.crm.services.CrmCaseTypeService;
+import com.balancika.crm.services.CrmContactService;
+import com.balancika.crm.services.CrmCustomerService;
+import com.balancika.crm.services.CrmUserService;
 
 @RestController
 @RequestMapping("/api/case")
@@ -22,6 +28,24 @@ public class CaseController {
 	
 	@Autowired
 	private CrmCaseService caseService;
+	
+	@Autowired
+	private CrmUserService userService;
+	
+	@Autowired
+	private CrmCustomerService customerService;
+	
+	@Autowired
+	private CrmContactService contactService;
+	
+	@Autowired
+	private CrmCaseTypeService typeService;
+	
+	@Autowired
+	private CrmCaseStatusService statusService;
+	
+	@Autowired
+	private CrmCasePriorityService priorityService;
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCases(){
@@ -56,6 +80,19 @@ public class CaseController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value = "/startup/{username}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> caseAddStartupPage(@PathVariable("username") String username){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CASE_STATUS", statusService.listCaseStatus());
+		map.put("CASE_TYPE", typeService.listCaseTypes());
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("CONTACTS", contactService.listContacts());
+		map.put("CASE_PRIORITY", priorityService.listCasePriorities());
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/list/details/{caseId}", method = RequestMethod.GET, produces = "application/json")
