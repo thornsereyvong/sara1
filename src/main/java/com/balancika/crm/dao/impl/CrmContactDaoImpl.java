@@ -8,6 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -101,5 +102,18 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	@Override
 	public CrmContact findContactDetailsById(String conId) {
 		return (CrmContact) transactionManager.getSessionFactory().getCurrentSession().get(CrmContact.class, conId);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> listContactRelatedToModule() {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmContact.class);
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.property("conID"), "conID")
+				.add(Projections.property("conFirstname"),"conFirstname")
+				.add(Projections.property("conLastname"), "conLastname"));
+		criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return criteria.list();
 	}
 }

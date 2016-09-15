@@ -89,9 +89,23 @@ public class CaseController {
 		map.put("CASE_STATUS", statusService.listCaseStatus());
 		map.put("CASE_TYPE", typeService.listCaseTypes());
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
-		map.put("CONTACTS", contactService.listContacts());
+		map.put("CONTACTS", contactService.listContactRelatedToModule());
 		map.put("CASE_PRIORITY", priorityService.listCasePriorities());
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/startup/{username}/{caseId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> caseEditStartupPage(@PathVariable("username") String username, @PathVariable("caseId") String caseId){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CASE_STATUS", statusService.listCaseStatus());
+		map.put("CASE_TYPE", typeService.listCaseTypes());
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("CONTACTS", contactService.listContactRelatedToModule());
+		map.put("CASE_PRIORITY", priorityService.listCasePriorities());
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
+		map.put("CASE", caseService.findCaseById(caseId));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

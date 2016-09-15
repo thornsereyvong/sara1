@@ -3,8 +3,6 @@ package com.balancika.crm.services.impl;
 import java.util.List;
 
 import javax.transaction.Transactional;
-
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,63 +19,38 @@ public class CrmContactServiceImpl implements CrmContactService{
 	
 	@Override
 	public boolean insertContact(CrmContact contact) {
-		try{
-			return contactDao.insertContact(contact);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return contactDao.insertContact(contact);
 		
 	}
 
 	@Override
 	public boolean updateContact(CrmContact contact) {
-		try{
-			return contactDao.updateContact(contact);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return contactDao.updateContact(contact);
 	}
 
 	@Override
 	public boolean deleteContact(String conId) {
-		try{
-			return contactDao.deleteContact(conId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return contactDao.deleteContact(conId);
 	}
 
 	@Override
 	public List<CrmContact> listContacts() {
-		try{
-			return contactDao.listContacts();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return contactDao.listContacts();
 	}
 
 	@Override
 	public Object findContactById(String conId) {
-		try{
-			return contactDao.findContactById(conId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return contactDao.findContactById(conId);
 	}
 
 	@Override
 	public CrmContact findContactDetailsById(String conId) {
-		try{
-			return contactDao.findContactDetailsById(conId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+		return contactDao.findContactDetailsById(conId);
+	}
+
+	@Override
+	public List<Object> listContactRelatedToModule() {
+		return contactDao.listContactRelatedToModule();
 	}
 
 }

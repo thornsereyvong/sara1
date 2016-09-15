@@ -12,4 +12,5 @@ public interface CrmContactDao {
 	List<CrmContact> listContacts();
 	Object findContactById(String conId);
 	CrmContact findContactDetailsById(String conId);
+	List<Object> listContactRelatedToModule();
 }
