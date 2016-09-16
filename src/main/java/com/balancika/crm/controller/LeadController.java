@@ -272,8 +272,8 @@ public class LeadController {
 		}
 	}
 	
-	@RequestMapping(value = "/convert/startup/{username}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> convertLeadStartup(@PathVariable("username") String username){
+	@RequestMapping(value = "/convert/startup/{username}/{leadId}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> convertLeadStartup(@PathVariable("username") String username, @PathVariable("leadId") String leadId){
 		Map<String , Object> map = new HashMap<String, Object>();
 		map.put("GROUP", groupService.listCustomerGroups());
 		map.put("PRICE_CODE", customerService.listPriceCode());
@@ -287,6 +287,7 @@ public class LeadController {
 		map.put("OPP_TYPES", typeService.listOpportunityTypes());
 		map.put("OPP_STAGES", stageService.listOpportunityStages());
 		map.put("CUSTOMER_TYPE", accountTypeService.listAccountTypes());
+		map.put("LEAD", leadService.findLeadById(leadId));
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
@@ -294,6 +295,7 @@ public class LeadController {
 	public ResponseEntity<Map<String, Object>> convertLead(@RequestBody String json){
 		Map<String , Object> map = new HashMap<String, Object>();
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		String custId = "";
 		try {
 			jsonMap = mapper.readValue(json, new TypeReference<Map<String, Object>>() {});
 		} catch (IOException e) {
@@ -306,9 +308,11 @@ public class LeadController {
 				if(customerService.insertCustomer(customer) == true){
 					map.put("MESSAGE", "LEAD CONVERT TO CUSTOMER SUCCESS");
 					map.put("STATUS", HttpStatus.OK.value());
+					custId = customer.getCustID();
 				}else{
 					map.put("MESSAGE", "CONVERT TO CUSTOMER FAILED");
 					map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+					custId = jsonMap.get("custID").toString();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -341,6 +345,9 @@ public class LeadController {
 			org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
 			try {
 				CrmOpportunity opportunity = objectMapper.readValue(jsonMap.get("OPPORTUNITY").toString(), CrmOpportunity.class);
+				CrmCustomer customer = new CrmCustomer();
+				customer.setCustID(custId);
+				opportunity.setCustomer(customer);
 				if(opportunityService.isInsertOpportunity(opportunity) == true){
 					map.put("MESSAGE", "LEAD CONVERT TO OPPORTUNITY SUCCESS");
 					map.put("STATUS", HttpStatus.OK.value());
