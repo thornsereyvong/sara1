@@ -3,6 +3,7 @@ package com.balancika.crm.services.impl;
 import java.util.List;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,11 @@ public class CrmContactServiceImpl implements CrmContactService{
 	@Override
 	public List<Object> listContactRelatedToModule() {
 		return contactDao.listContactRelatedToModule();
+	}
+
+	@Override
+	public List<Object> listParentOfContact() {
+		return contactDao.listParentOfContact();
 	}
 
 }

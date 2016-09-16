@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -87,10 +88,10 @@ public class CrmContact implements Serializable{
 	@JoinColumn(name="CO_LeadSource", nullable = true)
 	private CrmLeadSource conLeadSource;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="CO_ReportTo", nullable = true)
-	private CrmUser conReportTo;
+	private CrmContact conReportTo;
 	
 	@Column(name="CO_CBy", updatable = false)
 	private String conCreateBy;
@@ -293,12 +294,12 @@ public class CrmContact implements Serializable{
 	}
 
 
-	public CrmUser getConReportTo() {
+	public CrmContact getConReportTo() {
 		return conReportTo;
 	}
 
 
-	public void setConReportTo(CrmUser conReportTo) {
+	public void setConReportTo(CrmContact conReportTo) {
 		this.conReportTo = conReportTo;
 	}
 
