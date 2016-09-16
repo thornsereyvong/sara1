@@ -18,6 +18,7 @@ import com.balancika.crm.model.CrmContact;
 import com.balancika.crm.model.CrmCustomer;
 import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.CrmOpportunity;
+import com.balancika.crm.services.CrmAccountTypeService;
 import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
@@ -72,6 +73,9 @@ public class LeadController {
 	
 	@Autowired
 	private CustomerGroupService groupService;
+	
+	@Autowired
+	private CrmAccountTypeService accountTypeService;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -282,6 +286,7 @@ public class LeadController {
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
 		map.put("OPP_TYPES", typeService.listOpportunityTypes());
 		map.put("OPP_STAGES", stageService.listOpportunityStages());
+		map.put("CUSTOMER_TYPE", accountTypeService.listAccountTypes());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
