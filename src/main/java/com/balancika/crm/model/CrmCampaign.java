@@ -253,4 +253,5 @@ public class CrmCampaign implements Serializable {
 	public void setType(CrmCampaignType type) {
 		this.type = type;
 	}
+	
 }

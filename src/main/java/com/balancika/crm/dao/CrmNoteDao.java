@@ -12,4 +12,5 @@ public interface CrmNoteDao{
 	CrmNote findNoteById(String noteId);
 	List<CrmNote> listNoteRelatedToLead(String leadId);
 	List<CrmNote> listNotesRelatedToOpportunity(String opId);
+	List<CrmNote> listNoteRelatedToEachModule(String moduleId);
 }

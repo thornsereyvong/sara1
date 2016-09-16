@@ -1,6 +1,7 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -80,6 +82,9 @@ public class CrmCustomer implements Serializable{
 	
 	@Column(name="CrmImageName")
 	private String imageName;
+	
+	@Transient
+	private List<CrmCustomerDetails> custDetails;
 	
 	public String getCustID() {
 		return custID;
@@ -249,5 +254,17 @@ public class CrmCustomer implements Serializable{
 		this.imageName = imageName;
 	}
 
-	
+	/**
+	 * @return the custDetails
+	 */
+	public List<CrmCustomerDetails> getCustDetails() {
+		return custDetails;
+	}
+
+	/**
+	 * @param custDetails the custDetails to set
+	 */
+	public void setCustDetails(List<CrmCustomerDetails> custDetails) {
+		this.custDetails = custDetails;
+	}
 }

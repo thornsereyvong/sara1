@@ -58,4 +58,9 @@ public class CrmTaskServiceImpl implements CrmTaskService{
 		return taskDao.listTasksRelatedToOpportunity(opId);
 	}
 
+	@Override
+	public List<CrmTask> listTasksRelatedToModule(String moduleId) {
+		return taskDao.listTasksRelatedToModule(moduleId);
+	}
+
 }

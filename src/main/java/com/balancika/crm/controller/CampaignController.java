@@ -19,6 +19,10 @@ import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmCampaignStatusService;
 import com.balancika.crm.services.CrmCampaignTypeService;
+import com.balancika.crm.services.CrmCollaborationService;
+import com.balancika.crm.services.CrmEventService;
+import com.balancika.crm.services.CrmNoteService;
+import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmUserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +42,18 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmUserService userService;
+	
+	@Autowired
+	private CrmCollaborationService collaborationService;
+	
+	@Autowired
+	private CrmNoteService noteService;
+	
+	@Autowired
+	private CrmTaskService taskService;
+	
+	@Autowired
+	private CrmEventService eventService;
 
 	@RequestMapping(value="/list", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> allCampaign(){
@@ -91,6 +107,18 @@ public class CampaignController {
 		map.put("MESSAGE", "SUCCESS");
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("DATA", arrCamp);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/view/{campID}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> viewCampaignById(@PathVariable("campID") String campID){
+	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CAMPAIGN", campaignService.findCampaignById(campID));
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(campID));
+		map.put("NOTES", noteService.listNoteRelatedToEachModule(campID));
+		map.put("TASKS", taskService.listTasksRelatedToModule(campID));
+		map.put("EVENTS", eventService.listEventsRelatedToModule(campID));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

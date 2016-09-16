@@ -53,4 +53,9 @@ public class CrmNoteServiceImpl implements CrmNoteService{
 		return noteDao.listNotesRelatedToOpportunity(opId);
 	}
 
+	@Override
+	public List<CrmNote> listNoteRelatedToEachModule(String moduleId) {
+		return noteDao.listNoteRelatedToEachModule(moduleId);
+	}
+
 }

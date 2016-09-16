@@ -77,9 +77,6 @@ public class LeadController {
 	@Autowired
 	private CrmAccountTypeService accountTypeService;
 	
-	@Autowired
-	private ObjectMapper mapper;
-	
 	@RequestMapping(value = "/list_all", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getAllLead(){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -291,78 +288,95 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/convert", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> convertLead(@RequestBody String json){
 		Map<String , Object> map = new HashMap<String, Object>();
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		String custId = "";
+		org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
 		try {
-			jsonMap = mapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+			jsonMap = objectMapper.readValue(json, Map.class);
+			System.out.println(jsonMap);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(jsonMap.get("custID") == null){
-			org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
+		if(jsonMap.get("custID").equals("")){
 			try {
-				CrmCustomer customer = objectMapper.readValue(jsonMap.get("CUSTOMER").toString(), CrmCustomer.class);
+				String customerJson = objectMapper.writeValueAsString(jsonMap.get("CUSTOMER"));
+				CrmCustomer customer = objectMapper.readValue(customerJson, CrmCustomer.class);
 				if(customerService.insertCustomer(customer) == true){
-					map.put("MESSAGE", "LEAD CONVERT TO CUSTOMER SUCCESS");
-					map.put("STATUS", HttpStatus.OK.value());
+					map.put("CUST_MESSAGE", "SUCCESS");
+					map.put("CUST_STATUS", HttpStatus.OK.value());
 					custId = customer.getCustID();
 				}else{
-					map.put("MESSAGE", "CONVERT TO CUSTOMER FAILED");
-					map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+					map.put("CUST_MESSAGE", "FAILED");
+					map.put("CUST_STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 					custId = jsonMap.get("custID").toString();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}else{
-			map.put("MESSAGE", "CUSTOMER ALREADY EXIST");
-			map.put("STATUS", HttpStatus.OK.value());
+			map.put("CUST_MESSAGE", "EXIST");
+			map.put("CUST_STATUS", HttpStatus.OK.value());
 		}
 		
-		if(jsonMap.get("conID") == null){
-			org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
+		if(jsonMap.get("conID") != ""){
+			map.put("CON_MESSAGE", "EXIST");
+			map.put("STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}else if(map.get("CUST_MESSAGE").equals("FAILED")){
+			map.put("CUST_MESSAGE", "FAILED");
+			map.put("CUST_STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}else{
 			try {
-				CrmContact contact = objectMapper.readValue(jsonMap.get("CONTACT").toString(), CrmContact.class);
+				String contactJson = objectMapper.writeValueAsString(jsonMap.get("CONTACT"));
+				CrmContact contact = objectMapper.readValue(contactJson, CrmContact.class);
 				if(contactService.insertContact(contact) == true){
-					map.put("MESSAGE", "LEAD CONVERT TO CONTACT SUCCESS");
-					map.put("STATUS", HttpStatus.OK.value());
+					map.put("CON_MESSAGE", "SUCCESS");
+					map.put("CON_STATUS", HttpStatus.OK.value());
 				}else{
-					map.put("MESSAGE", "CONVERT TO CONTACT FAILED");
-					map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+					map.put("CON_MESSAGE", "FAILED");
+					map.put("CON_STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}else{
-			map.put("MESSAGE", "CONTACT ALREADY EXIST");
-			map.put("STATUS", HttpStatus.OK.value());
 		}
 		
-		if(jsonMap.get("OPPORTUNITY") != null){
-			org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
+		if(map.get("CON_MESSAGE").equals("FAILED")){
+			map.put("CON_MESSAGE", "CONVERT CONTACT FAILED");
+			map.put("CON_STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}else if(jsonMap.get("OPPORTUNITY").equals("")){
+			map.put("OP_MESSAGE", "NOT_CREATED");
+			map.put("OP_STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}
+		else{
 			try {
-				CrmOpportunity opportunity = objectMapper.readValue(jsonMap.get("OPPORTUNITY").toString(), CrmOpportunity.class);
+				String opportunityJson = objectMapper.writeValueAsString(jsonMap.get("OPPORTUNITY"));
+				CrmOpportunity opportunity = objectMapper.readValue(opportunityJson, CrmOpportunity.class);
 				CrmCustomer customer = new CrmCustomer();
 				customer.setCustID(custId);
 				opportunity.setCustomer(customer);
 				if(opportunityService.isInsertOpportunity(opportunity) == true){
-					map.put("MESSAGE", "LEAD CONVERT TO OPPORTUNITY SUCCESS");
-					map.put("STATUS", HttpStatus.OK.value());
+					map.put("OP_MESSAGE", "SUCCESS");
+					map.put("OP_STATUS", HttpStatus.OK.value());
+					return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 				}else{
-					map.put("MESSAGE", "CONVERT TO OPPORTUNITY FAILED");
-					map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+					map.put("OP_MESSAGE", "FAILED");
+					map.put("OP_STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+					return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}else{
-			map.put("MESSAGE", "OPPORTUNITY ALREADY EXIST");
-			map.put("STATUS", HttpStatus.OK.value());
 		}
-		
+		map.put("MESSAGE", "SUCCESS");
+		map.put("STATUS", HttpStatus.OK.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 }

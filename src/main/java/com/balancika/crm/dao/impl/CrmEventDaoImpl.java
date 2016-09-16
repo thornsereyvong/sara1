@@ -132,4 +132,23 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmEvent> listEventsRelatedToModule(String moduleId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmEvent.class);
+			criteria.add(Restrictions.eq("evRelatedToModuleId", moduleId));
+			List<CrmEvent> events = criteria.list();
+			for(CrmEvent event : events){
+				event.setStartDate(new DateTimeOperation().reverseLocalDateTimeToString(event.getEvStartDate()));
+				event.setEndDate(new DateTimeOperation().reverseLocalDateTimeToString(event.getEvEndDate()));
+			}
+			return events;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

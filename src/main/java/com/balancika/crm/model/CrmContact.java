@@ -30,6 +30,9 @@ public class CrmContact implements Serializable{
 	@Column(name="CO_ID", nullable = false, length = 11)
 	private String conID;
 	
+	@Column(name="CO_Salutation")
+	private String conSalutation;
+	
 	@NotEmpty
 	@Column(name="CO_FirstName", nullable = false)
 	private String conFirstname;

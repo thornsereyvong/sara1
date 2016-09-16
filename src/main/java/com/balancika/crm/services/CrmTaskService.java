@@ -13,5 +13,5 @@ public interface CrmTaskService {
 	CrmTask findTaskDetailsById(String taskId);
 	List<CrmTask> listTasksRelatedToLead(String leadId);
 	List<CrmTask> listTasksRelatedToOpportunity(String opId);
-	
+	List<CrmTask> listTasksRelatedToModule(String moduleId);
 }

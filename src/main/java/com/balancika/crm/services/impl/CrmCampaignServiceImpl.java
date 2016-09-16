@@ -66,5 +66,4 @@ public class CrmCampaignServiceImpl implements CrmCampaignService{
 	public List<Object> listIdAndNameOfCompaign() {
 		return dao.listIdAndNameOfCompaign();
 	}
-
 }

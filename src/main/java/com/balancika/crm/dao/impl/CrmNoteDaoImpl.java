@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.balancika.crm.dao.CrmNoteDao;
 import com.balancika.crm.model.CrmNote;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
@@ -119,6 +120,24 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 				query.setParameter("opId", opId);
 				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmNote> listNoteRelatedToEachModule(String moduleId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmNote.class);
+			criteria.add(Restrictions.eq("noteRelatedToModuleId", moduleId));
+			List<CrmNote> notes = criteria.list();
+			for(CrmNote note : notes){
+				note.setCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(note.getNoteCreateDate()));
+			}
+			return criteria.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		}

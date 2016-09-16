@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -48,6 +49,9 @@ public class CrmNote implements Serializable{
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="N_CDate", updatable = false)
 	private LocalDateTime noteCreateDate;
+	
+	@Transient
+	private String createDate;
 	
 	@Column(name="N_MBy")
 	private String noteModifiedBy;
@@ -127,6 +131,20 @@ public class CrmNote implements Serializable{
 
 	public void setNoteModifiedDate(Date noteModifiedDate) {
 		this.noteModifiedDate = noteModifiedDate;
+	}
+
+	/**
+	 * @return the createDate
+	 */
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	/**
+	 * @param createDate the createDate to set
+	 */
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
 	}
 	
 }

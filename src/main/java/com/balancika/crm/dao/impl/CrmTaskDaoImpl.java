@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -129,6 +130,25 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 				query.setParameter("opId", opId);
 				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmTask> listTasksRelatedToModule(String moduleId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmTask.class);
+			criteria.add(Restrictions.eq("taskRelatedToId", moduleId));
+			List<CrmTask> tasks = criteria.list();
+			for(CrmTask task : tasks){
+				task.setStartDate(new DateTimeOperation().reverseLocalDateTimeToString(task.getTaskStartDate()));
+				task.setDueDate(new DateTimeOperation().reverseLocalDateTimeToString(task.getTaskDueDate()));
+			}
+			return tasks;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		}

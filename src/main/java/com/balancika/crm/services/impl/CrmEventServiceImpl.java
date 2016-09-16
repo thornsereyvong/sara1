@@ -57,4 +57,9 @@ public class CrmEventServiceImpl implements CrmEventService{
 	public List<CrmEvent> listEventsRelatedToOpportunity(String opId) {
 		return eventDao.listEventsRelatedToOpportunity(opId);
 	}
+
+	@Override
+	public List<CrmEvent> listEventsRelatedToModule(String moduleId) {
+		return eventDao.listEventsRelatedToModule(moduleId);
+	}
 }
