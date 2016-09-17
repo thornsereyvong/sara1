@@ -125,6 +125,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		Criteria criteria = session.createCriteria(CrmContact.class);
 		criteria.setProjection(Projections.projectionList()
 							.add(Projections.property("conID"), "conID")
+							.add(Projections.property("conSalutation"), "conSalutation")
 							.add(Projections.property("conFirstname"), "conFirstname")
 							.add(Projections.property("conLastname"), "conLastname"));
 		criteria.add(Restrictions.eqOrIsNull("conReportTo", null));
