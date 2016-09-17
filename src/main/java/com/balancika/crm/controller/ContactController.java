@@ -129,7 +129,6 @@ public class ContactController {
 
 	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateContact(@RequestBody CrmContact contact){
-	
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(contactService.updateContact(contact) == false){
 			map.put("MESSAGE", "FAILED");
