@@ -34,6 +34,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 			session.getTransaction().commit();
 			return true;
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} catch (ConstraintViolationException e) {
 			session.getTransaction().rollback();
@@ -52,6 +53,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 			session.getTransaction().commit();
 			return true;
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} catch (ConstraintViolationException e) {
 			session.getTransaction().rollback();
