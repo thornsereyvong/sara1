@@ -144,4 +144,19 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmCall> listCallsRelatedToModule(String moduleId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToModule(:moduleId)");
+			query.setParameter("moduleId", moduleId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

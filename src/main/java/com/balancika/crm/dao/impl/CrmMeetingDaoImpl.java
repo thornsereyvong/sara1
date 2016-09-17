@@ -109,7 +109,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmMeeting> listTasksRelatedToLead(String leadId) {
+	public List<CrmMeeting> listMeetingsRelatedToLead(String leadId) {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToLead(:leadId)");
@@ -124,11 +124,26 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmMeeting> listTasksRelatedToOpportunity(String opId) {
+	public List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId) {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToOpportunity(:opId)");
 				query.setParameter("opId", opId);
+				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+				return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmMeeting> listMeetingsRelatedToModule(String moduleId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToModule(:moduleId)");
+				query.setParameter("moduleId", moduleId);
 				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 				return query.list();
 		} catch (HibernateException e) {

@@ -55,7 +55,7 @@ public class MeetingController {
 	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToLead(@PathVariable("leadId") String leadId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmMeeting> meetings = meetingService.listTasksRelatedToLead(leadId);
+		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToLead(leadId);
 		if(meetings != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -71,7 +71,7 @@ public class MeetingController {
 	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToOpportunity(@PathVariable("opId") String opId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmMeeting> meetings = meetingService.listTasksRelatedToOpportunity(opId);
+		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToOpportunity(opId);
 		if(meetings != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());

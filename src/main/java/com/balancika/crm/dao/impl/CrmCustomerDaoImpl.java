@@ -117,6 +117,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		Criteria criteria = session.createCriteria(CrmCustomerDetails.class);
 		criteria.add(Restrictions.eq("custId", custId));
+		criteria.addOrder(Order.asc("aId"));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}

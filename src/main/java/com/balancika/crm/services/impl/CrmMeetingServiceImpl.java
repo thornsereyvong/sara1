@@ -49,13 +49,18 @@ public class CrmMeetingServiceImpl implements CrmMeetingService{
 	}
 
 	@Override
-	public List<CrmMeeting> listTasksRelatedToLead(String leadId) {
-		return meetingDao.listTasksRelatedToLead(leadId);
+	public List<CrmMeeting> listMeetingsRelatedToLead(String leadId) {
+		return meetingDao.listMeetingsRelatedToLead(leadId);
 	}
 
 	@Override
-	public List<CrmMeeting> listTasksRelatedToOpportunity(String opId) {
-		return meetingDao.listTasksRelatedToOpportunity(opId);
+	public List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId) {
+		return meetingDao.listMeetingsRelatedToOpportunity(opId);
+	}
+
+	@Override
+	public List<CrmMeeting> listMeetingsRelatedToModule(String moduleId) {
+		return meetingDao.listMeetingsRelatedToModule(moduleId);
 	}
 	
 	

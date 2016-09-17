@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCampaign;
+import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmCampaignStatusService;
 import com.balancika.crm.services.CrmCampaignTypeService;
 import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmEventService;
+import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmUserService;
@@ -54,6 +56,12 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmEventService eventService;
+	
+	@Autowired
+	private CrmCallService callService;
+	
+	@Autowired
+	private CrmMeetingService meetingService;
 
 	@RequestMapping(value="/list", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> allCampaign(){
@@ -119,6 +127,8 @@ public class CampaignController {
 		map.put("NOTES", noteService.listNoteRelatedToEachModule(campID));
 		map.put("TASKS", taskService.listTasksRelatedToModule(campID));
 		map.put("EVENTS", eventService.listEventsRelatedToModule(campID));
+		map.put("CALLS", callService.listCallsRelatedToModule(campID));
+		map.put("MEETINGS", meetingService.listMeetingsRelatedToModule(campID));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

@@ -131,7 +131,7 @@ public class OpportunityController {
 		map.put("OPPORTUNITY", opService.findOpportunityById(jsonMap.get("opId").toString()));
 		map.put("CALLS", callService.listCallsRelatedToOpportunity(jsonMap.get("opId").toString()));
 		map.put("TASKS", taskService.listTasksRelatedToOpportunity(jsonMap.get("opId").toString()));
-		map.put("MEETINGS",meetingService.listTasksRelatedToOpportunity(jsonMap.get("opId").toString()));
+		map.put("MEETINGS",meetingService.listMeetingsRelatedToOpportunity(jsonMap.get("opId").toString()));
 		map.put("NOTES", noteService.listNotesRelatedToOpportunity(jsonMap.get("opId").toString()));
 		map.put("EVENTS", eventService.listEventsRelatedToOpportunity(jsonMap.get("opId").toString()));
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(jsonMap.get("username").toString()));

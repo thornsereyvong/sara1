@@ -11,6 +11,7 @@ public interface CrmMeetingService {
 	boolean deleteMeeting(String meetingId);
 	Object findMeetingById(String meetingId);
 	CrmMeeting findMeetingDetailsById(String meetingId);
-	List<CrmMeeting> listTasksRelatedToLead(String leadId);
-	List<CrmMeeting> listTasksRelatedToOpportunity(String opId);
+	List<CrmMeeting> listMeetingsRelatedToLead(String leadId);
+	List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId);
+	List<CrmMeeting> listMeetingsRelatedToModule(String moduleId);
 }

@@ -197,7 +197,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 	public Map<String,Object> viewActivitiesOfLeadById(String leadId) {
 		Map<String, Object> leadMap = new HashMap<String, Object>();
 		leadMap.put("CALLS", callDao.listCallsRelatedToLead(leadId));
-		leadMap.put("METTINGS", meetingDao.listTasksRelatedToLead(leadId));
+		leadMap.put("METTINGS", meetingDao.listMeetingsRelatedToLead(leadId));
 		leadMap.put("EVENTS", eventDao.listEventsRelatedToLead(leadId));
 		leadMap.put("TASKS", taskDao.listTasksRelatedToLead(leadId));
 		leadMap.put("NOTES", noteDao.listNoteRelatedToLead(leadId));

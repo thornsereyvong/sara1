@@ -58,4 +58,9 @@ public class CrmCallServiceImpl implements CrmCallService{
 		return callDao.listCallsRelatedToOpportunity(opId);
 	}
 
+	@Override
+	public List<CrmCall> listCallsRelatedToModule(String moduleId) {
+		return callDao.listCallsRelatedToModule(moduleId);
+	}
+
 }
