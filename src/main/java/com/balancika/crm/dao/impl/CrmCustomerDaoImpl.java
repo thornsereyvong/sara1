@@ -7,12 +7,14 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmCustomerDao;
 import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.CrmCustomerDetails;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
@@ -109,10 +111,21 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmCustomerDetails> listCustomerDetailsByCustId(String custId){
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmCustomerDetails.class);
+		criteria.add(Restrictions.eq("custId", custId));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
 
 	@Override
 	public CrmCustomer findCustomerById(String custID) {
-		return (CrmCustomer)transactionManager.getSessionFactory().getCurrentSession().get(CrmCustomer.class, custID);
+		CrmCustomer customer = (CrmCustomer)transactionManager.getSessionFactory().getCurrentSession().get(CrmCustomer.class, custID);
+		customer.setCustDetails(listCustomerDetailsByCustId(custID));
+		return customer;
 	}
 
 	@SuppressWarnings("unchecked")
