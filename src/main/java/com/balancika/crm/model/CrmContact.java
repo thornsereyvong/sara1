@@ -355,5 +355,19 @@ public class CrmContact implements Serializable{
 	public void setCustomer(CrmCustomer customer) {
 		this.customer = customer;
 	}
+
+	/**
+	 * @return the conSalutation
+	 */
+	public String getConSalutation() {
+		return conSalutation;
+	}
+
+	/**
+	 * @param conSalutation the conSalutation to set
+	 */
+	public void setConSalutation(String conSalutation) {
+		this.conSalutation = conSalutation;
+	}
 		
 }
