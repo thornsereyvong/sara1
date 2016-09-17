@@ -27,8 +27,18 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			customer.setCustID(ameIdAutoGenerator("CUST"));
-			session.save(customer);
+			String custId = ameIdAutoGenerator("CUST");
+			customer.setCustID(custId);
+			session.persist(customer);
+			for(int i = 0; i < customer.getCustDetails().size(); i++){
+				customer.getCustDetails().get(i).setCustId(custId);
+				session.save(customer.getCustDetails().get(i));
+				if(i % 20 == 0){
+					session.flush();
+			        session.clear();
+				}
+			}
+			session.flush();
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
@@ -45,6 +55,18 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		try {
 			session.beginTransaction();
 			session.update(customer);
+			SQLQuery query = session.createSQLQuery("DELETE FROM tblcustomerdetails WHERE CustID = :cusId");
+			query.setParameter("cusId", customer.getCustID());
+			if(query.executeUpdate() > 0){
+				for(int i = 0; i < customer.getCustDetails().size(); i++){
+					customer.getCustDetails().get(i).setCustId(customer.getCustID());
+					session.save(customer.getCustDetails().get(i));
+					if(i % 20 == 0){
+						session.flush();
+				        session.clear();
+					}
+				}
+			}
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
@@ -63,8 +85,12 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			SQLQuery query = session.createSQLQuery("DELETE FROM tblcustomer WHERE CustID = :custID");
 			query.setParameter("custID", custID);
 			if(query.executeUpdate() > 0){
+				SQLQuery detailsQuery = session.createSQLQuery("DELETE FROM tblcustomerdetails WHERE CustID = :custId");
+				detailsQuery.setParameter("custId", custID);
+				if(detailsQuery.executeUpdate() > 0){
+					return true;
+				}
 				session.getTransaction().commit();
-				return true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
