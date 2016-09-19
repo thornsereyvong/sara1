@@ -3,6 +3,7 @@ package com.balancika.crm.services.impl;
 import java.util.List;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,11 @@ public class CrmCustomerServiceImpl implements CrmCustomerService{
 	@Override
 	public List<PriceCode> listPriceCode() {
 		return customerDao.listPriceCode();
+	}
+
+	@Override
+	public CrmCustomer viewCustomerDetails(String custId) {
+		return customerDao.viewCustomerDetails(custId);
 	}
 
 }

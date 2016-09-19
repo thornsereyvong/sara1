@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmCampaignDao;
 import com.balancika.crm.model.CrmCampaign;
+import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -168,4 +169,28 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op").createAlias("op.opCampaign", "camp");
+			criteria.add(Restrictions.eq("camp.campID", campID));
+			criteria.setProjection(Projections.projectionList()
+					.add(Projections.property("opId"), "opId")
+					.add(Projections.property("opName"), "opName")
+					.add(Projections.property("opAmount"), "opAmount")
+					.add(Projections.property("opStageId"), "opStageId")
+					.add(Projections.property("opCloseDate"), "opCloseDate"));
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return criteria.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
 }

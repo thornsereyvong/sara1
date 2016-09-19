@@ -14,5 +14,5 @@ public interface CrmCustomerDao {
 	CrmCustomer findCustomerById(String custID);
 	List<Object> listCustomerIdAndName();
 	List<PriceCode> listPriceCode();
-	List<CrmCustomer> viewCustomerDetails(String custId);
+	CrmCustomer viewCustomerDetails(String custId);
 }

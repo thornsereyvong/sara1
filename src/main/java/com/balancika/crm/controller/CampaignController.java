@@ -133,6 +133,7 @@ public class CampaignController {
 		map.put("CAMP_PARENT", campaignService.listCampaignParents());
 		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
 		map.put("CAMP_TYPE", typeService.listAllCampaignType());
+		map.put("OPPORTUNITIES", campaignService.getOpportunitiesRelatedToCampaign(campID));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.balancika.crm.dao.CrmCampaignDao;
 import com.balancika.crm.model.CrmCampaign;
+import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.services.CrmCampaignService;
 
 @Service
@@ -65,5 +66,10 @@ public class CrmCampaignServiceImpl implements CrmCampaignService{
 	@Override
 	public List<Object> listIdAndNameOfCompaign() {
 		return dao.listIdAndNameOfCompaign();
+	}
+
+	@Override
+	public List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID) {
+		return dao.getOpportunitiesRelatedToCampaign(campID);
 	}
 }

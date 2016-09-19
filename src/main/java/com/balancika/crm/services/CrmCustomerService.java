@@ -14,4 +14,5 @@ public interface CrmCustomerService {
 	CrmCustomer findCustomerById(String custID);
 	List<Object> listCustomerIdAndName();
 	List<PriceCode> listPriceCode();
+	CrmCustomer viewCustomerDetails(String custId);
 }

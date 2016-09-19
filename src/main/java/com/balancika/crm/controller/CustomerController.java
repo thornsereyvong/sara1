@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmCustomer;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.services.CrmAccountTypeService;
+import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmCustomerService;
 import com.balancika.crm.services.CrmIndustryService;
+import com.balancika.crm.services.CrmNoteService;
+import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CustomerGroupService;
 
 
@@ -37,6 +40,15 @@ public class CustomerController {
 	@Autowired
 	private CrmAccountTypeService typeService;
 	
+	@Autowired
+	private CrmNoteService noteService;
+	
+	@Autowired
+	private CrmCollaborationService collaborationService;
+	
+	@Autowired
+	private CrmOpportunityService opportunityService;
+	
 	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCustomers(){
 		
@@ -48,6 +60,30 @@ public class CustomerController {
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("DATA", arrCustomer);
 			
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value="/view/{custId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewCustomer(@PathVariable("custId") String custId){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		CrmCustomer customer = customerService.viewCustomerDetails(custId);
+		
+		if(customer != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("CUSTOMER", customer);
+			map.put("NOTES", noteService.listNoteRelatedToEachModule(custId));
+			map.put("COLLABORATIONS", collaborationService.listCollaborations(custId));
+			map.put("GROUP", groupService.listCustomerGroups());
+			map.put("PRICE_CODE", customerService.listPriceCode());
+			map.put("INDUSTRY", industryService.listIndustries());
+			map.put("TYPE", typeService.listAccountTypes());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
