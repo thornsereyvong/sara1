@@ -22,4 +22,13 @@ public class DateTimeOperation {
 		String reverseDate = date.format(formatter);
 		return reverseDate;
 	}
+	
+	public String reverseLocalDateTimeToFormate(LocalDateTime date, String formate){
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formate);
+		if(date == null){
+			return null;
+		}
+		String reverseDate = date.format(formatter);
+		return reverseDate;
+	}
 }
