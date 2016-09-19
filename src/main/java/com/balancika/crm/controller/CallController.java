@@ -84,8 +84,24 @@ public class CallController {
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
-		map.put("DATA", calls);
-		map.put("CALLS", HttpStatus.NOT_FOUND.value());
+		map.put("CALLS", calls);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCallsRelatedToCampaign(@PathVariable("moduleId") String moduleId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmCall> calls = callService.listCallsRelatedToModule(moduleId);
+		if(calls != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("CALLS", calls);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("CALLS", calls);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

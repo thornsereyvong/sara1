@@ -87,6 +87,22 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listEventRelatedToModule(@PathVariable("moduleId") String moduleId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmEvent> events = eventService.listEventsRelatedToModule(moduleId);
+		if(events != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("EVENTS", events);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("EVENTS", events);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/list/details/{evId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findEventDetailsById(@PathVariable("evId") String evId){
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -89,6 +89,22 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTaskRelatedToModule(@PathVariable("moduleId") String moduleId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmTask> note = taskService.listTasksRelatedToModule(moduleId);
+		if(note != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("TASKS", note);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("TASKS", note);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/list/details/{taskId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findTaskDetailsById(@PathVariable("taskId") String taskId){
 		

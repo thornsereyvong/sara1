@@ -84,6 +84,22 @@ public class MeetingController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToModule(@PathVariable("moduleId") String moduleId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToModule(moduleId);
+		if(meetings != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MEETINGS", meetings);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}	
+		map.put("MESSAGE", "FAILED");
+		map.put("MEETINGS", meetings);
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/list/details/{meetingId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findMeetingDetailsById(@PathVariable("meetingId") String meetingId){
 		Map<String, Object> map = new HashMap<String, Object>();
