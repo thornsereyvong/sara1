@@ -155,8 +155,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("CALL checkChildOfUser(:username)");
 			query.setParameter("username", username);
-			
-			if(((Number)query.uniqueResult()).intValue() 	> 0){
+			if(((Number)query.uniqueResult()).intValue() > 0){
 				return "EXIST";
 			}
 		} catch (Exception e) {
