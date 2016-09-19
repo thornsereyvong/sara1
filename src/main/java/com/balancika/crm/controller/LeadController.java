@@ -299,7 +299,7 @@ public class LeadController {
 		status.setStatusID(4);
 		CrmLead lead = new CrmLead();
 		lead.setStatus(status);
-		lead.setLeadID(jsonMap.get("leadId").toString());
+		lead.setLeadID(jsonMap.get("leadID").toString());
 		org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
 		try {
 			jsonMap = objectMapper.readValue(json, Map.class);
