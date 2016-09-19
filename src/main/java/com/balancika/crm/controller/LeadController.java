@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmContact;
 import com.balancika.crm.model.CrmCustomer;
 import com.balancika.crm.model.CrmLead;
+import com.balancika.crm.model.CrmLeadStatus;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.services.CrmAccountTypeService;
 import com.balancika.crm.services.CrmCampaignService;
@@ -294,10 +295,15 @@ public class LeadController {
 		Map<String , Object> map = new HashMap<String, Object>();
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		String custId = "";
+		CrmLeadStatus status = new CrmLeadStatus();
+		status.setStatusID(4);
+		CrmLead lead = new CrmLead();
+		lead.setStatus(status);
+		lead.setLeadID(jsonMap.get("leadId").toString());
 		org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
 		try {
 			jsonMap = objectMapper.readValue(json, Map.class);
-			System.out.println(jsonMap);
+			//System.out.println(jsonMap);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -306,6 +312,7 @@ public class LeadController {
 				String customerJson = objectMapper.writeValueAsString(jsonMap.get("CUSTOMER"));
 				CrmCustomer customer = objectMapper.readValue(customerJson, CrmCustomer.class);
 				if(customerService.insertCustomer(customer) == true){
+					leadService.updateLead(lead);
 					map.put("CUST_MESSAGE", "SUCCESS");
 					map.put("CUST_STATUS", HttpStatus.OK.value());
 					custId = customer.getCustID();
@@ -318,6 +325,7 @@ public class LeadController {
 				e.printStackTrace();
 			}
 		}else{
+			leadService.updateLead(lead);
 			map.put("CUST_MESSAGE", "EXIST");
 			map.put("CUST_STATUS", HttpStatus.OK.value());
 		}
