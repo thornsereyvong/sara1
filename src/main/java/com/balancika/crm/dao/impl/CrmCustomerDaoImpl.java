@@ -13,6 +13,7 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmCustomerDao;
+import com.balancika.crm.model.CrmContact;
 import com.balancika.crm.model.CrmCustomer;
 import com.balancika.crm.model.CrmCustomerDetails;
 import com.balancika.crm.model.PriceCode;
@@ -168,5 +169,15 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		}
 		return null;
 	}
+
+	@Override
+	public List<CrmCustomer> viewCustomerDetails(String custId) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmCustomer.class);
+		criteria.add(Restrictions.eq("custID", custId));
+		return null;
+	}
+	
+	//private List<CrmContact> getContactRe
 
 }

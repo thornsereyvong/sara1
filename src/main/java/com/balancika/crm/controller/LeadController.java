@@ -254,6 +254,28 @@ public class LeadController {
 		
 	}
 	
+	@RequestMapping(value = "/edit/status", method = RequestMethod.PUT)
+	public ResponseEntity<Map<String, Object>> updateLeadStatusToConverted(@RequestBody String json){
+		System.err.println(json);
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		try {
+			jsonMap = new ObjectMapper().readValue(json, new TypeReference<Map<String, Object>>() {});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(leadService.updateLeadStatusToConverted(jsonMap.get("leadID").toString())== true){
+			map.put("MESSAGE", "UPDATED");
+			map.put("STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}else{
+			map.put("MESSAGE", "FAILED");
+			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
 	@RequestMapping(value = "/remove/{leadID}", method = RequestMethod.DELETE)
 	public ResponseEntity<Map<String, Object>> deleteList(@PathVariable("leadID") String leadID){
 		
@@ -312,7 +334,6 @@ public class LeadController {
 				String customerJson = objectMapper.writeValueAsString(jsonMap.get("CUSTOMER"));
 				CrmCustomer customer = objectMapper.readValue(customerJson, CrmCustomer.class);
 				if(customerService.insertCustomer(customer) == true){
-					leadService.updateLead(lead);
 					map.put("CUST_MESSAGE", "SUCCESS");
 					map.put("CUST_STATUS", HttpStatus.OK.value());
 					custId = customer.getCustID();
@@ -325,7 +346,6 @@ public class LeadController {
 				e.printStackTrace();
 			}
 		}else{
-			leadService.updateLead(lead);
 			map.put("CUST_MESSAGE", "EXIST");
 			map.put("CUST_STATUS", HttpStatus.OK.value());
 		}

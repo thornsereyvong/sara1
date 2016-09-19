@@ -86,6 +86,12 @@ public class CrmCustomer implements Serializable{
 	@Transient
 	private List<CrmCustomerDetails> custDetails;
 	
+	@Transient
+	private List<CrmCase> cases;
+	
+	@Transient
+	private List<CrmContact> contacts;
+	
 	public String getCustID() {
 		return custID;
 	}
@@ -267,4 +273,21 @@ public class CrmCustomer implements Serializable{
 	public void setCustDetails(List<CrmCustomerDetails> custDetails) {
 		this.custDetails = custDetails;
 	}
+
+	public List<CrmCase> getCases() {
+		return cases;
+	}
+
+	public void setCases(List<CrmCase> cases) {
+		this.cases = cases;
+	}
+
+	public List<CrmContact> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<CrmContact> contacts) {
+		this.contacts = contacts;
+	}
+	
 }

@@ -16,4 +16,5 @@ public interface CrmLeadService {
 	CrmLead findLeadDetailById(String leadID);
 	public boolean convertLead(String json);
 	Map<String,Object> viewActivitiesOfLeadById(String leadId);
+	boolean updateLeadStatusToConverted(String leadID);
 }

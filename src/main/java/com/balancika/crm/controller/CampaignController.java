@@ -118,8 +118,8 @@ public class CampaignController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/view/{campID}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> viewCampaignById(@PathVariable("campID") String campID){
+	@RequestMapping(value="/view/{campID}/{username}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> viewCampaignById(@PathVariable("campID") String campID, @PathVariable("username") String username){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("CAMPAIGN", campaignService.findCampaignById(campID));
@@ -129,6 +129,10 @@ public class CampaignController {
 		map.put("EVENTS", eventService.listEventsRelatedToModule(campID));
 		map.put("CALLS", callService.listCallsRelatedToModule(campID));
 		map.put("MEETINGS", meetingService.listMeetingsRelatedToModule(campID));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
+		map.put("CAMP_PARENT", campaignService.listCampaignParents());
+		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
+		map.put("CAMP_TYPE", typeService.listAllCampaignType());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

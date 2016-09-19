@@ -65,4 +65,9 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 		return dao.viewActivitiesOfLeadById(leadId);
 	}
 
+	@Override
+	public boolean updateLeadStatusToConverted(String leadID) {
+		return dao.updateLeadStatusToConverted(leadID);
+	}
+
 }
