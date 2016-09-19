@@ -307,7 +307,7 @@ public class LeadController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(jsonMap.get("custID").equals("")){
+		if(jsonMap.get("custID") == ""){
 			try {
 				String customerJson = objectMapper.writeValueAsString(jsonMap.get("CUSTOMER"));
 				CrmCustomer customer = objectMapper.readValue(customerJson, CrmCustomer.class);
