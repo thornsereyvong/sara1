@@ -10,13 +10,17 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmContactDao;
+import com.balancika.crm.model.CrmCase;
 import com.balancika.crm.model.CrmContact;
+import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
@@ -143,8 +147,54 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 			Criteria criteria = session.createCriteria(CrmContact.class, "con")
 					.createAlias("con.customer", "cust");
 			criteria.add(Restrictions.eq("conID", conId));
-			criteria.setProjection(Projections.projectionList().add(Projections.property("con"), "contact"));
+			//criteria.setProjection(Projections.projectionList().add(Projections.property("customer"), "customer"));
 			return (CrmContact)criteria.uniqueResult();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmOpportunity> getOpportunityRelatedToContact(String conId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op").createAlias("op.contact", "con");
+			criteria.add(Restrictions.eq("con.conID", conId));
+			criteria.setProjection(Projections.projectionList()
+					.add(Projections.property("opId"), "opId")
+					.add(Projections.property("opName"), "opName")
+					.add(Projections.property("opAmount"), "opAmount")
+					.add(Projections.property("opStageId"), "opStageId")
+					.add(Projections.property("opCloseDate"), "opCloseDate"));
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return criteria.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmCase> getCasesRelatedToContact(String conId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.contact", "con");
+			criteria.add(Restrictions.eq("con.conID", conId));
+			criteria.setProjection(Projections.projectionList()
+					.add(Projections.property("caseId"), "caseId")
+					.add(Projections.property("createDate"), "createDate")
+					.add(Projections.property("subject"), "subject")
+					.add(Projections.property("status"), "status")
+					.add(Projections.property("priority"), "priority"));
+			criteria.setResultTransformer(Transformers.aliasToBean(CrmCase.class));
+			List<CrmCase> cases = criteria.list();
+			for(CrmCase cs : cases){
+				cs.setConvertCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(cs.getCreateDate()));
+			}
+			return cases;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		}

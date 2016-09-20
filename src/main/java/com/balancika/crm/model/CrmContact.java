@@ -2,6 +2,7 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,6 +20,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="crm_contact")
@@ -96,6 +100,10 @@ public class CrmContact implements Serializable{
 	@JoinColumn(name="CO_ReportTo", nullable = true)
 	private CrmContact conReportTo;
 	
+	@OneToMany(mappedBy = "opContact")
+	@JsonIgnoreProperties(value = "opContact")
+	private List<CrmOpportunityContact> opportunityContacts;
+
 	@Column(name="CO_CBy", updatable = false)
 	private String conCreateBy;
 	
@@ -116,10 +124,6 @@ public class CrmContact implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="CO_CustID", nullable = true)
 	private CrmCustomer customer;
-	
-	
-	//private CrmOpportunity op
-
 
 	public String getConID() {
 		return conID;
@@ -372,5 +376,13 @@ public class CrmContact implements Serializable{
 	public void setConSalutation(String conSalutation) {
 		this.conSalutation = conSalutation;
 	}
-		
+
+	public List<CrmOpportunityContact> getOpportunityContacts() {
+		return opportunityContacts;
+	}
+
+	public void setOpportunityContacts(List<CrmOpportunityContact> opportunityContacts) {
+		this.opportunityContacts = opportunityContacts;
+	}
+
 }

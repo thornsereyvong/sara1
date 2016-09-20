@@ -2,6 +2,7 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,12 +10,15 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="crm_opportunity")
@@ -72,6 +76,10 @@ public class CrmOpportunity implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "OP_ATo")
 	private CrmUser opAssignedTo;
+	
+	@OneToMany(mappedBy = "conOpportunity")
+	@JsonIgnoreProperties(value = "conOpportunity")
+	private List<CrmOpportunityContact> contactOpportunity;
 	
 	@Column(name = "OP_CBy", updatable = false)
 	private String opCreateBy;
@@ -223,4 +231,15 @@ public class CrmOpportunity implements Serializable{
 		this.opModifyDate = opModifyDate;
 	}
 	
+	public List<CrmOpportunityContact> getContactOpportunity() {
+		return contactOpportunity;
+	}
+
+	public void setContactOpportunity(List<CrmOpportunityContact> contactOpportunity) {
+		this.contactOpportunity = contactOpportunity;
+	}
+
+	public void setOpCampaign(CrmCampaign opCampaign) {
+		this.opCampaign = opCampaign;
+	}
 }
