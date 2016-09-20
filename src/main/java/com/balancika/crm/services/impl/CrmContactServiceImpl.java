@@ -59,4 +59,9 @@ public class CrmContactServiceImpl implements CrmContactService{
 		return contactDao.listParentOfContact();
 	}
 
+	@Override
+	public CrmContact viewContact(String conId) {
+		return contactDao.viewContact(conId);
+	}
+
 }

@@ -116,6 +116,9 @@ public class CrmContact implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="CO_CustID", nullable = true)
 	private CrmCustomer customer;
+	
+	
+	//private CrmOpportunity op
 
 
 	public String getConID() {

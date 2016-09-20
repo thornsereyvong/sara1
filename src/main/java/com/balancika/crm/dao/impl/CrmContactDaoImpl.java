@@ -134,4 +134,20 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return criteria.list();
 	}
+
+	@Override
+	public CrmContact viewContact(String conId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmContact.class, "con")
+					.createAlias("con.customer", "cust");
+			criteria.add(Restrictions.eq("conID", conId));
+			criteria.setProjection(Projections.projectionList().add(Projections.property("con"), "contact"));
+			return (CrmContact)criteria.uniqueResult();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

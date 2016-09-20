@@ -13,4 +13,5 @@ public interface CrmContactService {
 	CrmContact findContactDetailsById(String conId);
 	List<Object> listContactRelatedToModule();
 	List<Object> listParentOfContact();
+	CrmContact viewContact(String conId);
 }
