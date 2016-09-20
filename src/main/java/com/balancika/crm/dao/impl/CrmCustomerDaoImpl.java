@@ -193,6 +193,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			if(opportunities != null){
 				customer.setOpportunities(opportunities);
 			}
+			customer.setCustDetails(listCustomerDetailsByCustId(custId));
 			return customer;
 		} catch (HibernateException e) {
 			e.printStackTrace();

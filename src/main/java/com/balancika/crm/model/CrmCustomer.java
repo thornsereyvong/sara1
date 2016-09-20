@@ -71,11 +71,15 @@ public class CrmCustomer implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	private CrmAccountType accountTypeID;
 	
-	@Column(name = "PriceCode")
-	private String priceCode;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name = "PriceCode")
+	private PriceCode priceCode;
 	
-	@Column(name="CustGroupID")
-	private String custGroupId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="CustGroupID")
+	private CustomerGroup custGroup;
 	
 	@Column(name="CrmApproval")
 	private int approval;
@@ -206,33 +210,21 @@ public class CrmCustomer implements Serializable{
 	public void setAccountTypeID(CrmAccountType accountTypeID) {
 		this.accountTypeID = accountTypeID;
 	}
-
-	/**
-	 * @return the priceCode
-	 */
-	public String getPriceCode() {
+	
+	public PriceCode getPriceCode() {
 		return priceCode;
 	}
 
-	/**
-	 * @param priceCode the priceCode to set
-	 */
-	public void setPriceCode(String priceCode) {
+	public void setPriceCode(PriceCode priceCode) {
 		this.priceCode = priceCode;
 	}
 
-	/**
-	 * @return the custGroupId
-	 */
-	public String getCustGroupId() {
-		return custGroupId;
+	public CustomerGroup getCustGroup() {
+		return custGroup;
 	}
 
-	/**
-	 * @param custGroupId the custGroupId to set
-	 */
-	public void setCustGroupId(String custGroupId) {
-		this.custGroupId = custGroupId;
+	public void setCustGroup(CustomerGroup custGroup) {
+		this.custGroup = custGroup;
 	}
 
 	/**
