@@ -53,6 +53,9 @@ public class CrmNote implements Serializable{
 	@Transient
 	private String createDate;
 	
+	@Transient
+	private String createTime;
+	
 	@Column(name="N_MBy")
 	private String noteModifiedBy;
 	
@@ -146,5 +149,12 @@ public class CrmNote implements Serializable{
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
-	
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
 }

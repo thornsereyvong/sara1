@@ -136,6 +136,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 			List<CrmNote> notes = criteria.list();
 			for(CrmNote note : notes){
 				note.setCreateDate(new DateTimeOperation().reverseLocalDateTimeToFormate(note.getNoteCreateDate(), "d-MM-YYYY"));
+				note.setCreateTime(new DateTimeOperation().reverseLocalDateTimeToFormate(note.getNoteCreateDate(), "h:mm a"));
 			}
 			return criteria.list();
 		} catch (HibernateException e) {

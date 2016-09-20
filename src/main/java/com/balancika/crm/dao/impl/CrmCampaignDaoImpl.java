@@ -176,14 +176,18 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op").createAlias("op.opCampaign", "camp");
+			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op")
+					.createAlias("op.opCampaign", "camp")
+					.createAlias("op.customer", "cust");
 			criteria.add(Restrictions.eq("camp.campID", campID));
 			criteria.setProjection(Projections.projectionList()
 					.add(Projections.property("opId"), "opId")
 					.add(Projections.property("opName"), "opName")
 					.add(Projections.property("opAmount"), "opAmount")
 					.add(Projections.property("opStageId"), "opStageId")
-					.add(Projections.property("opCloseDate"), "opCloseDate"));
+					.add(Projections.property("opCloseDate"), "opCloseDate")
+					.add(Projections.property("cust.custID"), "custID")
+					.add(Projections.property("cust.custName"), "custName"));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return criteria.list();
 		} catch (HibernateException e) {
