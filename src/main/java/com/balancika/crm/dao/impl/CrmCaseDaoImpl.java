@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.ConstraintViolationException;
@@ -30,6 +31,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		try {
 			session.beginTransaction();
 			cases.setCaseId(IdAutoGenerator("CS"));
+			cases.setCreateDate(LocalDateTime.now());
 			session.save(cases);
 			session.getTransaction().commit();
 			return true;	

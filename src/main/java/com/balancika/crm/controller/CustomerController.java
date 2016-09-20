@@ -16,11 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmCustomer;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.services.CrmAccountTypeService;
+import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmCustomerService;
+import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmIndustryService;
+import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmOpportunityService;
+import com.balancika.crm.services.CrmTaskService;
+import com.balancika.crm.services.CrmUserService;
 import com.balancika.crm.services.CustomerGroupService;
 
 
@@ -49,6 +54,21 @@ public class CustomerController {
 	@Autowired
 	private CrmOpportunityService opportunityService;
 	
+	@Autowired
+	private CrmCallService callService;
+	
+	@Autowired
+	private CrmTaskService taskService;
+	
+	@Autowired
+	private CrmEventService eventService;
+	
+	@Autowired
+	private CrmMeetingService meetingService;
+	
+	@Autowired
+	private CrmUserService userService;
+	
 	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCustomers(){
 		
@@ -68,8 +88,8 @@ public class CustomerController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/view/{custId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> viewCustomer(@PathVariable("custId") String custId){
+	@RequestMapping(value="/view/{custId}/{username}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewCustomer(@PathVariable("custId") String custId, @PathVariable("username") String username){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		CrmCustomer customer = customerService.viewCustomerDetails(custId);
@@ -84,6 +104,11 @@ public class CustomerController {
 			map.put("PRICE_CODE", customerService.listPriceCode());
 			map.put("INDUSTRY", industryService.listIndustries());
 			map.put("TYPE", typeService.listAccountTypes());
+			map.put("CALLS",callService.listCallsRelatedToModule(custId));
+			map.put("EVENTS", eventService.listEventsRelatedToModule(custId));
+			map.put("TASKS", taskService.listTasksRelatedToModule(custId));
+			map.put("MEETINGS", meetingService.listMeetingsRelatedToModule(custId));
+			map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		

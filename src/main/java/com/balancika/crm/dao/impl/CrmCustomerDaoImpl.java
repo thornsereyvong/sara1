@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,7 @@ import com.balancika.crm.model.CrmCustomerDetails;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao{
@@ -212,7 +214,12 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 					.add(Projections.property("conID"), "conID")
 					.add(Projections.property("conSalutation"), "conSalutation")
 					.add(Projections.property("conFirstname"), "conFirstname")
-					.add(Projections.property("conLastname"), "conLastname"));
+					.add(Projections.property("conLastname"), "conLastname")
+					.add(Projections.property("conPhone"),"conPhone")
+					.add(Projections.property("conMobile"),"conMobile")
+					.add(Projections.property("conEmial"),"conEmial")
+					.add(Projections.property("conDepartment"),"conDepartment")
+					.add(Projections.property("conTitle"),"conTitle"));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return criteria.list();
 		} catch (HibernateException e) {
@@ -232,9 +239,14 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 					.add(Projections.property("caseId"), "caseId")
 					.add(Projections.property("createDate"), "createDate")
 					.add(Projections.property("subject"), "subject")
-					.add(Projections.property("status"), "status"));
-			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return criteria.list();
+					.add(Projections.property("status"), "status")
+					.add(Projections.property("priority"), "priority"));
+			criteria.setResultTransformer(Transformers.aliasToBean(CrmCase.class));
+			List<CrmCase> cases = criteria.list();
+			for(CrmCase cs : cases){
+				cs.setConvertCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(cs.getCreateDate()));
+			}
+			return cases;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		}
