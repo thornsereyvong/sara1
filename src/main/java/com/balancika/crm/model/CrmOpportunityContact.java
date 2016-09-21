@@ -2,14 +2,11 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -23,60 +20,58 @@ public class CrmOpportunityContact implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="OPCON_ID")
-	private int opportunityContactId;
+	private int opConId;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="OPCON_OPID")
-	private CrmOpportunity conOpportunity;
+	@Column(name="OPCON_OPID")
+	private String opId ;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "OPCON_CONID")
-	private CrmContact opContact;
+	@Column(name = "OPCON_CONID")
+	private String conId;
 	
 	@NotEmpty
 	@Column(name="OPCON_Type")
-	private String opportunityContactType;
+	private String opConType;
 	
 	@Column(name="OPCON_Role")
-	private String opportunityContactRole;
+	private String opConRole;
 
-	public int getOpportunityContactId() {
-		return opportunityContactId;
+	public int getOpConId() {
+		return opConId;
 	}
 
-	public void setOpportunityContactId(int opportunityContactId) {
-		this.opportunityContactId = opportunityContactId;
+	public void setOpConId(int opConId) {
+		this.opConId = opConId;
 	}
 
-	public CrmOpportunity getConOpportunity() {
-		return conOpportunity;
+	public String getOpId() {
+		return opId;
 	}
 
-	public void setConOpportunity(CrmOpportunity conOpportunity) {
-		this.conOpportunity = conOpportunity;
+	public void setOpId(String opId) {
+		this.opId = opId;
 	}
 
-	public CrmContact getOpContact() {
-		return opContact;
+	public String getConId() {
+		return conId;
 	}
 
-	public void setOpContact(CrmContact opContact) {
-		this.opContact = opContact;
+	public void setConId(String conId) {
+		this.conId = conId;
 	}
 
-	public String getOpportunityContactType() {
-		return opportunityContactType;
+	public String getOpConType() {
+		return opConType;
 	}
 
-	public void setOpportunityContactType(String opportunityContactType) {
-		this.opportunityContactType = opportunityContactType;
+	public void setOpConType(String opConType) {
+		this.opConType = opConType;
 	}
 
-	public String getOpportunityContactRole() {
-		return opportunityContactRole;
+	public String getOpConRole() {
+		return opConRole;
 	}
 
-	public void setOpportunityContactRole(String opportunityContactRole) {
-		this.opportunityContactRole = opportunityContactRole;
+	public void setOpConRole(String opConRole) {
+		this.opConRole = opConRole;
 	}
 }

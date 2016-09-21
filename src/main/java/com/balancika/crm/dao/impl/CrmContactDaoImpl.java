@@ -189,4 +189,18 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmContact> listSomeFieldsOfContact() {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmContact.class);
+		criteria.setProjection(Projections.projectionList()
+							.add(Projections.property("conID"), "conID")
+							.add(Projections.property("conSalutation"), "conSalutation")
+							.add(Projections.property("conFirstname"), "conFirstname")
+							.add(Projections.property("conLastname"), "conLastname"));
+		criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return criteria.list();
+	}
 }

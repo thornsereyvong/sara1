@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.dao.CrmContactDao;
 import com.balancika.crm.dao.CrmOpportunityDao;
+import com.balancika.crm.dao.QuoteDao;
+import com.balancika.crm.dao.SaleOrderDao;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
@@ -21,6 +24,15 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 
 	@Autowired
 	private HibernateTransactionManager transactionManager;
+	
+	@Autowired
+	private CrmContactDao contactDao;
+	
+	@Autowired
+	private SaleOrderDao saleOrderDao;
+	
+	@Autowired
+	private QuoteDao quoteDao;
 	
 	@Override
 	public boolean isInsertOpportunity(CrmOpportunity opportunity) {
@@ -159,7 +171,11 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		map.put("QUOTATIONS", listQuotationsRelatedToOpportuntiy(opId));
 		map.put("SALE_ORDERS", listSaleOrdersRelatedToOpportuntiy(opId));
 		map.put("CONTACTS", listContactsRelatedToOpportuntiy(opId));
+		map.put("ALL_CONTACTS", contactDao.listSomeFieldsOfContact());
+		map.put("ALL_SALE_ORDERS", saleOrderDao.listSaleOrders());
+		map.put("ALL_QUOTATIONS", quoteDao.listQuotes());
 		return map;
 	}
+	
 
 }

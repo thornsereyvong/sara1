@@ -223,5 +223,27 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		}
 		return "NOT_EXIST";
 	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SaleOrder> listSomeFieldsOfSaleOrder() {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(SaleOrder.class);
+			criteria.setProjection(Projections.projectionList()
+					.add(Projections.property("saleId"), "saleId")
+					.add(Projections.property("totalAmount"),"totalAmount")
+					.add(Projections.property("saleDate"), "saleDate")
+					.add(Projections.property("dueDate"), "dueDate"));
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return criteria.list();
+		} catch (Exception e) {
+			e.getMessage();
+			session.close();
+		}
+		return null;
+	}
 	
 }
