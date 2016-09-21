@@ -92,8 +92,11 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		Criteria criteria = session.createCriteria(CrmNote.class);
 		criteria.add(Restrictions.eq("noteId", noteId));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return (CrmNote) criteria.uniqueResult();
+		CrmNote note = (CrmNote)criteria.uniqueResult();
+		note.setCreateDate(new DateTimeOperation().reverseLocalDateTimeToFormate(note.getNoteCreateDate(), "d-MM-YYYY"));
+		note.setCreateTime(new DateTimeOperation().reverseLocalDateTimeToFormate(note.getNoteCreateDate(), "h:mm a"));
+		note.setCreateDateTime(new DateTimeOperation().reverseLocalDateTimeToString(note.getNoteCreateDate()));
+		return note;
 	}
 
 	@SuppressWarnings("unchecked")
