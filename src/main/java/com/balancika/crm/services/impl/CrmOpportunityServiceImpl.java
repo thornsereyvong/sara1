@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -52,6 +53,11 @@ public class CrmOpportunityServiceImpl implements CrmOpportunityService{
 	@Override
 	public List<Object> listOpportunitiesWithSpecificUser(String username) {
 		return opDao.listOpportunitiesWithSpecificUser(username);
+	}
+
+	@Override
+	public Map<String, Object> listInformationRelateToOpportunity(String opId) {
+		return opDao.listInformationRelateToOpportunity(opId);
 	}
 
 }

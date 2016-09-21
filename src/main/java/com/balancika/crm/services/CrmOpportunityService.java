@@ -1,6 +1,7 @@
 package com.balancika.crm.services;
 
 import java.util.List;
+import java.util.Map;
 
 import com.balancika.crm.model.CrmOpportunity;
 
@@ -12,4 +13,5 @@ public interface CrmOpportunityService {
 	Object findOpportunityById(String opId);
 	List<CrmOpportunity> listOpportunities();
 	List<Object> listOpportunitiesWithSpecificUser(String username);
+	Map<String, Object> listInformationRelateToOpportunity(String opId);
 }

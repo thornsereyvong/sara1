@@ -1,6 +1,8 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -107,6 +109,57 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Object> listContactsRelatedToOpportuntiy(String opId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listContactsRelatedToOpportunity(:opId)");
+			query.setParameter("opId", opId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Object> listQuotationsRelatedToOpportuntiy(String opId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listQuotationRelatedToOpportunity(:opId)");
+			query.setParameter("opId", opId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Object> listSaleOrdersRelatedToOpportuntiy(String opId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listSaleOrdersRelatedToOpportunity(:opId)");
+			query.setParameter("opId", opId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> listInformationRelateToOpportunity(String opId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("QUOTATIONS", listQuotationsRelatedToOpportuntiy(opId));
+		map.put("SALE_ORDERS", listSaleOrdersRelatedToOpportuntiy(opId));
+		map.put("CONTACTS", listContactsRelatedToOpportuntiy(opId));
+		return map;
 	}
 
 }

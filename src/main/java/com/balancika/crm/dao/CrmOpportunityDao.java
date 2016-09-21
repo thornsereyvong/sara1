@@ -1,6 +1,7 @@
 package com.balancika.crm.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.balancika.crm.model.CrmOpportunity;
 
@@ -13,4 +14,5 @@ public interface CrmOpportunityDao {
 	Object findOpportunityById(String opId);
 	List<CrmOpportunity> listOpportunities();
 	List<Object> listOpportunitiesWithSpecificUser(String username);
+	Map<String, Object> listInformationRelateToOpportunity(String opId);
 }

@@ -125,9 +125,7 @@ public class OpportunityController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("MESSAGE", "SUCCESS");
-		map.put("STATUS", HttpStatus.OK.value());
+		Map<String, Object> map = opService.listInformationRelateToOpportunity(jsonMap.get("opId").toString());
 		map.put("OPPORTUNITY", opService.findOpportunityById(jsonMap.get("opId").toString()));
 		map.put("CALLS", callService.listCallsRelatedToOpportunity(jsonMap.get("opId").toString()));
 		map.put("TASKS", taskService.listTasksRelatedToOpportunity(jsonMap.get("opId").toString()));
