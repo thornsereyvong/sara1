@@ -96,6 +96,10 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 		note.setCreateDate(new DateTimeOperation().reverseLocalDateTimeToFormate(note.getNoteCreateDate(), "d-MM-YYYY"));
 		note.setCreateTime(new DateTimeOperation().reverseLocalDateTimeToFormate(note.getNoteCreateDate(), "h:mm a"));
 		note.setCreateDateTime(new DateTimeOperation().reverseLocalDateTimeToString(note.getNoteCreateDate()));
+		SQLQuery query  = session.createSQLQuery("SELECT findModuleDetailsByModuleNameAndItsId(:moduleName, :moduleId)");
+		query.setParameter("moduleName", note.getNoteRelatedToModuleType());
+		query.setParameter("moduleId", note.getNoteRelatedToModuleId());
+		note.setNoteRelatedName((String)query.uniqueResult());
 		return note;
 	}
 

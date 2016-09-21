@@ -13,7 +13,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
@@ -59,10 +58,12 @@ public class CrmNote implements Serializable{
 	@Transient
 	private String createDateTime;
 	
+	@Transient
+	private String noteRelatedName;
+	
 	@Column(name="N_MBy")
 	private String noteModifiedBy;
 	
-	@Type(type="date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="N_Mdate", insertable = true, updatable = true)
 	private Date noteModifiedDate;
@@ -167,5 +168,13 @@ public class CrmNote implements Serializable{
 
 	public void setCreateDateTime(String createDateTime) {
 		this.createDateTime = createDateTime;
+	}
+
+	public String getNoteRelatedName() {
+		return noteRelatedName;
+	}
+
+	public void setNoteRelatedName(String noteRelatedName) {
+		this.noteRelatedName = noteRelatedName;
 	}
 }
