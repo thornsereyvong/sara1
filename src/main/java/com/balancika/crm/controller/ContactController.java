@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmContact;
+import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
 import com.balancika.crm.services.CrmLeadSourceService;
+import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -34,6 +36,12 @@ public class ContactController {
 	
 	@Autowired
 	private CrmUserService userService;
+	
+	@Autowired
+	private CrmCollaborationService collaborationService;
+	
+	@Autowired
+	private CrmNoteService noteService;
 
 	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listContacts(){
@@ -80,6 +88,8 @@ public class ContactController {
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
 		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
 		map.put("REPORT_TO", contactService.listParentOfContact());
+		map.put("COLLABORATION", collaborationService.listCollaborations(conId));
+		map.put("NOTES", noteService.listNoteRelatedToEachModule(conId));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
