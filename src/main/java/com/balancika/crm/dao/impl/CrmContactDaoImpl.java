@@ -146,6 +146,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("CASES", getCasesRelatedToContact(conId));
 		map.put("CONTACT", findContactById(conId));
+		map.put("OPPORTUNITIES", getOpportunityRelatedToContact(conId));
 		return map;
 	}
 	
@@ -154,16 +155,10 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op").createAlias("op.contact", "con");
-			criteria.add(Restrictions.eq("con.conID", conId));
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.property("opId"), "opId")
-					.add(Projections.property("opName"), "opName")
-					.add(Projections.property("opAmount"), "opAmount")
-					.add(Projections.property("opStageId"), "opStageId")
-					.add(Projections.property("opCloseDate"), "opCloseDate"));
-			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return criteria.list();
+			SQLQuery query = session.createSQLQuery("CALL listOpportunitiesRelatedToContact(:conId)");
+			query.setParameter("conId",conId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		}
