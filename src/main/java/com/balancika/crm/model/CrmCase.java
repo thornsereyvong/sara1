@@ -18,7 +18,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
@@ -86,7 +85,6 @@ public class CrmCase implements Serializable{
 	@Column(name="CS_MBy")
 	private String modifyBy;
 	
-	@Type(type = "date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="CS_MDate", insertable = false, updatable = false)
 	private Date modifyDate;

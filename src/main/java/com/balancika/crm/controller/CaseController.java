@@ -14,12 +14,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCasePriorityService;
 import com.balancika.crm.services.CrmCaseService;
 import com.balancika.crm.services.CrmCaseStatusService;
 import com.balancika.crm.services.CrmCaseTypeService;
+import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
+import com.balancika.crm.services.CrmEventService;
+import com.balancika.crm.services.CrmMeetingService;
+import com.balancika.crm.services.CrmNoteService;
+import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -46,6 +52,24 @@ public class CaseController {
 	
 	@Autowired
 	private CrmCasePriorityService priorityService;
+	
+	@Autowired
+	private CrmNoteService noteService;
+	
+	@Autowired
+	private CrmCollaborationService collaborationService;
+	
+	@Autowired
+	private CrmCallService callService;
+	
+	@Autowired
+	private CrmTaskService taskService;
+	
+	@Autowired
+	private CrmMeetingService meetingService;
+	
+	@Autowired
+	private CrmEventService eventService;
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCases(){
@@ -80,6 +104,25 @@ public class CaseController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value = "/view/{caseId}/{username}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewCaseById(@PathVariable("caseId") String caseId, @PathVariable("username") String username){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CASE", caseService.findCaseById(caseId));
+		map.put("CASE_STATUS", statusService.listCaseStatus());
+		map.put("CASE_TYPE", typeService.listCaseTypes());
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("CONTACTS", contactService.listContactRelatedToModule());
+		map.put("CASE_PRIORITY", priorityService.listCasePriorities());
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(caseId));
+		map.put("EVENTS", eventService.listEventsRelatedToModule(caseId));
+		map.put("NOTES", noteService.listNoteRelatedToEachModule(caseId));
+		map.put("CALLS", callService.listCallsRelatedToModule(caseId));
+		map.put("MEETINGS", meetingService.listMeetingsRelatedToModule(caseId));
+		map.put("TASKS", taskService.listTasksRelatedToModule(caseId));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/startup/{username}", method = RequestMethod.GET, produces = "application/json")
