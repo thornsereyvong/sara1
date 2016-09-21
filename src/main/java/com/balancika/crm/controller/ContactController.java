@@ -71,21 +71,15 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/view/{conId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> viewContact(@PathVariable("conId") String conId){
+	@RequestMapping(value="/view/{conId}/{username}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewContact(@PathVariable("conId") String conId, @PathVariable("username") String username){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		CrmContact contact = contactService.viewContact(conId);
-		if( contact == null){
-			map.put("MESSAGE", "FAILED");
-			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
-		}
-		
-		map.put("MESSAGE", "SUCCESS");
-		map.put("STATUS", HttpStatus.OK.value());
-		map.put("DATA", contact);
+		map = contactService.viewContact(conId);
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
+		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
+		map.put("REPORT_TO", contactService.listParentOfContact());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

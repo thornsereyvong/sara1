@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -60,7 +61,7 @@ public class CrmContactServiceImpl implements CrmContactService{
 	}
 
 	@Override
-	public CrmContact viewContact(String conId) {
+	public Map<String, Object> viewContact(String conId) {
 		return contactDao.viewContact(conId);
 	}
 

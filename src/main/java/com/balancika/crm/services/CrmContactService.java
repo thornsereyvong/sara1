@@ -1,6 +1,7 @@
 package com.balancika.crm.services;
 
 import java.util.List;
+import java.util.Map;
 
 import com.balancika.crm.model.CrmContact;
 
@@ -13,5 +14,5 @@ public interface CrmContactService {
 	CrmContact findContactDetailsById(String conId);
 	List<Object> listContactRelatedToModule();
 	List<Object> listParentOfContact();
-	CrmContact viewContact(String conId);
+	Map<String, Object> viewContact(String conId);
 }

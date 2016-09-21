@@ -1,6 +1,8 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.ConstraintViolationException;
 
@@ -140,19 +142,11 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	}
 
 	@Override
-	public CrmContact viewContact(String conId) {
-		Session session = transactionManager.getSessionFactory().openSession();
-		try {
-			session.beginTransaction();
-			Criteria criteria = session.createCriteria(CrmContact.class, "con")
-					.createAlias("con.customer", "cust");
-			criteria.add(Restrictions.eq("conID", conId));
-			//criteria.setProjection(Projections.projectionList().add(Projections.property("customer"), "customer"));
-			return (CrmContact)criteria.uniqueResult();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public Map<String, Object> viewContact(String conId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CASES", getCasesRelatedToContact(conId));
+		map.put("CONTACT", findContactById(conId));
+		return map;
 	}
 	
 	@SuppressWarnings("unchecked")
