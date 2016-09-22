@@ -175,8 +175,8 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		map.put("SALE_ORDERS", listSaleOrdersRelatedToOpportuntiy(opId));
 		map.put("CONTACTS", listContactsRelatedToOpportuntiy(opId));
 		map.put("ALL_CONTACTS", contactDao.listSomeFieldsOfContact());
-		map.put("ALL_SALE_ORDERS", saleOrderDao.listSomeFieldsOfSaleOrder());
-		map.put("ALL_QUOTATIONS", quoteDao.listCustomFieldOfQuotes());
+		map.put("ALL_SALE_ORDERS", saleOrderDao.listSomeFieldsOfSaleOrder(opId));
+		map.put("ALL_QUOTATIONS", quoteDao.listCustomFieldOfQuotes(opId));
 		return map;
 	}
 	

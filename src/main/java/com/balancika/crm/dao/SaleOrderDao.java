@@ -12,5 +12,5 @@ public interface SaleOrderDao {
 	List<Object> listSaleOrders();
 	List<Object> listPrincipleOnStartup();
 	String checkSaleOrderIdExist(String saleId);
-	List<SaleOrder> listSomeFieldsOfSaleOrder();
+	List<SaleOrder> listSomeFieldsOfSaleOrder(String opId);
 }

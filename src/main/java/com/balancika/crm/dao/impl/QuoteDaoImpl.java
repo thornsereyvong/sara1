@@ -266,9 +266,10 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Quote> listCustomFieldOfQuotes() {
+	public List<Quote> listCustomFieldOfQuotes(String opId) {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfQuotations()");
+		SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfQuotations(:opId)");
+		query.setParameter("opId", opId);
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return query.list();
 	}

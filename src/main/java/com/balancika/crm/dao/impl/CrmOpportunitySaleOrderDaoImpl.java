@@ -1,5 +1,7 @@
 package com.balancika.crm.dao.impl;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -15,19 +17,51 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 	
 	@Override
 	public boolean insertOpportunitySaleOrder(CrmOpportunitySaleOrder opSaleOrder) {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			session.save(opSaleOrder);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean updateOpportunitySaleOrder(CrmOpportunitySaleOrder opSaleOrder) {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			session.update(opSaleOrder);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteOpportunitySaleOrder(int opSaleOrderId) {
-		// TODO Auto-generated method stub
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			CrmOpportunitySaleOrder opSaleOrder = new CrmOpportunitySaleOrder();
+			opSaleOrder.setOpSaleId(opSaleOrderId);
+			session.delete(opSaleOrder);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+		}
 		return false;
 	}
 

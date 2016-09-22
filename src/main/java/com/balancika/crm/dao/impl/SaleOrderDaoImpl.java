@@ -227,11 +227,12 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SaleOrder> listSomeFieldsOfSaleOrder() {
+	public List<SaleOrder> listSomeFieldsOfSaleOrder(String opId) {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfSaleorder()");
+			SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfSaleorder(:opId)");
+			query.setParameter("opId", opId);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return query.list();
 		} catch (Exception e) {

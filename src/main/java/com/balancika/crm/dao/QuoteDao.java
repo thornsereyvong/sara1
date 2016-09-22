@@ -17,5 +17,5 @@ public interface QuoteDao {
 	String checkQuoteIdExist(String quoteId);
 	List<Quote> listQuotes();
 	String convertQuoteToSaleOrder();
-	List<Quote> listCustomFieldOfQuotes();
+	List<Quote> listCustomFieldOfQuotes(String opId);
 }
