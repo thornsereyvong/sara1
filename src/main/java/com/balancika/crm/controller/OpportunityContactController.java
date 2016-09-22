@@ -16,7 +16,7 @@ import com.balancika.crm.model.CrmOpportunityContact;
 import com.balancika.crm.services.CrmOpportunityContactService;
 
 @RestController
-@RequestMapping("/opportunity_contact")
+@RequestMapping("/api/opportunity_contact")
 public class OpportunityContactController {
 
 	@Autowired
@@ -24,6 +24,7 @@ public class OpportunityContactController {
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addOpportunityContact(@RequestBody CrmOpportunityContact opCon){
+		System.err.println(opCon.getOpId());
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(opportunityContactService.insterOpportunityContact(opCon) == true){
 			map.put("MESSAGE", "INSERTED");

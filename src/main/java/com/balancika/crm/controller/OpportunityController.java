@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCampaignService;
-import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
 import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmLeadSourceService;
@@ -70,9 +69,6 @@ public class OpportunityController {
 	
 	@Autowired
 	private CrmLeadSourceService sourceService;
-	
-	@Autowired
-	private CrmContactService contactService;
 	
 	@Autowired
 	private ObjectMapper mapper;

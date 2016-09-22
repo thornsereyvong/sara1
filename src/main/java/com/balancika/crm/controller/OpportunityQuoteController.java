@@ -16,7 +16,7 @@ import com.balancika.crm.model.CrmOpportunityQuotation;
 import com.balancika.crm.services.CrmOpportunityQuoteService;
 
 @RestController
-@RequestMapping("/opportunity_quote")
+@RequestMapping("/api/opportunity_quote")
 public class OpportunityQuoteController {
 	
 	@Autowired
