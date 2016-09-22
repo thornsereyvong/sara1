@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.balancika.crm.model.CrmOpportunityContact;
-import com.balancika.crm.services.CrmOpportunityContactService;
+import com.balancika.crm.model.CrmOpportunityQuotation;
+import com.balancika.crm.services.CrmOpportunityQuoteService;
 
 @RestController
-@RequestMapping("/opportunity_contact")
-public class OpportunityContactController {
-
+@RequestMapping("/opportunity_quote")
+public class OpportunityQuoteController {
+	
 	@Autowired
-	private CrmOpportunityContactService opportunityContactService;
+	private CrmOpportunityQuoteService opportunityQuoteService;
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> addOpportunityContact(@RequestBody CrmOpportunityContact opCon){
+	public ResponseEntity<Map<String, Object>> addOpportunityQuote(@RequestBody CrmOpportunityQuotation opQuote){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityContactService.insterOpportunityContact(opCon) == true){
+		if(opportunityQuoteService.insertOpportunityQuote(opQuote) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
@@ -37,9 +37,9 @@ public class OpportunityContactController {
 	}
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
-	public ResponseEntity<Map<String, Object>> updateOpportunityContact(@RequestBody CrmOpportunityContact opCon){
+	public ResponseEntity<Map<String, Object>> updateOpportunityQuote(@RequestBody CrmOpportunityQuotation opQuote){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityContactService.updateOpportunityContact(opCon) == true){
+		if(opportunityQuoteService.updateOpportunityQuote(opQuote) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
@@ -50,10 +50,10 @@ public class OpportunityContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/remove/{opConId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Map<String, Object>> deleteOpportunityContact(@PathVariable("opConId") int opConId){
+	@RequestMapping(value = "/remove/{opQuoteId}", method = RequestMethod.DELETE)
+	public ResponseEntity<Map<String, Object>> deleteOpportunityContact(@PathVariable("opQuoteId") int opQuoteId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityContactService.deleteOpportunityContact(opConId) == true){
+		if(opportunityQuoteService.deleteOpportunityQuote(opQuoteId) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -64,20 +64,20 @@ public class OpportunityContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/view/{opConId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> viewOpportunityContact(@PathVariable("opConId") int opConId){
+	@RequestMapping(value = "/view/{opQuoteId}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> viewOpportunityQuote(@PathVariable("opQuoteId") int opQuoteId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmOpportunityContact opportunityContact = opportunityContactService.findOpportunityContactById(opConId);
-		if(opportunityContact != null){
+		CrmOpportunityQuotation opportunityQuote = opportunityQuoteService.findOpportunityQuotationById(opQuoteId);
+		if(opportunityQuote != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("OPPORTUNITY_CONTACT", opportunityContact);
+			map.put("OPPORTUNITY_QUOTE", opportunityQuote);
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		map.put("OPPORTUNITY_CONTACT", opportunityContact);
+		map.put("OPPORTUNITY_CONTACT", opportunityQuote);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
