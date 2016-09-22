@@ -220,9 +220,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} catch (Exception e) {
 			e.getMessage();
 			session.close();
-		} finally {
-			session.close();
-		}
+		} 
 		return "NOT_EXIST";
 	}
 
@@ -239,9 +237,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} catch (Exception e) {
 			e.getMessage();
 			session.close();
-		} finally {
-			session.close();
-		}
+		} 
 		return null;
 	}
 	
