@@ -220,6 +220,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} catch (Exception e) {
 			e.getMessage();
 			session.close();
+		} finally {
+			session.close();
 		}
 		return "NOT_EXIST";
 	}
@@ -231,16 +233,13 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			Criteria criteria = session.createCriteria(SaleOrder.class);
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.property("saleId"), "saleId")
-					.add(Projections.property("totalAmount"),"totalAmount")
-					.add(Projections.property("saleDate"), "saleDate")
-					.add(Projections.property("dueDate"), "dueDate"));
-			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return criteria.list();
+			SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfSaleorder()");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
 		} catch (Exception e) {
 			e.getMessage();
+			session.close();
+		} finally {
 			session.close();
 		}
 		return null;

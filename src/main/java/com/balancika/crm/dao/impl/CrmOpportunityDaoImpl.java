@@ -153,7 +153,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	
 	@SuppressWarnings("unchecked")
 	private List<Object> listSaleOrdersRelatedToOpportuntiy(String opId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session  session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listSaleOrdersRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -172,8 +172,8 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		map.put("SALE_ORDERS", listSaleOrdersRelatedToOpportuntiy(opId));
 		map.put("CONTACTS", listContactsRelatedToOpportuntiy(opId));
 		map.put("ALL_CONTACTS", contactDao.listSomeFieldsOfContact());
-		map.put("ALL_SALE_ORDERS", saleOrderDao.listSaleOrders());
-		map.put("ALL_QUOTATIONS", quoteDao.listQuotes());
+		map.put("ALL_SALE_ORDERS", saleOrderDao.listSomeFieldsOfSaleOrder());
+		map.put("ALL_QUOTATIONS", quoteDao.listCustomFieldOfQuotes());
 		return map;
 	}
 	

@@ -263,4 +263,13 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Quote> listCustomFieldOfQuotes() {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfQuotations()");
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return query.list();
+	}
 }
