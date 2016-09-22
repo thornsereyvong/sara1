@@ -67,8 +67,7 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 
 	@Override
 	public CrmOpportunitySaleOrder findOpportunitySaleOrder(int opSaleOrderId) {
-		// TODO Auto-generated method stub
-		return null;
+		return (CrmOpportunitySaleOrder)transactionManager.getSessionFactory().getCurrentSession().get(CrmOpportunitySaleOrder.class, opSaleOrderId);
 	}
 
 	

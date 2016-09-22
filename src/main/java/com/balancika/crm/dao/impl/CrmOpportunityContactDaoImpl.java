@@ -22,8 +22,11 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 			session.beginTransaction();
 			session.save(opCon);
 			session.getTransaction().commit();
+			session.close();
 			return true;
 		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
 		}
 		return false;
 	}
@@ -35,8 +38,11 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 			session.beginTransaction();
 			session.update(opCon);
 			session.getTransaction().commit();
+			session.close();
 			return true;
 		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
 		}
 		return false;
 	}
@@ -50,8 +56,11 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 			opCon.setOpConId(opConId);
 			session.delete(opCon);
 			session.getTransaction().commit();
+			session.close();
 			return true;
 		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
 		}
 		return false;
 	}
