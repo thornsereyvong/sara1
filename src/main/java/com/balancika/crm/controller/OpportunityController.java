@@ -164,6 +164,60 @@ public class OpportunityController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
+	@RequestMapping(value="/startup/contact/{opId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listContactsRelatedToOpportuntiy(@PathVariable("opId") String opId){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> contacts = opService.listContactsRelatedToOpportuntiy(opId);
+		
+		if(contacts != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("CONTACTS", contacts);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value="/startup/saleorder/{opId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listSaleOrdersRelatedToOpportuntiy(@PathVariable("opId") String opId){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> saleorders = opService.listSaleOrdersRelatedToOpportuntiy(opId);
+		
+		if(saleorders != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("SALE_ORDERS", saleorders);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value="/startup/quotation/{opId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listQuotationsRelatedToOpportuntiy(@PathVariable("opId") String opId){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> quotations = opService.listQuotationsRelatedToOpportuntiy(opId);
+		
+		if(quotations != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("QUOTATIONS", quotations);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
 	@RequestMapping(value="/list/details/{opId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findOpportunityDetailsById(@PathVariable("opId") String opId){
 		

@@ -60,4 +60,19 @@ public class CrmOpportunityServiceImpl implements CrmOpportunityService{
 		return opDao.listInformationRelateToOpportunity(opId);
 	}
 
+	@Override
+	public List<Object> listContactsRelatedToOpportuntiy(String opId) {
+		return opDao.listContactsRelatedToOpportuntiy(opId);
+	}
+
+	@Override
+	public List<Object> listQuotationsRelatedToOpportuntiy(String opId) {
+		return opDao.listQuotationsRelatedToOpportuntiy(opId);
+	}
+
+	@Override
+	public List<Object> listSaleOrdersRelatedToOpportuntiy(String opId) {
+		return opDao.listSaleOrdersRelatedToOpportuntiy(opId);
+	}
+
 }

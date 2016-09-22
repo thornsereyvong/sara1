@@ -15,4 +15,7 @@ public interface CrmOpportunityDao {
 	List<CrmOpportunity> listOpportunities();
 	List<Object> listOpportunitiesWithSpecificUser(String username);
 	Map<String, Object> listInformationRelateToOpportunity(String opId);
+	List<Object> listContactsRelatedToOpportuntiy(String opId);
+	List<Object> listQuotationsRelatedToOpportuntiy(String opId);
+	List<Object> listSaleOrdersRelatedToOpportuntiy(String opId);
 }

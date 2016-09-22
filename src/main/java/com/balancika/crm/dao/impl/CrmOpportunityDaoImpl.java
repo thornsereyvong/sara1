@@ -123,8 +123,9 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		return null;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	private List<Object> listContactsRelatedToOpportuntiy(String opId){
+	public List<Object> listContactsRelatedToOpportuntiy(String opId){
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listContactsRelatedToOpportunity(:opId)");
@@ -137,8 +138,9 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		return null;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	private List<Object> listQuotationsRelatedToOpportuntiy(String opId){
+	public List<Object> listQuotationsRelatedToOpportuntiy(String opId){
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listQuotationRelatedToOpportunity(:opId)");
@@ -151,8 +153,9 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		return null;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	private List<Object> listSaleOrdersRelatedToOpportuntiy(String opId){
+	public List<Object> listSaleOrdersRelatedToOpportuntiy(String opId){
 		Session  session = transactionManager.getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listSaleOrdersRelatedToOpportunity(:opId)");
