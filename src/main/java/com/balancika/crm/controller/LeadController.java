@@ -22,6 +22,7 @@ import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.services.CrmAccountTypeService;
 import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
+import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
 import com.balancika.crm.services.CrmEventLocationService;
@@ -93,6 +94,9 @@ public class LeadController {
 	
 	@Autowired
 	private CrmAccountTypeService accountTypeService;
+	
+	@Autowired
+	private CrmCollaborationService collaborationService;
 	
 	@RequestMapping(value = "/list_all", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getAllLead(){
@@ -199,6 +203,7 @@ public class LeadController {
 		map.put("EVENT_LOCATION", locationService.listEventLocations());
 		map.put("CONTACT", contactService.listContacts()); // wait to edit
 		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
+		map.put("COLLABORATION", collaborationService.listCollaborations(leadMap.get("leadId").toString()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
