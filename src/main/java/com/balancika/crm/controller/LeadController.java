@@ -20,13 +20,16 @@ import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.CrmLeadStatus;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.services.CrmAccountTypeService;
+import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
+import com.balancika.crm.services.CrmEventLocationService;
 import com.balancika.crm.services.CrmIndustryService;
 import com.balancika.crm.services.CrmLeadService;
 import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmLeadStatusService;
+import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CrmOpportunityStageService;
 import com.balancika.crm.services.CrmOpportunityTypeService;
@@ -49,6 +52,12 @@ public class LeadController {
 	private CrmLeadSourceService leadSourceService;
 	
 	@Autowired
+	private CrmCallStatusService callStatusService;
+	
+	@Autowired
+	private CrmMeetingStatusService meetingStatusService;
+	
+	@Autowired
 	private CrmIndustryService industryService;
 	
 	@Autowired
@@ -59,6 +68,9 @@ public class LeadController {
 	
 	@Autowired
 	private CrmCustomerService customerService;
+	
+	@Autowired
+	private CrmEventLocationService locationService;
 	
 	@Autowired
 	private CrmContactService contactService;
@@ -173,13 +185,15 @@ public class LeadController {
 			e.printStackTrace();
 		}
 		Map<String, Object> map = leadService.viewActivitiesOfLeadById(leadMap.get("leadId").toString());
-		map.put("MESSAGE", "SUCCESS");
-		map.put("STATUS", HttpStatus.OK.value());
 		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
 		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
 		map.put("INDUSTRY", industryService.listIndustries());
 		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
+		map.put("CALL_STATUS", callStatusService.listCallStatus());
+		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
+		map.put("EVENT_LOCATION", locationService.listEventLocations());
+		map.put("CONTACT", contactService.listContacts()); // wait to edit
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

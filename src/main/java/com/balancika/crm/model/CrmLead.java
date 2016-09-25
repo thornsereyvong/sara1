@@ -117,7 +117,7 @@ public class CrmLead implements Serializable{
 	@JoinColumn(name="LA_ATo")
 	private CrmUser assignTo;
 	
-	@Column(name="LA_CBy")
+	@Column(name="LA_CBy", updatable = false)
 	private String createBy;
 	
 	@Column(name="LA_CDate", updatable = false)

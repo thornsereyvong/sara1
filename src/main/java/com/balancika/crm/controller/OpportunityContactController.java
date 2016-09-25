@@ -24,7 +24,6 @@ public class OpportunityContactController {
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addOpportunityContact(@RequestBody CrmOpportunityContact opCon){
-		System.err.println(opCon.getOpId());
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(opportunityContactService.insterOpportunityContact(opCon) == true){
 			map.put("MESSAGE", "INSERTED");
