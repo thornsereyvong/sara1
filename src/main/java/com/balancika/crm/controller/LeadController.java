@@ -204,6 +204,7 @@ public class LeadController {
 		map.put("CONTACT", contactService.listContacts()); // wait to edit
 		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
 		map.put("COLLABORATION", collaborationService.listCollaborations(leadMap.get("leadId").toString()));
+		map.put("TAG_TO", userService.listAllUsernameAndId());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
