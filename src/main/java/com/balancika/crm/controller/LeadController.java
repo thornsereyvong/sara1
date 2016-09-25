@@ -33,6 +33,7 @@ import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CrmOpportunityStageService;
 import com.balancika.crm.services.CrmOpportunityTypeService;
+import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserService;
 import com.balancika.crm.services.CustomerGroupService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -83,6 +84,9 @@ public class LeadController {
 	
 	@Autowired
 	private CrmOpportunityStageService stageService;
+	
+	@Autowired
+	private CrmTaskStatusService taskStatusService;
 	
 	@Autowired
 	private CustomerGroupService groupService;
@@ -194,6 +198,7 @@ public class LeadController {
 		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
 		map.put("EVENT_LOCATION", locationService.listEventLocations());
 		map.put("CONTACT", contactService.listContacts()); // wait to edit
+		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
