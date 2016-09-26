@@ -108,7 +108,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmTask> listTasksRelatedToLead(String leadId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -123,7 +123,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmTask> listTasksRelatedToOpportunity(String opId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToOpportunity(:opId)");
 				query.setParameter("opId", opId);
@@ -138,7 +138,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmTask> listTasksRelatedToModule(String moduleId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToModule(:moduleId)");
 			query.setParameter("moduleId", moduleId);

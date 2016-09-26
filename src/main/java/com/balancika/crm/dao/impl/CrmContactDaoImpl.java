@@ -152,9 +152,8 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmOpportunity> getOpportunityRelatedToContact(String conId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("CALL listOpportunitiesRelatedToContact(:conId)");
 			query.setParameter("conId",conId);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -167,9 +166,8 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmCase> getCasesRelatedToContact(String conId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.contact", "con");
 			criteria.add(Restrictions.eq("con.conID", conId));
 			criteria.setProjection(Projections.projectionList()

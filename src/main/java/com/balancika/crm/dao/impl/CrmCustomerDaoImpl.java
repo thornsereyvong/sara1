@@ -137,9 +137,8 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listCustomerIdAndName() {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("custID"),"custID").add(Projections.property("custName"),"custName"));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -147,8 +146,6 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally{
-			session.close();
 		}
 		return null;
 	}
@@ -156,26 +153,22 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PriceCode> listPriceCode() {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(PriceCode.class);
 			criteria.addOrder(Order.asc("priceCode"));
 			return (List<PriceCode>)criteria.list();
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally{
-			session.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmCustomer viewCustomerDetails(String custId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
 			criteria.add(Restrictions.eq("custID", custId));
 			CrmCustomer customer = (CrmCustomer)criteria.uniqueResult();
@@ -203,9 +196,8 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmContact> getContactRelatedToCustomer(String custId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmContact.class, "con").createAlias("con.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));
 			criteria.setProjection(Projections.projectionList()
@@ -228,9 +220,8 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmCase> getCasesRelatedToCustomer(String custId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));
 			criteria.setProjection(Projections.projectionList()
@@ -254,9 +245,8 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmOpportunity> getOpportunityRelatedToCustomer(String custId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op").createAlias("op.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));
 			criteria.setProjection(Projections.projectionList()

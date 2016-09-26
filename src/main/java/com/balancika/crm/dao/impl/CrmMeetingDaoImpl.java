@@ -110,7 +110,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeeting> listMeetingsRelatedToLead(String leadId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -125,7 +125,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToOpportunity(:opId)");
 				query.setParameter("opId", opId);
@@ -140,7 +140,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeeting> listMeetingsRelatedToModule(String moduleId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToModule(:moduleId)");
 				query.setParameter("moduleId", moduleId);

@@ -105,7 +105,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmEvent> listEventsRelatedToLead(String leadId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -120,7 +120,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmEvent> listEventsRelatedToOpportunity(String opId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedOpportuntiy(:opId)");
 				query.setParameter("opId", opId);

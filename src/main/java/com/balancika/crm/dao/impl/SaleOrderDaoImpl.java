@@ -207,13 +207,11 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 
 	@Override
 	public String checkSaleOrderIdExist(String saleId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(SaleOrder.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("saleId")));
 			criteria.add(Restrictions.eq("saleId", saleId));
-			session.getTransaction().commit();
 			if(criteria.uniqueResult() != null){
 				return "EXIST";
 			}
@@ -228,9 +226,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SaleOrder> listSomeFieldsOfSaleOrder(String opId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfSaleorder(:opId)");
 			query.setParameter("opId", opId);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);

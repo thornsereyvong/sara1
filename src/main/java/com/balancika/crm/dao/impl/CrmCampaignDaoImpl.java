@@ -138,9 +138,8 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listCampaignParents() {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCampaign.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("campID"), "campID")
 																 .add(Projections.property("campName"), "campName"));
@@ -156,9 +155,8 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listIdAndNameOfCompaign() {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCampaign.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("campID"), "campID")
 																 .add(Projections.property("campName"), "campName"));
@@ -173,9 +171,8 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op")
 					.createAlias("op.opCampaign", "camp")
 					.createAlias("op.customer", "cust");
@@ -195,6 +192,4 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		}
 		return null;
 	}
-
-	
 }

@@ -113,7 +113,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listOpportunitiesWithSpecificUser(String username) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listOpportunityWithSpecificUser(:username)");
 			query.setParameter("username", username);
@@ -128,7 +128,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object> listContactsRelatedToOpportuntiy(String opId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listContactsRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -143,7 +143,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object> listQuotationsRelatedToOpportuntiy(String opId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listQuotationRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -158,7 +158,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object> listSaleOrdersRelatedToOpportuntiy(String opId){
-		Session  session = transactionManager.getSessionFactory().openSession();
+		Session  session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listSaleOrdersRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);

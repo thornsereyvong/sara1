@@ -62,7 +62,7 @@ public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCollaborationTags> listCollaborationTags() {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCollaborationTags.class);
@@ -70,9 +70,7 @@ public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		} 
 		return null;
 	}
 

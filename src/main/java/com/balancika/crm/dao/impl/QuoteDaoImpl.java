@@ -192,14 +192,13 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 
 	@Override
 	public Quote findQuoteById(String quoteId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(Quote.class);
 			criteria.add(Restrictions.eq("saleId", quoteId));
 			Quote quote = (Quote)criteria.uniqueResult();
 			quote.setQuoteDetails(lisQuoteDetails(quoteId));
-			session.close();
 			return quote;
 		} catch (Exception e) {
 			e.getMessage();
@@ -211,7 +210,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	
 	@SuppressWarnings("unchecked")
 	public List<QuoteDetails> lisQuoteDetails(String quoteId){
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		SQLQuery query = session.createSQLQuery("SELECT SalID AS saleId, LineNo AS lineNo, ItemID AS itemId,"
 				+ "UomID AS uomId, LocationID AS locationId, SalQty AS saleQuantity, UnitPrice AS unitPrice, TotalAmt AS totalAmt, "
 				+ "PostStatus AS postStatus, NetTotalAmt AS netTotalAmt, DisDol AS disDol, DisPer AS disPer, STaxDol AS staxDol, "
@@ -232,13 +231,11 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 
 	@Override
 	public String checkQuoteIdExist(String quoteId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(Quote.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("saleId"), "quoteId"));
 			criteria.add(Restrictions.eq("saleId", quoteId));
-			session.getTransaction().commit();
 			if(criteria.uniqueResult() != null){
 				return "EXIST";
 			}

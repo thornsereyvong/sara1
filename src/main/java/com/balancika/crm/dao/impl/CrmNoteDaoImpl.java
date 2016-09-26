@@ -106,7 +106,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmNote> listNoteRelatedToLead(String leadId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listNotesRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -121,7 +121,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmNote> listNotesRelatedToOpportunity(String opId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listNotesRelatedToOpportunity(:opId)");
 				query.setParameter("opId", opId);
@@ -136,7 +136,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmNote> listNoteRelatedToEachModule(String moduleId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmNote.class);
 			criteria.add(Restrictions.eq("noteRelatedToModuleId", moduleId));

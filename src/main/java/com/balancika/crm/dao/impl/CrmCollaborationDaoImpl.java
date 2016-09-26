@@ -92,10 +92,9 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCollaboration> listCollaborations(String moduleId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		List<CrmCollaboration> collaborations = new ArrayList<CrmCollaboration>();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
 			criteria.add(Restrictions.eq("colRelatedToModuleId", moduleId));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -112,17 +111,14 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			return collaborations;
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		} 
 		return null;
 	}
 
 	@Override
 	public CrmCollaboration findCollaborationById(int collapId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
 			criteria.add(Restrictions.eq("colId", collapId));
 			CrmCollaboration collaboration = (CrmCollaboration)criteria.uniqueResult();
@@ -130,16 +126,14 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			return collaboration;
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		} 
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Map<String, Object>> listAllCollaboration(String username, String moduleType, String moduleId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listAllCollaborationRelatedToModule(:username, :moduleType, :moduleId)");
 			query.setParameter("username", username);
@@ -150,9 +144,7 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			return coList;
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		} 
 		return null;
 	}
 
