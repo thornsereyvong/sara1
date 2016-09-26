@@ -72,7 +72,7 @@ public class CrmCase implements Serializable{
 	@JoinColumn(name="CS_ATo")
 	private CrmUser assignTo;
 	
-	@Column(name="CS_CBy", updatable = true)
+	@Column(name="CS_CBy", updatable = false)
 	private String createBy;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)

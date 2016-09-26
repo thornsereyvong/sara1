@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		try {
 			session.beginTransaction();
 			opportunity.setOpId(IdAutoGenerator("OP"));
+			opportunity.setOpCreateDate(new Date());
 			session.save(opportunity);
 			session.getTransaction().commit();
 			return true;
