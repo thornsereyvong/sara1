@@ -168,7 +168,7 @@ public class OpportunityController {
 		map.put("EVENT_LOCATION", locationService.listEventLocations());
 		map.put("COLLABORATIONS", collaborationService.listCollaborations(jsonMap.get("opId").toString()));
 		map.put("TAG_TO", userService.listAllUsernameAndId());
-		map.put("CONTACTS", contactService.listSomeFieldsOfContact());
+		map.put("ALL_CONTACT", contactService.listSomeFieldsOfContact());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 	}
