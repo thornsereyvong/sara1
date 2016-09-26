@@ -127,8 +127,9 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		subCriteria.setProjection((Projections.projectionList().add(Projections.property("userID"), "userID")))
 				   .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		Criteria criteria = session.createCriteria(CrmUser.class, "user");
-		criteria.setProjection(Projections.projectionList().add(Projections.property("user.userID"), "userID")
-				   											.add(Projections.property("user.username"), "username"));
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.property("user.userID"), "userID")
+				.add(Projections.property("user.username"), "username"));
 		criteria.add(Restrictions.or(Subqueries.propertyEq("parentID", subCriteria), Restrictions.eq("username", username)));
 		criteria.addOrder(Order.asc("userID")).setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return criteria.list();
