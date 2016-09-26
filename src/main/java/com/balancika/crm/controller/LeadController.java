@@ -19,6 +19,7 @@ import com.balancika.crm.model.CrmCustomer;
 import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.CrmLeadStatus;
 import com.balancika.crm.model.CrmOpportunity;
+import com.balancika.crm.model.CrmOpportunityContact;
 import com.balancika.crm.services.CrmAccountTypeService;
 import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
@@ -31,6 +32,7 @@ import com.balancika.crm.services.CrmLeadService;
 import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmLeadStatusService;
 import com.balancika.crm.services.CrmMeetingStatusService;
+import com.balancika.crm.services.CrmOpportunityContactService;
 import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CrmOpportunityStageService;
 import com.balancika.crm.services.CrmOpportunityTypeService;
@@ -97,6 +99,9 @@ public class LeadController {
 	
 	@Autowired
 	private CrmCollaborationService collaborationService;
+	
+	@Autowired
+	private CrmOpportunityContactService opContactService;
 	
 	@RequestMapping(value = "/list_all", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getAllLead(){
@@ -342,6 +347,7 @@ public class LeadController {
 		Map<String , Object> map = new HashMap<String, Object>();
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		String custId = "";
+		String contactId = "";
 		CrmLeadStatus status = new CrmLeadStatus();
 		status.setStatusID(4);
 		CrmLead lead = new CrmLead();
@@ -378,6 +384,7 @@ public class LeadController {
 		if(jsonMap.get("conID") != ""){
 			map.put("CON_MESSAGE", "EXIST");
 			map.put("STATUS", HttpStatus.OK.value());
+			contactId = jsonMap.get("conID").toString();
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}else if(map.get("CUST_MESSAGE").equals("FAILED")){
 			map.put("CUST_MESSAGE", "FAILED");
@@ -387,9 +394,13 @@ public class LeadController {
 			try {
 				String contactJson = objectMapper.writeValueAsString(jsonMap.get("CONTACT"));
 				CrmContact contact = objectMapper.readValue(contactJson, CrmContact.class);
+				CrmCustomer customer = new CrmCustomer();
+				customer.setCustID(custId);
+				contact.setCustomer(customer);
 				if(contactService.insertContact(contact) == true){
 					map.put("CON_MESSAGE", "SUCCESS");
 					map.put("CON_STATUS", HttpStatus.OK.value());
+					contactId = contact.getConID();
 				}else{
 					map.put("CON_MESSAGE", "FAILED");
 					map.put("CON_STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -416,6 +427,11 @@ public class LeadController {
 				customer.setCustID(custId);
 				opportunity.setCustomer(customer);
 				if(opportunityService.isInsertOpportunity(opportunity) == true){
+					CrmOpportunityContact opCon = new CrmOpportunityContact();
+					opCon.setConId(contactId);
+					opCon.setOpId(opportunity.getOpId());
+					opCon.setOpConType("Primary");
+					opContactService.insterOpportunityContact(opCon);
 					map.put("OP_MESSAGE", "SUCCESS");
 					map.put("OP_STATUS", HttpStatus.OK.value());
 					return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
