@@ -202,8 +202,9 @@ public class LeadController {
 		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
 		map.put("EVENT_LOCATION", locationService.listEventLocations());
 		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
-		map.put("COLLABORATION", collaborationService.listCollaborations(leadMap.get("leadId").toString()));
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(leadMap.get("leadId").toString()));
 		map.put("TAG_TO", userService.listAllUsernameAndId());
+		map.put("CONTACTS", contactService.listSomeFieldsOfContact());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
