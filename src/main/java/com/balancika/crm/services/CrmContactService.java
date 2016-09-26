@@ -15,4 +15,5 @@ public interface CrmContactService {
 	List<Object> listContactRelatedToModule();
 	List<Object> listParentOfContact();
 	Map<String, Object> viewContact(String conId);
+	List<CrmContact> listSomeFieldsOfContact();
 }

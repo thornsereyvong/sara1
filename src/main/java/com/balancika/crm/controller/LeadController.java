@@ -201,7 +201,6 @@ public class LeadController {
 		map.put("CALL_STATUS", callStatusService.listCallStatus());
 		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
 		map.put("EVENT_LOCATION", locationService.listEventLocations());
-		map.put("CONTACT", contactService.listContacts()); // wait to edit
 		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
 		map.put("COLLABORATION", collaborationService.listCollaborations(leadMap.get("leadId").toString()));
 		map.put("TAG_TO", userService.listAllUsernameAndId());

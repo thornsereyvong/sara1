@@ -16,16 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.services.CrmCallService;
+import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
+import com.balancika.crm.services.CrmCollaborationService;
+import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
+import com.balancika.crm.services.CrmEventLocationService;
 import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmMeetingService;
+import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CrmOpportunityStageService;
 import com.balancika.crm.services.CrmOpportunityTypeService;
 import com.balancika.crm.services.CrmTaskService;
+import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,6 +75,24 @@ public class OpportunityController {
 	
 	@Autowired
 	private CrmLeadSourceService sourceService;
+	
+	@Autowired
+	private CrmTaskStatusService taskStatusService;
+	
+	@Autowired
+	private CrmCallStatusService callStatusService;
+	
+	@Autowired
+	private CrmMeetingStatusService meetingStatusService;
+	
+	@Autowired
+	private CrmCollaborationService collaborationService;
+	
+	@Autowired
+	private CrmEventLocationService locationService;
+	
+	@Autowired
+	private CrmContactService contactService;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -138,6 +162,13 @@ public class OpportunityController {
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
 		map.put("CAMPAIGNS", campaignService.listIdAndNameOfCompaign());
 		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
+		map.put("CALL_STATUS", callStatusService.listCallStatus());
+		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
+		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
+		map.put("EVENT_LOCATION", locationService.listEventLocations());
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(jsonMap.get("opId").toString()));
+		map.put("TAG_TO", userService.listAllUsernameAndId());
+		map.put("CONTACTS", contactService.listSomeFieldsOfContact());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 	}

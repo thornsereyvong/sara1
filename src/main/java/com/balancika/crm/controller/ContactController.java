@@ -15,14 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmContact;
 import com.balancika.crm.services.CrmCallService;
+import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
+import com.balancika.crm.services.CrmEventLocationService;
 import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmMeetingService;
+import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmTaskService;
+import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -58,6 +62,18 @@ public class ContactController {
 	
 	@Autowired
 	private CrmMeetingService meetingService;
+	
+	@Autowired
+	private CrmTaskStatusService taskStatusService;
+	
+	@Autowired
+	private CrmCallStatusService callStatusService;
+	
+	@Autowired
+	private CrmMeetingStatusService meetingStatusService;
+	
+	@Autowired
+	private CrmEventLocationService eventLocationService;
 
 	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listContacts(){
@@ -110,6 +126,12 @@ public class ContactController {
 		map.put("TASKS", taskService.listTasksRelatedToModule(conId));
 		map.put("METTINGS", meetingService.listMeetingsRelatedToModule(conId));
 		map.put("EVENTS", eventService.listEventsRelatedToModule(conId));
+		map.put("TAG_TO", userService.listAllUsernameAndId());
+		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
+		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
+		map.put("CALL_STATUS", callStatusService.listCallStatus());
+		map.put("EVENT_LOCATION", eventLocationService.listEventLocations());
+		map.put("CONTACTS", contactService.listSomeFieldsOfContact());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

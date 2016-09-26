@@ -65,4 +65,9 @@ public class CrmContactServiceImpl implements CrmContactService{
 		return contactDao.viewContact(conId);
 	}
 
+	@Override
+	public List<CrmContact> listSomeFieldsOfContact() {
+		return contactDao.listSomeFieldsOfContact();
+	}
+
 }
