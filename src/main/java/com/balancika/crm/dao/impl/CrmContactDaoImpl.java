@@ -194,7 +194,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	@Override
 	public List<CrmContact> listSomeFieldsOfContact() {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmContact.class);
+		Criteria criteria = session.createCriteria(CrmContact.class, "con");
 		criteria.setProjection(Projections.projectionList()
 							.add(Projections.property("conID"), "conID")
 							.add(Projections.property("conSalutation"), "conSalutation")

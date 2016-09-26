@@ -120,7 +120,7 @@ public class ContactController {
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
 		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
 		map.put("REPORT_TO", contactService.listParentOfContact());
-		map.put("COLLABORATION", collaborationService.listCollaborations(conId));
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(conId));
 		map.put("NOTES", noteService.listNoteRelatedToEachModule(conId));
 		map.put("CALLS", callService.listCallsRelatedToModule(conId));
 		map.put("TASKS", taskService.listTasksRelatedToModule(conId));

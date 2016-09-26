@@ -17,14 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.services.CrmCallService;
+import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmCampaignStatusService;
 import com.balancika.crm.services.CrmCampaignTypeService;
 import com.balancika.crm.services.CrmCollaborationService;
+import com.balancika.crm.services.CrmContactService;
+import com.balancika.crm.services.CrmEventLocationService;
 import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmMeetingService;
+import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmTaskService;
+import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,6 +67,21 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmMeetingService meetingService;
+	
+	@Autowired
+	private CrmTaskStatusService taskStatusService;
+	
+	@Autowired
+	private CrmCallStatusService callStatusService;
+	
+	@Autowired
+	private CrmMeetingStatusService meetingStatusService;
+	
+	@Autowired
+	private CrmEventLocationService locationService;
+	
+	@Autowired
+	private CrmContactService contactService;
 
 	@RequestMapping(value="/list", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> allCampaign(){
@@ -134,6 +154,12 @@ public class CampaignController {
 		map.put("CAMP_STATUS", statusService.listAllCampaignStatus());
 		map.put("CAMP_TYPE", typeService.listAllCampaignType());
 		map.put("OPPORTUNITIES", campaignService.getOpportunitiesRelatedToCampaign(campID));
+		map.put("EVENT_LOCATION", locationService.listEventLocations());
+		map.put("CALL_STATUS", callStatusService.listCallStatus());
+		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
+		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
+		map.put("TAG_TO", userService.listAllUsernameAndId());
+		map.put("CONTACTS", contactService.listSomeFieldsOfContact());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
