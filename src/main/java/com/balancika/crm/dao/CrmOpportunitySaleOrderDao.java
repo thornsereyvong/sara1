@@ -8,4 +8,6 @@ public interface CrmOpportunitySaleOrderDao {
 	boolean updateOpportunitySaleOrder(CrmOpportunitySaleOrder opSaleOrder);
 	boolean deleteOpportunitySaleOrder(int opSaleOrderId);
 	CrmOpportunitySaleOrder findOpportunitySaleOrder(int opSaleOrderId);
+	Integer checkOpportunitySaleOrderIsExist(String opId, String saleOrderId);
+	Object viewOpportunitySaleOrder(int opSaleOrderId);
 }

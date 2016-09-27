@@ -36,4 +36,14 @@ public class CrmOpportunitySaleOrderServiceImpl implements CrmOpportunitySaleOrd
 		return opportunitySaleOrderDao.findOpportunitySaleOrder(opSaleOrderId);
 	}
 
+	@Override
+	public Integer checkOpportunitySaleOrderIsExist(String opId, String saleOrderId) {
+		return opportunitySaleOrderDao.checkOpportunitySaleOrderIsExist(opId, saleOrderId);
+	}
+
+	@Override
+	public Object viewOpportunitySaleOrder(int opSaleOrderId) {
+		return opportunitySaleOrderDao.viewOpportunitySaleOrder(opSaleOrderId);
+	}
+
 }

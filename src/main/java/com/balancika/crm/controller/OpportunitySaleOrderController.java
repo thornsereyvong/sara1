@@ -25,15 +25,22 @@ public class OpportunitySaleOrderController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addOpportunitySaleOrder(@RequestBody CrmOpportunitySaleOrder opSaleOrder){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunitySaleOrderService.insertOpportunitySaleOrder(opSaleOrder) == true){
-			map.put("MESSAGE", "INSERTED");
-			map.put("STATUS", HttpStatus.CREATED.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
+		if(opportunitySaleOrderService.checkOpportunitySaleOrderIsExist(opSaleOrder.getOpId(), opSaleOrder.getSaleId()) > 0){
+			map.put("MESSAGE", "EXIST");
+			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}else{
+			if(opportunitySaleOrderService.insertOpportunitySaleOrder(opSaleOrder) == true){
+				map.put("MESSAGE", "INSERTED");
+				map.put("STATUS", HttpStatus.CREATED.value());
+				map.put("DATA", opportunitySaleOrderService.viewOpportunitySaleOrder(opSaleOrder.getOpSaleId()));
+				return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
+			}
+			
+			map.put("MESSAGE", "FAILED");
+			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
-		
-		map.put("MESSAGE", "FAILED");
-		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
@@ -47,7 +54,7 @@ public class OpportunitySaleOrderController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/remove/{opSaleOrderId}", method = RequestMethod.DELETE)
@@ -61,7 +68,7 @@ public class OpportunitySaleOrderController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/remove/{opSaleOrderId}", method = RequestMethod.GET)

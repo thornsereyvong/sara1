@@ -1,7 +1,11 @@
 package com.balancika.crm.dao.impl;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -68,6 +72,24 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 	@Override
 	public CrmOpportunitySaleOrder findOpportunitySaleOrder(int opSaleOrderId) {
 		return (CrmOpportunitySaleOrder)transactionManager.getSessionFactory().getCurrentSession().get(CrmOpportunitySaleOrder.class, opSaleOrderId);
+	}
+
+	@Override
+	public Integer checkOpportunitySaleOrderIsExist(String opId, String saleOrderId) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmOpportunitySaleOrder.class);
+		criteria.add(Restrictions.and(Restrictions.eq("opId", opId), Restrictions.eq("saleId", saleOrderId)))
+				.setProjection(Projections.rowCount());
+		return ((Number)criteria.uniqueResult()).intValue();
+	}
+
+	@Override
+	public Object viewOpportunitySaleOrder(int opSaleOrderId) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		SQLQuery query = session.createSQLQuery("CALL viewOpportunitySaleOrderById(:opSaleOrderId)");
+		query.setParameter("opSaleOrderId", opSaleOrderId)
+			 .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return query.uniqueResult();
 	}
 
 	
