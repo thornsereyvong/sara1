@@ -3,6 +3,7 @@ package com.balancika.crm.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -237,6 +238,28 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 			session.close();
 		} 
 		return null;
+	}
+
+
+	@Override
+	public boolean updateSaleOrderPostStatus(String saleId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("CALL updatePostStatus(:saleId, :postStatus)");
+			query.setParameter("saleId", saleId);
+			query.setParameter("postStatus", "Authorize");
+			session.getTransaction().commit();
+			if(query.executeUpdate() > 0){
+				session.close();
+				return true;
+			}
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return false;
 	}
 	
 }

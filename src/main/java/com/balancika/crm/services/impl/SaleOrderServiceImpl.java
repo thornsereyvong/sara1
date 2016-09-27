@@ -54,4 +54,9 @@ public class SaleOrderServiceImpl implements SaleOrderService{
 		return saleOrderDao.checkSaleOrderIdExist(saleId);
 	}
 
+	@Override
+	public boolean updateSaleOrderPostStatus(String saleId) {
+		return saleOrderDao.updateSaleOrderPostStatus(saleId);
+	}
+
 }

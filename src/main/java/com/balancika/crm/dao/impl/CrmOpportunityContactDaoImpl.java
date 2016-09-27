@@ -1,7 +1,10 @@
 package com.balancika.crm.dao.impl;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -68,6 +71,18 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 	@Override
 	public CrmOpportunityContact findOpportunityContactById(int opConId) {
 		return (CrmOpportunityContact)transactionManager.getSessionFactory().getCurrentSession().get(CrmOpportunityContact.class, opConId);
+	}
+
+	@Override
+	public Integer checkOpportunityContactIsExist(String opId, String conId) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmOpportunityContact.class);
+		criteria.add(Restrictions.and(Restrictions.eq("opId", opId),Restrictions.eq("conId", conId)));
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.property("opId"), "opId")
+				.add(Projections.property("conId"), "opId"));
+		criteria.setProjection(Projections.rowCount());
+		return ((Number)criteria.uniqueResult()).intValue();
 	}
 
 }

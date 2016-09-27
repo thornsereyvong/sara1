@@ -36,4 +36,9 @@ public class CrmOpportunityContactServiceImpl implements CrmOpportunityContactSe
 		return opportunityContactDao.findOpportunityContactById(opConId);
 	}
 
+	@Override
+	public Integer checkOpportunityContactIsExist(String opId, String conId) {
+		return opportunityContactDao.checkOpportunityContactIsExist(opId, conId);
+	}
+
 }

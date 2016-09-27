@@ -13,4 +13,5 @@ public interface SaleOrderService {
 	List<Object> listSaleOrders();
 	List<Object> listPrincipleOnStartup();
 	String checkSaleOrderIdExist(String saleId);
+	boolean updateSaleOrderPostStatus(String saleId);
 }

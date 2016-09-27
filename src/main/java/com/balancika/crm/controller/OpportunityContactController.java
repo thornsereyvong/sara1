@@ -25,15 +25,21 @@ public class OpportunityContactController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addOpportunityContact(@RequestBody CrmOpportunityContact opCon){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityContactService.insterOpportunityContact(opCon) == true){
-			map.put("MESSAGE", "INSERTED");
-			map.put("STATUS", HttpStatus.CREATED.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
+		if(opportunityContactService.checkOpportunityContactIsExist(opCon.getOpId(), opCon.getConId()) > 0){
+			map.put("MESSAGE", "EXIST");
+			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}else{
+			if(opportunityContactService.insterOpportunityContact(opCon) == true){
+				map.put("MESSAGE", "INSERTED");
+				map.put("STATUS", HttpStatus.CREATED.value());
+				return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
+			}
+			
+			map.put("MESSAGE", "FAILED");
+			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
-		
-		map.put("MESSAGE", "FAILED");
-		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
@@ -47,7 +53,7 @@ public class OpportunityContactController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/remove/{opConId}", method = RequestMethod.DELETE)
@@ -61,7 +67,7 @@ public class OpportunityContactController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/view/{opConId}", method = RequestMethod.GET)

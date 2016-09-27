@@ -119,6 +119,20 @@ public class SaleOrderController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@RequestMapping(value="/edit/post_status/{saleId}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> editSaleOrderPostStatus(@PathVariable String saleId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(saleOrderService.updateSaleOrderPostStatus(saleId) == true){
+			map.put("MESSAGE", "UPDATED");
+			map.put("STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/remove/{saleId}", method = RequestMethod.DELETE)
 	public ResponseEntity<Map<String, Object>> editSaleOrder(@PathVariable("saleId") String saleId){
 		
