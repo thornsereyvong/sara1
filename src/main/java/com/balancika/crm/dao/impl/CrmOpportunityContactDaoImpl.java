@@ -2,6 +2,7 @@ package com.balancika.crm.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -83,6 +84,20 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 				.add(Projections.property("conId"), "opId"));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number)criteria.uniqueResult()).intValue();
+	}
+
+	@Override
+	public Object viewOpportunityContactById(int opConId) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL viewOpportunityById(:opConId)");
+			query.setParameter("opConId", opConId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.uniqueResult();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

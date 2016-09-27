@@ -8,4 +8,5 @@ public interface CrmOpportunityContactService {
 	boolean deleteOpportunityContact(int opConId);
 	CrmOpportunityContact findOpportunityContactById(int opConId);
 	Integer checkOpportunityContactIsExist(String opId, String conId);
+	Object viewOpportunityContactById(int opConId);
 }

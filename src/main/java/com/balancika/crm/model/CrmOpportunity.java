@@ -86,6 +86,34 @@ public class CrmOpportunity implements Serializable{
 	@Type(type="date")
 	@Column(name = "OP_MDate", insertable = false, updatable = false)
 	private Date opModifyDate;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="OP_PriceCode")
+	private PriceCode priceCode;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="OP_Class")
+	private AmeClass ameClass;
+	
+	@Column(name="OP_TotalAmt", columnDefinition = "double default 0.00")
+	private double totalAmount;
+	
+	@Column(name="OP_DisInvDol", columnDefinition = "double default 0.00")
+	private double disInvDol;
+	
+	@Column(name="OP_DisInvPer", columnDefinition = "double default 0.00")
+	private double disInvPer;
+	
+	@Column(name="OP_TotalDis", columnDefinition = "double default 0.00")
+	private double totalDis;
+	
+	@Column(name="OP_TotalSTax", columnDefinition = "double default 0.00")
+	private double totalSTax;
+	
+	@Column(name="OP_TotalVTax", columnDefinition = "double default 0.00")
+	private double totalVTax;
 
 	public String getOpId() {
 		return opId;

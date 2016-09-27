@@ -32,6 +32,7 @@ public class OpportunityContactController {
 		}else{
 			if(opportunityContactService.insterOpportunityContact(opCon) == true){
 				map.put("MESSAGE", "INSERTED");
+				map.put("DATA", opportunityContactService.viewOpportunityContactById(opCon.getOpConId()));
 				map.put("STATUS", HttpStatus.CREATED.value());
 				return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 			}
