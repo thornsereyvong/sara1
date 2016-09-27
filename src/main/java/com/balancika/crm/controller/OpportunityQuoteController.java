@@ -25,15 +25,22 @@ public class OpportunityQuoteController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addOpportunityQuote(@RequestBody CrmOpportunityQuotation opQuote){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityQuoteService.insertOpportunityQuote(opQuote) == true){
-			map.put("MESSAGE", "INSERTED");
-			map.put("STATUS", HttpStatus.CREATED.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
+		if(opportunityQuoteService.checkOpportunityQuotationIsExist(opQuote.getOpId(), opQuote.getQuoteId()) > 0){
+			map.put("MESSAGE", "EXIST");
+			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}else{
+			if(opportunityQuoteService.insertOpportunityQuote(opQuote) == true){
+				map.put("MESSAGE", "INSERTED");
+				map.put("STATUS", HttpStatus.CREATED.value());
+				map.put("DATA", opportunityQuoteService.viewOpportunityQuotationById(opQuote.getOpQuoteId()));
+				return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
+			}
+			
+			map.put("MESSAGE", "FAILED");
+			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
-		
-		map.put("MESSAGE", "FAILED");
-		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
@@ -47,7 +54,7 @@ public class OpportunityQuoteController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/remove/{opQuoteId}", method = RequestMethod.DELETE)
@@ -61,7 +68,7 @@ public class OpportunityQuoteController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/view/{opQuoteId}", method = RequestMethod.GET)

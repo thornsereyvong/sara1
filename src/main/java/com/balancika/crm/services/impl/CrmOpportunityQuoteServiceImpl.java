@@ -36,4 +36,14 @@ public class CrmOpportunityQuoteServiceImpl implements CrmOpportunityQuoteServic
 		return opportunityQuoteDao.findOpportunityQuotationById(opQuoteId);
 	}
 
+	@Override
+	public Integer checkOpportunityQuotationIsExist(String opId, String quoteId) {
+		return opportunityQuoteDao.checkOpportunityQuotationIsExist(opId, quoteId);
+	}
+
+	@Override
+	public Object viewOpportunityQuotationById(int opQuoteId) {
+		return opportunityQuoteDao.viewOpportunityQuotationById(opQuoteId);
+	}
+
 }

@@ -1,7 +1,11 @@
 package com.balancika.crm.dao.impl;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -68,6 +72,24 @@ public class CrmOpportunityQuoteDaoImpl implements CrmOpportunityQuoteDao{
 	@Override
 	public CrmOpportunityQuotation findOpportunityQuotationById(int opQuoteId) {
 		return (CrmOpportunityQuotation)transactionManager.getSessionFactory().getCurrentSession().get(CrmOpportunityQuotation.class, opQuoteId);
+	}
+
+	@Override
+	public Integer checkOpportunityQuotationIsExist(String opId, String quoteId) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmOpportunityQuotation.class);
+		criteria.add(Restrictions.and(Restrictions.eq("opId", opId), Restrictions.eq("quoteId", quoteId)))
+				.setProjection(Projections.rowCount());
+		return ((Number)criteria.uniqueResult()).intValue();
+	}
+
+	@Override
+	public Object viewOpportunityQuotationById(int opQuoteId) {
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		SQLQuery query = session.createSQLQuery("CALL viewOpportunityQuotationById(:opQuoteId)");
+		query.setParameter("opQuoteId", opQuoteId);
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return query.uniqueResult();
 	}
 
 }

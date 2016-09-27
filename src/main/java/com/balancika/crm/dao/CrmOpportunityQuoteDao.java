@@ -8,4 +8,6 @@ public interface CrmOpportunityQuoteDao {
 	boolean updateOpportunityQuote(CrmOpportunityQuotation opQuote);
 	boolean deleteOpportunityQuote(int opQuoteId);
 	CrmOpportunityQuotation findOpportunityQuotationById(int opQuoteId);
+	Integer checkOpportunityQuotationIsExist(String opId, String quoteId);
+	Object viewOpportunityQuotationById(int opQuoteId);
 }
