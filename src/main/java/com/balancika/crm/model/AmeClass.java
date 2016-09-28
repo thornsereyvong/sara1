@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="")
+@Table(name="tblclass")
 public class AmeClass implements Serializable{
 
 	private static final long serialVersionUID = 1L;

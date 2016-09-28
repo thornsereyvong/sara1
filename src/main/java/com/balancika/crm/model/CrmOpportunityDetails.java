@@ -1,13 +1,21 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 
 @Entity
@@ -22,19 +30,25 @@ public class CrmOpportunityDetails implements Serializable{
 	private int opDetailsId;
 	
 	@Column(name="OP_ID")
-	private int opId;
+	private String opId;
 	
 	@Column(name="LineNo")
 	private int lineNo;
 	
-	@Column(name="ItemID")
-	private String itemId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="ItemID")
+	private AmeItem item;
 	
-	@Column(name="UomID")
-	private String uomId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="UomID")
+	private AmeUom uom;
 	
-	@Column(name="LocationID")
-	private String locationId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="LocationID")
+	private AmeLocation location;
 	
 	@Column(name="SalQty", columnDefinition = "double default 0.00")
 	private double saleQty;
@@ -72,11 +86,22 @@ public class CrmOpportunityDetails implements Serializable{
 	@Column(name="Factor", columnDefinition = "double default 0.00")
 	private double factor;
 	
-	@Column(name="ClassID", columnDefinition = "double default 0.00")
-	private String classId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="ClassID")
+	private AmeClass ameClass;
 	
 	@Column(name="DisInv", columnDefinition = "double default 0.00")
 	private double disInv;
+	
+	@Transient
+	private List<Object> items;
+	
+	@Transient
+	private List<Object> locations;
+	
+	@Transient
+	private Object opportunity;
 
 	public int getOpDetailsId() {
 		return opDetailsId;
@@ -86,13 +111,6 @@ public class CrmOpportunityDetails implements Serializable{
 		this.opDetailsId = opDetailsId;
 	}
 
-	public int getOpId() {
-		return opId;
-	}
-
-	public void setOpId(int opId) {
-		this.opId = opId;
-	}
 
 	public int getLineNo() {
 		return lineNo;
@@ -100,30 +118,6 @@ public class CrmOpportunityDetails implements Serializable{
 
 	public void setLineNo(int lineNo) {
 		this.lineNo = lineNo;
-	}
-
-	public String getItemId() {
-		return itemId;
-	}
-
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
-	}
-
-	public String getUomId() {
-		return uomId;
-	}
-
-	public void setUomId(String uomId) {
-		this.uomId = uomId;
-	}
-
-	public String getLocationId() {
-		return locationId;
-	}
-
-	public void setLocationId(String locationId) {
-		this.locationId = locationId;
 	}
 
 	public double getSaleQty() {
@@ -222,14 +216,6 @@ public class CrmOpportunityDetails implements Serializable{
 		this.factor = factor;
 	}
 
-	public String getClassId() {
-		return classId;
-	}
-
-	public void setClassId(String classId) {
-		this.classId = classId;
-	}
-
 	public double getDisInv() {
 		return disInv;
 	}
@@ -237,4 +223,69 @@ public class CrmOpportunityDetails implements Serializable{
 	public void setDisInv(double disInv) {
 		this.disInv = disInv;
 	}
+
+	public String getOpId() {
+		return opId;
+	}
+
+	public void setOpId(String opId) {
+		this.opId = opId;
+	}
+
+	public List<Object> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Object> items) {
+		this.items = items;
+	}
+
+	public List<Object> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<Object> locations) {
+		this.locations = locations;
+	}
+
+	public Object getOpportunity() {
+		return opportunity;
+	}
+
+	public void setOpportunity(Object opportunity) {
+		this.opportunity = opportunity;
+	}
+
+	public AmeItem getItem() {
+		return item;
+	}
+
+	public void setItem(AmeItem item) {
+		this.item = item;
+	}
+
+	public AmeUom getUom() {
+		return uom;
+	}
+
+	public void setUom(AmeUom uom) {
+		this.uom = uom;
+	}
+
+	public AmeLocation getLocation() {
+		return location;
+	}
+
+	public void setLocation(AmeLocation location) {
+		this.location = location;
+	}
+
+	public AmeClass getAmeClass() {
+		return ameClass;
+	}
+
+	public void setAmeClass(AmeClass ameClass) {
+		this.ameClass = ameClass;
+	}
+	
 }
