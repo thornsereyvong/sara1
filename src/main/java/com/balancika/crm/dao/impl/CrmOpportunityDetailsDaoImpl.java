@@ -86,10 +86,12 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 		return (CrmOpportunityDetails)criteria.uniqueResult();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunityDetails> listOpportunityDetails() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmOpportunityDetails.class);
+		return criteria.list();
 	}
 
 	@Override

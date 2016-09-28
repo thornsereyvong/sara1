@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
@@ -18,6 +20,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="crm_opportunity")
+@DynamicUpdate(value = true)
+@DynamicInsert(value = false)
 public class CrmOpportunity implements Serializable{
 
 	private static final long serialVersionUID = 1L;

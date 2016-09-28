@@ -86,7 +86,7 @@ public class CrmOpportunityDetails implements Serializable{
 	@Column(name="Factor", columnDefinition = "double default 0.00")
 	private double factor;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="ClassID")
 	private AmeClass ameClass;
