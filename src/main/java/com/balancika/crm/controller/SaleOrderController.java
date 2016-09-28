@@ -119,10 +119,10 @@ public class SaleOrderController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/edit/post_status/{saleId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> editSaleOrderPostStatus(@PathVariable String saleId){
+	@RequestMapping(value="/edit/post_status/{saleId}/{status}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> editSaleOrderPostStatus(@PathVariable("saleId") String saleId, @PathVariable("status") String status){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(saleOrderService.updateSaleOrderPostStatus(saleId) == true){
+		if(saleOrderService.updateSaleOrderPostStatus(saleId,status) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

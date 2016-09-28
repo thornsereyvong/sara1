@@ -242,13 +242,13 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 
 
 	@Override
-	public boolean updateSaleOrderPostStatus(String saleId) {
+	public boolean updateSaleOrderPostStatus(String saleId, String status) {
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("CALL updatePostStatus(:saleId, :postStatus)");
 			query.setParameter("saleId", saleId);
-			query.setParameter("postStatus", "Authorize");
+			query.setParameter("postStatus", status);
 			session.getTransaction().commit();
 			if(query.executeUpdate() > 0){
 				session.close();

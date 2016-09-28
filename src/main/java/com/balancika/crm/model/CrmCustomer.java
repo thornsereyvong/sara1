@@ -61,6 +61,12 @@ public class CrmCustomer implements Serializable{
 	@Column(name="WhatApp")
 	private String whatApp;
 	
+	@Column(name="AID")
+	private int aId;
+	
+	@Column(name="TermNetDueIn", columnDefinition = "int default 0")
+	private int termNetDueIn;
+	
 	@Fetch(FetchMode.JOIN)
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = CrmIndustry.class)
 	@JoinColumn(name="CrmIndustID", nullable = true)
@@ -292,4 +298,21 @@ public class CrmCustomer implements Serializable{
 	public void setOpportunities(List<CrmOpportunity> opportunities) {
 		this.opportunities = opportunities;
 	}
+
+	public int getaId() {
+		return aId;
+	}
+
+	public void setaId(int aId) {
+		this.aId = aId;
+	}
+
+	public int getTermNetDueIn() {
+		return termNetDueIn;
+	}
+
+	public void setTermNetDueIn(int termNetDueIn) {
+		this.termNetDueIn = termNetDueIn;
+	}
+	
 }

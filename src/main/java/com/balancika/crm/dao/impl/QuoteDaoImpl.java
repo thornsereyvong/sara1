@@ -13,11 +13,14 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.QuoteDao;
+import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.CrmCustomerDetails;
 import com.balancika.crm.model.Quote;
 import com.balancika.crm.model.QuoteDetails;
 import com.balancika.crm.utilities.CrmIdGenerator;
@@ -28,12 +31,17 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	@Autowired
 	private HibernateTransactionManager transactionManager;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listQuoteStartupPage() {	
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		SQLQuery cust = session.createSQLQuery("SELECT C.CustID,C.CustName, C.AID AS AIDMaster,COALESCE(C.TermNetDueIn,0) 'TermNetDueIn',"
-												+ "COALESCE(CD.AID,'') 'AID',COALESCE(CD.Address,'') 'Address',COALESCE(C.PriceCode) 'PriceCode' "
-												+ "FROM tblcustomer C LEFT JOIN tblcustomerdetails CD on C.CustID = CD.CustID;");
+		Criteria criteria = session.createCriteria(CrmCustomer.class, "cust");
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.property("custID"), "custID")
+				.add(Projections.property("custName"), "custName")
+				.add(Projections.property("aId"),"aId")
+				.add(Projections.property("termNetDueIn"), "termNetDueIn"));
+		criteria.setResultTransformer(Transformers.aliasToBean(CrmCustomer.class));
 		SQLQuery query = session.createSQLQuery("SELECT ClassID, Des AS ClassName FROM tblclass WHERE Inactive = 0;");
 		SQLQuery emp = session.createSQLQuery("SELECT EmpID, EmpName FROM tblemployee;");
 		SQLQuery item = session.createSQLQuery("SELECT ItemID,ItemName, COALESCE(i.UOMID,'') 'UOM' FROM tblitem i;");
@@ -41,7 +49,6 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		SQLQuery uom = session.createSQLQuery("SELECT UomID,Des AS UomName FROM tbluom;");
 		SQLQuery priceCode = session.createSQLQuery("SELECT PriceCode,Description FROM tblpricecode;");
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		cust.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		emp.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		item.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		location.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -49,7 +56,11 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		priceCode.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		List<Object> arrMap = new ArrayList<Object>();
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("customer", cust.list());
+		List<CrmCustomer> customers = criteria.list();
+		for(CrmCustomer customer : customers){
+			customer.setCustDetails(listCustomerDetails(customer.getCustID()));
+		}
+		map.put("customer", customers);
 		map.put("classCode", query.list());
 		map.put("employee", emp.list());
 		map.put("item", item.list());
@@ -58,6 +69,16 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		map.put("priceCode", priceCode.list());
 		arrMap.add(map);
 		return arrMap;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private List<CrmCustomerDetails> listCustomerDetails(String custId){
+		
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmCustomerDetails.class);
+		criteria.add(Restrictions.eq("custId", custId));
+		return criteria.list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -192,16 +213,17 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 
 	@Override
 	public Quote findQuoteById(String quoteId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(Quote.class);
 			criteria.add(Restrictions.eq("saleId", quoteId));
 			Quote quote = (Quote)criteria.uniqueResult();
 			quote.setQuoteDetails(lisQuoteDetails(quoteId));
+			session.close();
 			return quote;
-		} catch (Exception e) {
-			e.getMessage();
+		} catch (HibernateException e) {
+			e.printStackTrace();
 			session.close();
 		}
 		

@@ -55,8 +55,8 @@ public class SaleOrderServiceImpl implements SaleOrderService{
 	}
 
 	@Override
-	public boolean updateSaleOrderPostStatus(String saleId) {
-		return saleOrderDao.updateSaleOrderPostStatus(saleId);
+	public boolean updateSaleOrderPostStatus(String saleId, String status) {
+		return saleOrderDao.updateSaleOrderPostStatus(saleId, status);
 	}
 
 }
