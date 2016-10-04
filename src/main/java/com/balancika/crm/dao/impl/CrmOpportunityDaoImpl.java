@@ -181,6 +181,4 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		map.put("ALL_QUOTATIONS", quoteDao.listCustomFieldOfQuotes(opId));
 		return map;
 	}
-	
-
 }

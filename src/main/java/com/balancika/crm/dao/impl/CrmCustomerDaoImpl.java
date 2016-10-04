@@ -14,6 +14,7 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmCustomerDao;
+import com.balancika.crm.model.AmeClass;
 import com.balancika.crm.model.CrmCase;
 import com.balancika.crm.model.CrmContact;
 import com.balancika.crm.model.CrmCustomer;
@@ -140,7 +141,10 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
-			criteria.setProjection(Projections.projectionList().add(Projections.property("custID"),"custID").add(Projections.property("custName"),"custName"));
+			criteria.setProjection(Projections.projectionList()
+					.add(Projections.property("custID"),"custID")
+					.add(Projections.property("custName"),"custName")
+					.add(Projections.property("priceCode"), "priceCode"));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return criteria.list();
 		} catch (Exception e) {
@@ -154,17 +158,19 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	@Override
 	public List<PriceCode> listPriceCode() {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		try {
-			Criteria criteria = session.createCriteria(PriceCode.class);
-			criteria.addOrder(Order.asc("priceCode"));
-			return (List<PriceCode>)criteria.list();
-		} catch (Exception e) {
-			e.printStackTrace();
-			session.getTransaction().rollback();
-		}
-		return null;
+		Criteria criteria = session.createCriteria(PriceCode.class);
+		criteria.addOrder(Order.asc("priceCode"));
+		return (List<PriceCode>)criteria.list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<AmeClass> listAmeClasses(){
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(AmeClass.class);
+		return criteria.list();
+	}
+	
 	@Override
 	public CrmCustomer viewCustomerDetails(String custId) {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();

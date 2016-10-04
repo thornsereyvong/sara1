@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCustomerDao;
+import com.balancika.crm.model.AmeClass;
 import com.balancika.crm.model.CrmCustomer;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.services.CrmCustomerService;
@@ -57,6 +58,11 @@ public class CrmCustomerServiceImpl implements CrmCustomerService{
 	@Override
 	public CrmCustomer viewCustomerDetails(String custId) {
 		return customerDao.viewCustomerDetails(custId);
+	}
+
+	@Override
+	public List<AmeClass> listAmeClasses() {
+		return customerDao.listAmeClasses();
 	}
 
 }

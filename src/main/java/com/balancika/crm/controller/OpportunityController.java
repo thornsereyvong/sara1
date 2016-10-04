@@ -277,6 +277,8 @@ public class OpportunityController {
 		map.put("OPP_TYPES", typeService.listOpportunityTypes());
 		map.put("OPP_STAGES", stageService.listOpportunityStages());
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("PRICE_CODE", customerService.listPriceCode());
+		map.put("CLASSES", customerService.listAmeClasses());
 		map.put("CAMPAIGNS", campaignService.listIdAndNameOfCompaign());
 		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -312,6 +314,8 @@ public class OpportunityController {
 		map.put("OPP_TYPES", typeService.listOpportunityTypes());
 		map.put("OPP_STAGES", stageService.listOpportunityStages());
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
+		map.put("PRICE_CODE", customerService.listPriceCode());
+		map.put("CLASSES", customerService.listAmeClasses());
 		map.put("CAMPAIGNS", campaignService.listIdAndNameOfCompaign());
 		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
 		map.put("OPPORTUNITY", opService.findOpportunityById(jsonMap.get("opId").toString()));
