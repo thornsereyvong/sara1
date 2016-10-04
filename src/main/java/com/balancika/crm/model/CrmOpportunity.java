@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name="crm_opportunity")
 @DynamicUpdate(value = true)
-@DynamicInsert(value = false)
+@DynamicInsert(value = true)
 public class CrmOpportunity implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -251,6 +251,70 @@ public class CrmOpportunity implements Serializable{
 		return opModifyDate;
 	}
 
+	public PriceCode getPriceCode() {
+		return priceCode;
+	}
+
+	public void setPriceCode(PriceCode priceCode) {
+		this.priceCode = priceCode;
+	}
+
+	public AmeClass getAmeClass() {
+		return ameClass;
+	}
+
+	public void setAmeClass(AmeClass ameClass) {
+		this.ameClass = ameClass;
+	}
+
+	public double getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public double getDisInvDol() {
+		return disInvDol;
+	}
+
+	public void setDisInvDol(double disInvDol) {
+		this.disInvDol = disInvDol;
+	}
+
+	public double getDisInvPer() {
+		return disInvPer;
+	}
+
+	public void setDisInvPer(double disInvPer) {
+		this.disInvPer = disInvPer;
+	}
+
+	public double getTotalDis() {
+		return totalDis;
+	}
+
+	public void setTotalDis(double totalDis) {
+		this.totalDis = totalDis;
+	}
+
+	public double getTotalSTax() {
+		return totalSTax;
+	}
+
+	public void setTotalSTax(double totalSTax) {
+		this.totalSTax = totalSTax;
+	}
+
+	public double getTotalVTax() {
+		return totalVTax;
+	}
+
+	public void setTotalVTax(double totalVTax) {
+		this.totalVTax = totalVTax;
+	}
+
 	public void setOpModifyDate(Date opModifyDate) {
 		this.opModifyDate = opModifyDate;
 	}
@@ -258,4 +322,6 @@ public class CrmOpportunity implements Serializable{
 	public void setOpCampaign(CrmCampaign opCampaign) {
 		this.opCampaign = opCampaign;
 	}
+	
+	
 }
