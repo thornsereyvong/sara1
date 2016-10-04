@@ -77,6 +77,8 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			CrmOpportunity opportunity = new CrmOpportunity();
 			opportunity.setOpId(opId);
 			session.delete(opportunity);
+			this.deleteOpportunityQuote(opId);
+			this.deleteOpportunitySaleOrder(opId);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
@@ -180,5 +182,35 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		map.put("ALL_SALE_ORDERS", saleOrderDao.listSomeFieldsOfSaleOrder(opId));
 		map.put("ALL_QUOTATIONS", quoteDao.listCustomFieldOfQuotes(opId));
 		return map;
+	}
+	
+	private void deleteOpportunityQuote(String opId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_quote WHERE OP_ID = :opId ;");
+			query.setParameter("opId", opId);
+			query.executeUpdate();
+			session.getTransaction().commit();
+			session.close();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+		}
+	}
+	
+	private void deleteOpportunitySaleOrder(String opId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_saleorder WHERE OP_ID = :opId ;");
+			query.setParameter("opId", opId);
+			query.executeUpdate();
+			session.getTransaction().commit();
+			session.close();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+		}
 	}
 }
