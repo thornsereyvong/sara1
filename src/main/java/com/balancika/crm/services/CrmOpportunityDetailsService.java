@@ -12,4 +12,5 @@ public interface CrmOpportunityDetailsService {
 	CrmOpportunityDetails findOpportunityDetailsById(int opDetailsId);
 	List<CrmOpportunityDetails> listOpportunityDetails();
 	Map<String, Object> startUpPage();
+	List<CrmOpportunityDetails> listOpportunityDetailsRelatedToOpportunity(String opId);
 }

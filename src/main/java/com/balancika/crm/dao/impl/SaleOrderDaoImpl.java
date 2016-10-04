@@ -32,7 +32,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 			session.beginTransaction();
 			String saleId = "";
 			
-			if(saleOrder.getSaleId().equals("") || saleOrder.getSaleId().equals(null)){
+			if(saleOrder.getSaleId().equals("") || saleOrder.getSaleId() == null){
 				saleId = ameIdAutoGenerator("AR-SO");
 				if(checkSaleOrderIdExist(saleId).equals("EXIST")){
 					saleId = ameIdAutoGenerator("AR-SO");
@@ -106,10 +106,10 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 			SQLQuery query = session.createSQLQuery(sql);
 			query.setParameter("saleId", saleId);
 			session.getTransaction().commit();
-			if(query.executeUpdate() > 0){
-				session.close();
-				return true;
-			}
+			query.executeUpdate();
+			this.deleteOpportunitySaleOrder(saleId);
+			session.close();
+			return true;
 		} catch (Exception e) {
 			session.beginTransaction().rollback();
 			session.close();
@@ -153,12 +153,11 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 				SQLQuery query = session.createSQLQuery("DELETE FROM tblsaleOrder WHERE SalID = :saleId ;");
 				query.setParameter("saleId", saleId);
 				session.getTransaction().commit();
-				if(query.executeUpdate() > 0){
-					session.close();
-					return true;
-				}
+				query.executeUpdate();
+				this.deleteOpportunitySaleOrder(saleId);
+				session.close();
+				return true;
 			}
-			
 		} catch (Exception e) {
 			e.getMessage();
 			session.getTransaction().rollback();
@@ -216,8 +215,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 			if(criteria.uniqueResult() != null){
 				return "EXIST";
 			}
-		} catch (Exception e) {
-			e.getMessage();
+		} catch (HibernateException e) {
+			e.printStackTrace();
 			session.close();
 		} 
 		return "NOT_EXIST";
@@ -260,6 +259,21 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 			session.close();
 		}
 		return false;
+	}
+	
+	private void deleteOpportunitySaleOrder(String saleId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_saleorder WHERE S_O_ID = :saleId ;");
+			query.setParameter("saleId", saleId);
+			query.executeUpdate();
+			session.getTransaction().commit();
+			session.close();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+		}
 	}
 	
 }

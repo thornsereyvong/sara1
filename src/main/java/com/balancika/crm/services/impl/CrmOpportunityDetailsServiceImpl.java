@@ -49,4 +49,9 @@ public class CrmOpportunityDetailsServiceImpl implements CrmOpportunityDetailsSe
 		return opportunityDetailsDao.startUpPage();
 	}
 
+	@Override
+	public List<CrmOpportunityDetails> listOpportunityDetailsRelatedToOpportunity(String opId) {
+		return opportunityDetailsDao.listOpportunityDetailsRelatedToOpportunity(opId);
+	}
+
 }

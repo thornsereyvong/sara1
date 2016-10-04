@@ -132,4 +132,15 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 		return criteria.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmOpportunityDetails> listOpportunityDetailsRelatedToOpportunity(String opId) {
+
+		Session session = transactionManager.getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(CrmOpportunityDetails.class);
+		criteria.add(Restrictions.eq("opId", opId));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
 }

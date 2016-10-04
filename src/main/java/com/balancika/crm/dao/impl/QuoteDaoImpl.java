@@ -198,9 +198,9 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM tblsbquotedetails WHERE SalID = :quoteId ;");
 			query.setParameter("quoteId", quoteId);
-			if(query.executeUpdate() > 0){
-				session.delete(quote);
-			}
+			query.executeUpdate();
+			session.delete(quote);
+			this.deleteOpportunityQuote(quoteId);
 			session.getTransaction().commit();
 			session.close();
 			return true;
@@ -255,16 +255,11 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	@Override
 	public String checkQuoteIdExist(String quoteId) {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		try {
-			Criteria criteria = session.createCriteria(Quote.class);
-			criteria.setProjection(Projections.projectionList().add(Projections.property("saleId"), "quoteId"));
-			criteria.add(Restrictions.eq("saleId", quoteId));
-			if(criteria.uniqueResult() != null){
-				return "EXIST";
-			}
-			
-		} catch (HibernateException e) {
-			e.getMessage();
+		Criteria criteria = session.createCriteria(Quote.class);
+		criteria.setProjection(Projections.projectionList().add(Projections.property("saleId"), "quoteId"));
+		criteria.add(Restrictions.eq("saleId", quoteId));
+		if(criteria.uniqueResult() != null){
+			return "EXIST";
 		}
 		return "NOT_EXIST";
 	}
@@ -292,5 +287,21 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		query.setParameter("opId", opId);
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return query.list();
+	}
+	
+	
+	private void deleteOpportunityQuote(String quoteId){
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_quote WHERE QuoteID = :quoteId ;");
+			query.setParameter("quoteId", quoteId);
+			query.executeUpdate();
+			session.getTransaction().commit();
+			session.close();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+		}
 	}
 }
