@@ -174,6 +174,7 @@ public class OpportunityController {
 		map.put("TAG_TO", userService.listAllUsernameAndId());
 		map.put("ALL_CONTACT", contactService.listSomeFieldsOfContact());
 		map.put("OPPORTUNITY_DETAILS", detailsService.listOpportunityDetailsRelatedToOpportunity(jsonMap.get("opId").toString()));
+		map.put("OPPORTUNITY_DETAILS_STARTUP", detailsService.startUpPage());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 	}
