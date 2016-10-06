@@ -378,16 +378,17 @@ public class LeadController {
 				e.printStackTrace();
 			}
 		}else{
+			custId = jsonMap.get("custID").toString();
 			map.put("CUST_MESSAGE", "EXIST");
-			map.put("CUSTID",jsonMap.get("custID").toString());
+			map.put("CUSTID",custId);
+			map.put("OPID", "");
 			map.put("CUST_STATUS", HttpStatus.OK.value());
 		}
 		
 		if(jsonMap.get("conID") != ""){
 			map.put("CON_MESSAGE", "EXIST");
-			map.put("STATUS", HttpStatus.OK.value());
+			map.put("CON_STATUS", HttpStatus.OK.value());
 			contactId = jsonMap.get("conID").toString();
-			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}else if(map.get("CUST_MESSAGE").equals("FAILED")){
 			map.put("CUST_MESSAGE", "FAILED");
 			map.put("CUST_STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -419,6 +420,7 @@ public class LeadController {
 		}else if(jsonMap.get("OPPORTUNITY").equals("")){
 			map.put("OP_MESSAGE", "NOT_CREATED");
 			map.put("OP_STATUS", HttpStatus.OK.value());
+			map.put("OPID", "");
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		else{

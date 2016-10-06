@@ -230,12 +230,11 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 			query.setParameter("leadId", leadID);
 			query.setParameter("custId", custId);
 			query.setParameter("opId", opId);
-			session.getTransaction().commit();
 			if(query.executeUpdate() > 0){
 				return true;
 			}
 		} catch (Exception e) {
-			session.getTransaction().rollback();
+			e.printStackTrace();
 		}
 		return false;
 	}
