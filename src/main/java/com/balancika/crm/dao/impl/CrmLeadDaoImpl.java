@@ -223,11 +223,13 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 	}
 
 	@Override
-	public boolean updateLeadStatusToConverted(String leadID) {
+	public boolean updateLeadStatusToConverted(String leadID, String custId, String opId) {
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		try {
-			SQLQuery query = session.createSQLQuery("CALL updateLeadStatusToConverted(:leadId)");
+			SQLQuery query = session.createSQLQuery("CALL updateLeadStatusToConverted(:leadId, :custId, :opId)");
 			query.setParameter("leadId", leadID);
+			query.setParameter("custId", custId);
+			query.setParameter("opId", opId);
 			session.getTransaction().commit();
 			if(query.executeUpdate() > 0){
 				return true;

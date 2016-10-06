@@ -66,8 +66,8 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 	}
 
 	@Override
-	public boolean updateLeadStatusToConverted(String leadID) {
-		return dao.updateLeadStatusToConverted(leadID);
+	public boolean updateLeadStatusToConverted(String leadID, String custId, String opId) {
+		return dao.updateLeadStatusToConverted(leadID,custId,opId);
 	}
 
 }

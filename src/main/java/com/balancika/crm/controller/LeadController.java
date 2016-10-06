@@ -294,7 +294,7 @@ public class LeadController {
 			e.printStackTrace();
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(leadService.updateLeadStatusToConverted(jsonMap.get("leadID").toString())== true){
+		if(leadService.updateLeadStatusToConverted(jsonMap.get("leadID").toString(),jsonMap.get("custId").toString(),jsonMap.get("opId").toString())== true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
@@ -367,6 +367,7 @@ public class LeadController {
 				if(customerService.insertCustomer(customer) == true){
 					map.put("CUST_MESSAGE", "SUCCESS");
 					map.put("CUST_STATUS", HttpStatus.OK.value());
+					map.put("CUSTID",customer.getCustID());
 					custId = customer.getCustID();
 				}else{
 					map.put("CUST_MESSAGE", "FAILED");
@@ -378,6 +379,7 @@ public class LeadController {
 			}
 		}else{
 			map.put("CUST_MESSAGE", "EXIST");
+			map.put("CUSTID",jsonMap.get("custID").toString());
 			map.put("CUST_STATUS", HttpStatus.OK.value());
 		}
 		
@@ -434,6 +436,7 @@ public class LeadController {
 					opContactService.insterOpportunityContact(opCon);
 					map.put("OP_MESSAGE", "SUCCESS");
 					map.put("OP_STATUS", HttpStatus.OK.value());
+					map.put("OPID", opportunity.getOpId());
 					return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 				}else{
 					map.put("OP_MESSAGE", "FAILED");
