@@ -19,21 +19,29 @@ public class LeadReportDaoImpl implements LeadReportDao{
 
 	@Override
 	public List<CrmLead> reportLeadsConvertedAllTime() {
-		Session session = sessionFactory.getCurrentSession();
-		SQLQuery query = session.createSQLQuery("CALL ");
+		//Session session = sessionFactory.getCurrentSession();
+		//SQLQuery query = session.createSQLQuery("CALL ");
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLead> reportLeadConvertedByFQ(String startDate, String endDate) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		SQLQuery query = session.createSQLQuery("CALL reportLeadsConvertedByFQ(:startDate, :endDate)");
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLead> reportLeadCreatedCurrentFQ(String startDate, String endDate) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		SQLQuery query = session.createSQLQuery("CALL reportLeadsCreatedCurrentByFQ(:startDate, :endDate)");
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		return query.list();
 	}
 
 	@Override
@@ -49,9 +57,10 @@ public class LeadReportDaoImpl implements LeadReportDao{
 	}
 
 	@Override
-	public List<CrmLead> reportMarketingLeadTrendsByStatus() {
-		// TODO Auto-generated method stub
-		return null;
+	public Object reportMarketingLeadTrendsByStatus() {
+		Session session = sessionFactory.getCurrentSession();
+		SQLQuery query = session.createSQLQuery("SELECT reportMarketingExecLeadTrendsByStatus()");
+		return query.uniqueResult();
 	}
 
 	@Override

@@ -14,12 +14,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 
 @Entity
 @Table(name="crm_opportunity_detail")
+@DynamicUpdate(value = true)
+@DynamicInsert(value = true)
 public class CrmOpportunityDetails implements Serializable{
 
 	private static final long serialVersionUID = 1L;

@@ -10,7 +10,7 @@ public interface LeadReportDao {
 	List<CrmLead> reportLeadCreatedCurrentFQ(String startDate, String endDate);
 	List<CrmLead> reportMarketingOfLead();
 	List<CrmLead> reportLeadByMonth(String date);
-	List<CrmLead> reportMarketingLeadTrendsByStatus();
+	Object reportMarketingLeadTrendsByStatus();
 	List<CrmLead> reportMarketingLeadByCampaigns();
 	List<CrmLead> reportMarketingLeadByIndustry();
 	List<CrmLead> reportMarketingLeadBySource();

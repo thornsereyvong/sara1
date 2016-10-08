@@ -2,13 +2,16 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -118,6 +121,11 @@ public class CrmOpportunity implements Serializable{
 	
 	@Column(name="OP_TotalVTax", columnDefinition = "double default 0.00")
 	private double totalVTax;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="OP_ID")
+	private List<CrmOpportunityDetails> details;
 
 	public String getOpId() {
 		return opId;
@@ -322,6 +330,12 @@ public class CrmOpportunity implements Serializable{
 	public void setOpCampaign(CrmCampaign opCampaign) {
 		this.opCampaign = opCampaign;
 	}
-	
-	
+
+	public List<CrmOpportunityDetails> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<CrmOpportunityDetails> details) {
+		this.details = details;
+	}
 }

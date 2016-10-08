@@ -41,6 +41,13 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 		}
 		return false;
 	}
+	
+	/*private double generateDisInvByItem(double netAmt, double persent){
+		if(netAmt == 0 || persent == 0){
+			return 0;
+		}
+		return (netAmt * persent / 100);
+	}*/
 
 	@Override
 	public boolean updateOpportunityDetails(CrmOpportunityDetails details) {

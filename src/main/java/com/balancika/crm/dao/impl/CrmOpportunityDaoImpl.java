@@ -18,6 +18,7 @@ import com.balancika.crm.dao.CrmOpportunityDao;
 import com.balancika.crm.dao.QuoteDao;
 import com.balancika.crm.dao.SaleOrderDao;
 import com.balancika.crm.model.CrmOpportunity;
+import com.balancika.crm.model.CrmOpportunityDetails;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -58,6 +59,9 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			for(CrmOpportunityDetails details : opportunity.getDetails()){
+				details.setDisInv(generateDisInvByItem(details.getNetTotalAmt(), opportunity.getDisInvPer()));
+			}
 			session.update(opportunity);
 			session.getTransaction().commit();
 			return true;
@@ -212,5 +216,12 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			e.printStackTrace();
 			session.close();
 		}
+	}
+	
+	private double generateDisInvByItem(double netAmt, double persent){
+		if(netAmt == 0 || persent == 0){
+			return 0;
+		}
+		return (netAmt * persent / 100);
 	}
 }
