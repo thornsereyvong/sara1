@@ -25,5 +25,26 @@ public class LeadReportController {
 		map.put("REPORT",leadReportService.reportMarketingLeadTrendsByStatus());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/exec-lead-by-campaign", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> reportMarketingExecLeadByCampaigns(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("REPORT",leadReportService.reportMarketingLeadByCampaigns());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/exec-lead-by-industry", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> reportMarketingExecLeadByIndustry(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("REPORT",leadReportService.reportMarketingLeadByIndustry());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/exec-lead-by-source", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> reportMarketingExecLeadBySource(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("REPORT",leadReportService.reportMarketingLeadBySource());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
 
 }

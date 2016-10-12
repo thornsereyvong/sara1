@@ -1,7 +1,9 @@
 package com.balancika.crm.dao.impl.report;
 
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -46,44 +48,48 @@ public class LeadReportDaoImpl implements LeadReportDao{
 
 	@Override
 	public List<CrmLead> reportMarketingOfLead() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<CrmLead> reportLeadByMonth(String date) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object reportMarketingLeadTrendsByStatus() {
+	public List<Map<String, Object>> reportMarketingLeadTrendsByStatus() {
 		Session session = sessionFactory.getCurrentSession();
-		SQLQuery query = session.createSQLQuery("SELECT reportMarketingExecLeadTrendsByStatus()");
-		return query.uniqueResult();
+		SQLQuery query = session.createSQLQuery("CALL reportMarketingExecLeadTrendsByStatus()");
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLead> reportMarketingLeadByCampaigns() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		SQLQuery query = session.createSQLQuery("CALL reportMarketingExecLeadsByCampaigns()");
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return query.list();
 	}
 
 	@Override
 	public List<CrmLead> reportMarketingLeadByIndustry() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLead> reportMarketingLeadBySource() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		SQLQuery query = session.createSQLQuery("CALL reportMarketingLeadsExecBySource()");
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return query.list();
 	}
 
 	@Override
 	public List<CrmLead> reportMarketingLeadByConverted() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl.report;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -31,49 +32,42 @@ public class leadReportServiceImpl implements LeadReportService{
 
 	@Override
 	public List<CrmLead> reportLeadCreatedCurrentFQ(String startDate, String endDate) {
-		// TODO Auto-generated method stub
-		return null;
+		return reportDao.reportLeadCreatedCurrentFQ(startDate, endDate);
 	}
 
 	@Override
 	public List<CrmLead> reportMarketingOfLead() {
-		// TODO Auto-generated method stub
-		return null;
+		return reportDao.reportMarketingOfLead();
 	}
 
 	@Override
 	public List<CrmLead> reportLeadByMonth(String date) {
-		// TODO Auto-generated method stub
-		return null;
+		return reportDao.reportLeadByMonth(date);
 	}
 
 	@Override
-	public Object reportMarketingLeadTrendsByStatus() {
+	public List<Map<String, Object>> reportMarketingLeadTrendsByStatus() {
 		return reportDao.reportMarketingLeadTrendsByStatus();
 	}
 
 	@Override
 	public List<CrmLead> reportMarketingLeadByCampaigns() {
-		// TODO Auto-generated method stub
-		return null;
+		return reportDao.reportMarketingLeadByCampaigns();
 	}
 
 	@Override
 	public List<CrmLead> reportMarketingLeadByIndustry() {
-		// TODO Auto-generated method stub
-		return null;
+		return reportDao.reportMarketingLeadByIndustry();
 	}
 
 	@Override
 	public List<CrmLead> reportMarketingLeadBySource() {
-		// TODO Auto-generated method stub
-		return null;
+		return reportDao.reportMarketingLeadBySource();
 	}
 
 	@Override
 	public List<CrmLead> reportMarketingLeadByConverted() {
-		// TODO Auto-generated method stub
-		return null;
+		return reportDao.reportMarketingLeadByConverted();
 	}
 
 }
