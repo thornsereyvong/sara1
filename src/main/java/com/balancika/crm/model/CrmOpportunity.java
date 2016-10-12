@@ -31,25 +31,23 @@ public class CrmOpportunity implements Serializable{
 
 	@Id
 	@Column(name="OP_ID", unique = true, nullable = false)
-	@NotEmpty
 	private String opId;
 	
-	@NotEmpty
 	@Column(name="OP_Name", nullable = false)
 	private String opName;
 	
 	@Column(name="OP_Amt", nullable = false)
 	private double opAmount;
 	
-	@JoinColumn(name="OP_CustID", nullable = false)
+	@JoinColumn(name="OP_CustID")
 	@ManyToOne(targetEntity = CrmCustomer.class)
 	private CrmCustomer customer;
 	
 	@Type(type="date")
-	@Column(name="OP_CloseDate", nullable = false)
+	@Column(name="OP_CloseDate")
 	private Date opCloseDate;
 
-	@JoinColumn(name="OP_TypeID", nullable = true)
+	@JoinColumn(name="OP_TypeID")
 	@ManyToOne(optional = true, targetEntity = CrmOpportunityType.class)
 	private CrmOpportunityType opTypeID;
 	
@@ -60,7 +58,7 @@ public class CrmOpportunity implements Serializable{
 	@Column(name = "OP_Probability")
 	private int opProbability;
 	
-	@JoinColumn(name = "OP_LeadSourceID", nullable = true)
+	@JoinColumn(name = "OP_LeadSourceID")
 	@ManyToOne( optional = true, targetEntity = CrmLeadSource.class)
 	private CrmLeadSource opLeadSourceID;
 	

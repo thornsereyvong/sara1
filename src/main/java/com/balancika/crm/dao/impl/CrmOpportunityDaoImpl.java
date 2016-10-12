@@ -59,13 +59,16 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			for(CrmOpportunityDetails details : opportunity.getDetails()){
-				details.setDisInv(generateDisInvByItem(details.getNetTotalAmt(), opportunity.getDisInvPer()));
+			if(opportunity.getDetails() != null){
+				for(CrmOpportunityDetails details : opportunity.getDetails()){
+					details.setDisInv(generateDisInvByItem(details.getNetTotalAmt(), opportunity.getDisInvPer()));
+				}
 			}
 			session.update(opportunity);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.close();
