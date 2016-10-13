@@ -75,4 +75,9 @@ public class CrmOpportunityServiceImpl implements CrmOpportunityService{
 		return opDao.listSaleOrdersRelatedToOpportuntiy(opId);
 	}
 
+	@Override
+	public boolean updateCustomFieldsOfOpprotunity(CrmOpportunity opp) {
+		return opDao.updateCustomFieldsOfOpprotunity(opp);
+	}
+
 }

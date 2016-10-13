@@ -19,6 +19,7 @@ import com.balancika.crm.dao.QuoteDao;
 import com.balancika.crm.dao.SaleOrderDao;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.CrmOpportunityDetails;
+import com.balancika.crm.services.CrmOpportunityDetailsService;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
@@ -35,6 +36,9 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	
 	@Autowired
 	private QuoteDao quoteDao;
+	
+	@Autowired
+	private CrmOpportunityDetailsService detailsService;
 	
 	@Override
 	public boolean isInsertOpportunity(CrmOpportunity opportunity) {
@@ -59,11 +63,6 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			if(opportunity.getDetails() != null){
-				for(CrmOpportunityDetails details : opportunity.getDetails()){
-					details.setDisInv(generateDisInvByItem(details.getNetTotalAmt(), opportunity.getDisInvPer()));
-				}
-			}
 			session.update(opportunity);
 			session.getTransaction().commit();
 			return true;
@@ -84,6 +83,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			CrmOpportunity opportunity = new CrmOpportunity();
 			opportunity.setOpId(opId);
 			session.delete(opportunity);
+			detailsService.deleteOpportunityDetails(opId);
 			this.deleteOpportunityQuote(opId);
 			this.deleteOpportunitySaleOrder(opId);
 			session.getTransaction().commit();
@@ -226,5 +226,37 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			return 0;
 		}
 		return (netAmt * persent / 100);
+	}
+
+	@Override
+	public boolean updateCustomFieldsOfOpprotunity(CrmOpportunity opp) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			CrmOpportunity opportunity = (CrmOpportunity) session.load(CrmOpportunity.class, opp.getOpId());
+			opportunity.setTotalAmount(opp.getTotalAmount());
+			opportunity.setTotalDis(opp.getTotalDis());
+			opportunity.setTotalSTax(opp.getTotalSTax());
+			opportunity.setTotalVTax(opp.getTotalVTax());
+			opportunity.setDisInvDol(opp.getDisInvDol());
+			opportunity.setDisInvPer(opp.getDisInvPer());
+			opportunity.setOpAmount(opp.getOpAmount());
+			if(opp.getDetails() != null){
+				detailsService.deleteOpportunityDetails(opp.getOpId());
+				for(CrmOpportunityDetails details : opp.getDetails()){
+					details.setOpId(opp.getOpId());
+					details.setDisInv(generateDisInvByItem(details.getNetTotalAmt(), opportunity.getDisInvPer()));
+					detailsService.insertOpportunityDetails(details);
+				}
+			}
+			session.merge(opportunity);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+		}
+		return false;
 	}
 }

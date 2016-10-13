@@ -14,4 +14,5 @@ public interface CrmOpportunityDetailsDao {
 	List<CrmOpportunityDetails> listOpportunityDetails();
 	Map<String, Object> startUpPage();
 	List<CrmOpportunityDetails> listOpportunityDetailsRelatedToOpportunity(String opId);
+	boolean deleteOpportunityDetails(String opId);
  }

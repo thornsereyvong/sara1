@@ -331,10 +331,22 @@ public class OpportunityController {
 	
 	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateOpportunity(@RequestBody CrmOpportunity opportunity){
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		if(opService.isUpdateOpportunity(opportunity) == true){
+			map.put("MESSAGE", "UPDATED");
+			map.put("STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@RequestMapping(value="/edit/custom", method = RequestMethod.PUT, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> updateCustomOpportunity(@RequestBody CrmOpportunity opportunity){
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(opService.updateCustomFieldsOfOpprotunity(opportunity) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

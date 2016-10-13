@@ -30,6 +30,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		Session session = transactionManager.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
+			System.err.println(cmp.getCampName());
 			cmp.setCampID(IdAutoGenerator("CA"));
 			cmp.setCreatedDate(new Date());
 			session.save(cmp);

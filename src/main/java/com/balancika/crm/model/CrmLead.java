@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
@@ -20,6 +22,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="crm_lead")
+@DynamicInsert(value = true)
+@DynamicUpdate(value = true)
 public class CrmLead implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

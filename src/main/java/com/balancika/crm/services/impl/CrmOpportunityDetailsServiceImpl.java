@@ -54,4 +54,9 @@ public class CrmOpportunityDetailsServiceImpl implements CrmOpportunityDetailsSe
 		return opportunityDetailsDao.listOpportunityDetailsRelatedToOpportunity(opId);
 	}
 
+	@Override
+	public boolean deleteOpportunityDetails(String opId) {
+		return opportunityDetailsDao.deleteOpportunityDetails(opId);
+	}
+
 }

@@ -4,22 +4,20 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="crm_opportunity")
@@ -120,9 +118,10 @@ public class CrmOpportunity implements Serializable{
 	@Column(name="OP_TotalVTax", columnDefinition = "double default 0.00")
 	private double totalVTax;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	/*@OneToMany(fetch = FetchType.LAZY)
 	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name="OP_ID")
+	@JoinColumn(name="OP_ID")*/
+	@Transient
 	private List<CrmOpportunityDetails> details;
 
 	public String getOpId() {

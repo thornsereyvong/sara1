@@ -6,7 +6,9 @@ import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
@@ -90,6 +92,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
 		Criteria criteria = session.createCriteria(CrmOpportunityDetails.class);
 		criteria.add(Restrictions.eq("opDetailsId", opDetailsId));
+		criteria.addOrder(Order.asc("lineNo"));
 		return (CrmOpportunityDetails)criteria.uniqueResult();
 	}
 
@@ -148,6 +151,25 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 		criteria.add(Restrictions.eq("opId", opId));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
+	}
+
+	@Override
+	public boolean deleteOpportunityDetails(String opId) {
+		Session session = transactionManager.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_detail WHERE OP_ID = :opId");
+			query.setParameter("opId", opId);
+			query.executeUpdate();
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return false;
 	}
 
 }

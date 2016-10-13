@@ -17,4 +17,5 @@ public interface CrmOpportunityService {
 	List<Object> listContactsRelatedToOpportuntiy(String opId);
 	List<Object> listQuotationsRelatedToOpportuntiy(String opId);
 	List<Object> listSaleOrdersRelatedToOpportuntiy(String opId);
+	boolean updateCustomFieldsOfOpprotunity(CrmOpportunity opp);
 }
