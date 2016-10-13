@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		try {
 			session.beginTransaction();
 			contact.setConID(IdAutoGenerator("CO"));
+			contact.setConCreateDate(new Date());
 			session.save(contact);
 			session.getTransaction().commit();
 			return true;

@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -30,6 +31,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		try{
 			session.beginTransaction();
 			cmp.setCampID(IdAutoGenerator("CA"));
+			cmp.setCreatedDate(new Date());
 			session.save(cmp);
 			session.getTransaction().commit();
 			return true;
@@ -79,7 +81,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 				return "OK";
 			}
 		} catch (ConstraintViolationException ex) {
-			ex.getMessage();
+			ex.printStackTrace();
 			session.getTransaction().rollback();
 			return "FOREIGN_KEY_CONSTRAIN";
 		} catch (HibernateException e) {
