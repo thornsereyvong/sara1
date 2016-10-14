@@ -103,11 +103,17 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	@Override
 	public List<CrmUser> listAllUsers() {
 		session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmUser.class);
+		Criteria criteria = session.createCriteria(CrmUser.class, "user").createAlias("user.role", "role");
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.property("userID"),"userID")
+				.add(Projections.property("username"),"username")
+				.add(Projections.property("role.roleId"),"roleId")
+				.add(Projections.property("role.roleName"),"roleName")
+				.add(Projections.property("role.createDate"),"createDate"));
 		criteria.add(Restrictions.eq("status", 1));
+		criteria.add(Restrictions.ne("role.roleName", "CRM_ADMIN"));
 		criteria.addOrder(Order.desc("userID"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		//criteria.setProjection(Projections.groupProperty(""));
+		criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return criteria.list();
 	}
 
