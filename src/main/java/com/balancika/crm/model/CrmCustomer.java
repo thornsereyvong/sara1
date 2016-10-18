@@ -79,7 +79,7 @@ public class CrmCustomer implements Serializable{
 	
 	@ManyToOne(fetch = FetchType.LAZY,optional = false)
 	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name = "PriceCode")
+	@JoinColumn(name = "PriceCode", nullable = true)
 	private PriceCode priceCode;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
