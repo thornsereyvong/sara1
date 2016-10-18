@@ -77,7 +77,7 @@ public class CrmCustomer implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	private CrmAccountType accountTypeID;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY,optional = false)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "PriceCode")
 	private PriceCode priceCode;
