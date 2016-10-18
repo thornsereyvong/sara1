@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -29,6 +30,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 		try {
 			session.beginTransaction();
 			location.setLoId(IdAutoGenerator("LOC"));
+			location.setLoCreateDate(new Date());
 			session.save(location);
 			session.getTransaction().commit();
 			return true;
@@ -69,13 +71,13 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 				return "OK";
 			}
 		} catch (ConstraintViolationException ex){
-			ex.getMessage();
+			ex.printStackTrace();
 			session.getTransaction().rollback();
 			session.close();
 			return "FOREIGN_KEY_CONSTRAIN";
 		}
 		catch (HibernateException e) {
-			e.getMessage();
+			e.printStackTrace();
 			session.getTransaction().rollback();
 			session.close();
 		}

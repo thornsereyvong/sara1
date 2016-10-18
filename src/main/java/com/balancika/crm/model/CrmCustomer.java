@@ -62,7 +62,7 @@ public class CrmCustomer implements Serializable{
 	private String whatApp;
 	
 	@Column(name="AID")
-	private int aId;
+	private String aId;
 	
 	@Column(name="TermNetDueIn", columnDefinition = "int default 0")
 	private int termNetDueIn;
@@ -104,6 +104,9 @@ public class CrmCustomer implements Serializable{
 	
 	@Transient
 	private List<CrmOpportunity> opportunities;
+	
+	@Transient
+	private List<CrmShipAddress> shipAddresses;
 	
 	public String getCustID() {
 		return custID;
@@ -299,11 +302,11 @@ public class CrmCustomer implements Serializable{
 		this.opportunities = opportunities;
 	}
 
-	public int getaId() {
+	public String getaId() {
 		return aId;
 	}
 
-	public void setaId(int aId) {
+	public void setaId(String aId) {
 		this.aId = aId;
 	}
 
@@ -314,5 +317,12 @@ public class CrmCustomer implements Serializable{
 	public void setTermNetDueIn(int termNetDueIn) {
 		this.termNetDueIn = termNetDueIn;
 	}
-	
+
+	public List<CrmShipAddress> getShipAddresses() {
+		return shipAddresses;
+	}
+
+	public void setShipAddresses(List<CrmShipAddress> shipAddresses) {
+		this.shipAddresses = shipAddresses;
+	}
 }

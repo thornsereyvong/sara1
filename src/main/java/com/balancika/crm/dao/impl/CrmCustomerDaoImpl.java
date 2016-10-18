@@ -18,8 +18,8 @@ import com.balancika.crm.model.AmeClass;
 import com.balancika.crm.model.CrmCase;
 import com.balancika.crm.model.CrmContact;
 import com.balancika.crm.model.CrmCustomer;
-import com.balancika.crm.model.CrmCustomerDetails;
 import com.balancika.crm.model.CrmOpportunity;
+import com.balancika.crm.model.CrmShipAddress;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.utilities.CrmIdGenerator;
 import com.balancika.crm.utilities.DateTimeOperation;
@@ -37,11 +37,13 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			session.beginTransaction();
 			String custId = ameIdAutoGenerator("CUST");
 			customer.setCustID(custId);
+			customer.setaId(customer.getShipAddresses().get(0).getShipId());
 			session.persist(customer);
-			if(customer.getCustDetails() != null){
-				for(int i = 0; i < customer.getCustDetails().size(); i++){
-					customer.getCustDetails().get(i).setCustId(custId);
-					session.save(customer.getCustDetails().get(i));
+			if(customer.getShipAddresses() != null){
+				for(int i = 0; i < customer.getShipAddresses().size(); i++){
+					customer.getShipAddresses().get(i).setModuleId("MT-CUS");
+					customer.getShipAddresses().get(i).setDocId(custId);
+					session.save(customer.getShipAddresses().get(i));
 					if(i % 20 == 0){
 						session.flush();
 				        session.clear();
@@ -66,11 +68,13 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		try {
 			session.beginTransaction();
 			session.update(customer);
-			SQLQuery query = session.createSQLQuery("DELETE FROM tblcustomerdetails WHERE CustID = :custId");
+			SQLQuery query = session.createSQLQuery("DELETE FROM tblshipaddress WHERE docid = :custId");
 			query.setParameter("custId", customer.getCustID());
 			query.executeUpdate();
-			for(int i = 0; i < customer.getCustDetails().size(); i++){
-				session.save(customer.getCustDetails().get(i));
+			for(int i = 0; i < customer.getShipAddresses().size(); i++){
+				customer.getShipAddresses().get(i).setModuleId("MT-CUS");
+				customer.getShipAddresses().get(i).setDocId(customer.getCustID());
+				session.save(customer.getShipAddresses().get(i));
 				if(i % 20 == 0){
 					session.flush();
 			        session.clear();
@@ -94,7 +98,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			SQLQuery query = session.createSQLQuery("DELETE FROM tblcustomer WHERE CustID = :custID");
 			query.setParameter("custID", custID);
 			if(query.executeUpdate() > 0){
-				SQLQuery detailsQuery = session.createSQLQuery("DELETE FROM tblcustomerdetails WHERE CustID = :custId");
+				SQLQuery detailsQuery = session.createSQLQuery("DELETE FROM tblshipaddress WHERE moduleid = :custId");
 				detailsQuery.setParameter("custId", custID);
 				session.getTransaction().commit();
 				detailsQuery.executeUpdate();
@@ -119,11 +123,11 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<CrmCustomerDetails> listCustomerDetailsByCustId(String custId){
+	private List<CrmShipAddress> listShipAdressesByCustId(String custId){
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmCustomerDetails.class);
-		criteria.add(Restrictions.eq("custId", custId));
-		criteria.addOrder(Order.asc("aId"));
+		Criteria criteria = session.createCriteria(CrmShipAddress.class);
+		criteria.add(Restrictions.eq("docId", custId));
+		criteria.addOrder(Order.asc("shipId"));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
@@ -131,7 +135,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	@Override
 	public CrmCustomer findCustomerById(String custID) {
 		CrmCustomer customer = (CrmCustomer)transactionManager.getSessionFactory().getCurrentSession().get(CrmCustomer.class, custID);
-		customer.setCustDetails(listCustomerDetailsByCustId(custID));
+		customer.setShipAddresses(listShipAdressesByCustId(custID));
 		return customer;
 	}
 
@@ -192,7 +196,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			if(opportunities != null){
 				customer.setOpportunities(opportunities);
 			}
-			customer.setCustDetails(listCustomerDetailsByCustId(custId));
+			customer.setShipAddresses(listShipAdressesByCustId(custId));
 			return customer;
 		} catch (HibernateException e) {
 			e.printStackTrace();

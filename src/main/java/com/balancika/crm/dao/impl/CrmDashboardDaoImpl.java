@@ -89,15 +89,19 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 	private Map<String, Object> generateMeetingMap(String meetings){
 		String[] str = meetings.split(" ,");
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("meetingId", str[0]);
-		map.put("meetingSubject", str[1]);
-		map.put("relatedRelatedTo", str[2]);
-		map.put("meetingLocation", str[3]);
-		map.put("meetingStartDate", str[4]);
-		map.put("meetingEndDate", str[5]);
-		map.put("meetingStatus", str[6]);
-		map.put("meetingRelatedToType", str[7]);
-		map.put("meetingRelatedToId", str[8]);
+		try {
+			map.put("meetingId", str[0]);
+			map.put("meetingSubject", str[1]);
+			map.put("relatedRelatedTo", str[2]);
+			map.put("meetingLocation", str[3]);
+			map.put("meetingStartDate", str[4]);
+			map.put("meetingEndDate", str[5]);
+			map.put("meetingStatus", str[6]);
+			map.put("meetingRelatedToType", str[7]);
+			map.put("meetingRelatedToId", str[8]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return map;
 	}
 	
@@ -184,7 +188,7 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		map.put("campId", str[0]);
 		map.put("campName", str[1]);
 		map.put("campStartDate", str[2]);
-		map.put("campStartDate", str[3]);
+		map.put("campEndDate", str[3]);
 		map.put("campStatus", str[4]);
 		map.put("campType", str[5]);
 		map.put("campBudget", str[6]);
@@ -199,8 +203,10 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		map.put("caseStatus", str[2]);
 		map.put("caseType", str[3]);
 		map.put("casePriority", str[4]);
-		map.put("caseCustomer", str[5]);
-		map.put("caseContact", str[6]);
+		map.put("custId", str[5]);
+		map.put("caseCustomer", str[6]);
+		map.put("conId", str[7]);
+		map.put("caseContact", str[8]);
 		return map;
 	}
 }
