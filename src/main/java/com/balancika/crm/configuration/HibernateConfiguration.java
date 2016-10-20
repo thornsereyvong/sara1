@@ -26,7 +26,7 @@ public class HibernateConfiguration {
 
 	    @Autowired
 	    private Environment environment;
-	  
+	    
 	    @Bean
 	    public LocalSessionFactoryBean sessionFactory() {
 	        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -40,15 +40,15 @@ public class HibernateConfiguration {
 	    public DataSource dataSource() {
 	        DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-	        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
+	        //databaseConfiguration().setDbName("balancika_crm");
+	        System.err.println(databaseConfiguration().getDbName());
+	        if(databaseConfiguration().getDbName() == null || databaseConfiguration().getDbName().equals("")){
+	        	dataSource.setUrl("jdbc:mysql://192.168.0.2:3306/bmg_crm?useUnicode=true&characterEncoding=UTF-8");
+	        }else{
+	        	dataSource.setUrl("jdbc:mysql://192.168.0.2:3306/"+databaseConfiguration().getDbName()+"?useUnicode=true&characterEncoding=UTF-8");
+	        }
 	        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
 	        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-	        
-	        /*dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-	        dataSource.setUrl("jdbc:mysql://"+databaseConfiguration().getDbIP()+":"+databaseConfiguration().getDbPort()+"/"+databaseConfiguration().getDbName()+"?createDatabaseIfNotExist=true");
-	        dataSource.setUsername(databaseConfiguration().getDbUsername());
-	        dataSource.setPassword(databaseConfiguration().getDbPassword());*/
-	        
 	        return dataSource;
 	    }
 	    
@@ -80,5 +80,4 @@ public class HibernateConfiguration {
 		public CrmDatabaseConfiguration databaseConfiguration(){ 
 			return new CrmDatabaseConfiguration();
 		}
-		
 }

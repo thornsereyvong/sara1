@@ -11,6 +11,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.QuoteDao;
 import com.balancika.crm.model.CrmCustomer;
-import com.balancika.crm.model.CrmCustomerDetails;
+import com.balancika.crm.model.CrmShipAddress;
 import com.balancika.crm.model.Quote;
 import com.balancika.crm.model.QuoteDetails;
 import com.balancika.crm.utilities.CrmIdGenerator;
@@ -59,7 +60,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<CrmCustomer> customers = criteria.list();
 		for(CrmCustomer customer : customers){
-			customer.setCustDetails(listCustomerDetails(customer.getCustID()));
+			customer.setShipAddresses(listShipAdressesByCustId(customer.getCustID()));
 		}
 		map.put("customer", customers);
 		map.put("classCode", query.list());
@@ -72,13 +73,13 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		return arrMap;
 	}
 	
-	
 	@SuppressWarnings("unchecked")
-	private List<CrmCustomerDetails> listCustomerDetails(String custId){
-		
+	private List<CrmShipAddress> listShipAdressesByCustId(String custId){
 		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmCustomerDetails.class);
-		criteria.add(Restrictions.eq("custId", custId));
+		Criteria criteria = session.createCriteria(CrmShipAddress.class);
+		criteria.add(Restrictions.eq("docId", custId));
+		criteria.addOrder(Order.asc("shipId"));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
