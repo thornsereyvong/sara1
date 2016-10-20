@@ -123,7 +123,7 @@ public class SaleOrder implements Serializable{
 	private String classId;
 	
 	@Column(name="ShipTo")
-	private int shipTo;
+	private String shipTo;
 	
 	@Column(name="IsRead")
 	private short isRead;
@@ -394,12 +394,11 @@ public class SaleOrder implements Serializable{
 	public void setClassId(String classId) {
 		this.classId = classId;
 	}
-
-	public int getShipTo() {
+	public String getShipTo() {
 		return shipTo;
 	}
 
-	public void setShipTo(int shipTo) {
+	public void setShipTo(String shipTo) {
 		this.shipTo = shipTo;
 	}
 

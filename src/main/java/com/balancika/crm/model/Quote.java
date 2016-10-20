@@ -95,7 +95,7 @@ public class Quote implements Serializable{
 	private String classId;
 	
 	@Column(name="ShipTo")
-	private int shipTo;
+	private String shipTo;
 	
 	@Transient
 	private List<QuoteDetails> quoteDetails;
@@ -269,11 +269,11 @@ public class Quote implements Serializable{
 		this.classId = classId;
 	}
 
-	public int getShipTo() {
+	public String getShipTo() {
 		return shipTo;
 	}
 
-	public void setShipTo(int shipTo) {
+	public void setShipTo(String shipTo) {
 		this.shipTo = shipTo;
 	}
 
