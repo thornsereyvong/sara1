@@ -49,15 +49,6 @@ public class Quote implements Serializable{
 	@Column(name="PostStatus")
 	private String postStatus;
 	
-	@Column(name="PmtStatus")
-	private String pmtStatus;
-	
-	@Column(name="JID")
-	private int jId;
-	
-	@Column(name="PmtSchID")
-	private String pmtSchId;
-	
 	@Column(name="EmpID")
 	private String empId;
 	
@@ -82,26 +73,8 @@ public class Quote implements Serializable{
 	@Column(name="NetTotalAmt")
 	private double netTotalAmt;
 	
-	@Column(name="PmtToDate")
-	private double pmtToDate;
-	
-	@Column(name="cash")
-	private double cash;
-	
-	@Column(name="CashCard")
-	private double cashCard;
-	
-	@Column(name="PmtDisDate", columnDefinition = "DATETIME")
-	private Date pmtDisDate;
-	
 	@Column(name="Remark")
 	private String remark;
-	
-	@Column(name="Message")
-	private String message;
-	
-	@Column(name="ClientID")
-	private String clientId;
 	
 	@Column(name="LocationID")
 	private String locationId;
@@ -200,30 +173,6 @@ public class Quote implements Serializable{
 		this.postStatus = postStatus;
 	}
 
-	public String getPmtStatus() {
-		return pmtStatus;
-	}
-
-	public void setPmtStatus(String pmtStatus) {
-		this.pmtStatus = pmtStatus;
-	}
-
-	public int getjId() {
-		return jId;
-	}
-
-	public void setjId(int jId) {
-		this.jId = jId;
-	}
-
-	public String getPmtSchId() {
-		return pmtSchId;
-	}
-
-	public void setPmtSchId(String pmtSchId) {
-		this.pmtSchId = pmtSchId;
-	}
-
 	public String getEmpId() {
 		return empId;
 	}
@@ -288,60 +237,12 @@ public class Quote implements Serializable{
 		this.netTotalAmt = netTotalAmt;
 	}
 
-	public double getPmtToDate() {
-		return pmtToDate;
-	}
-
-	public void setPmtToDate(double pmtToDate) {
-		this.pmtToDate = pmtToDate;
-	}
-
-	public double getCash() {
-		return cash;
-	}
-
-	public void setCash(double cash) {
-		this.cash = cash;
-	}
-
-	public double getCashCard() {
-		return cashCard;
-	}
-
-	public void setCashCard(double cashCard) {
-		this.cashCard = cashCard;
-	}
-
-	public Date getPmtDisDate() {
-		return pmtDisDate;
-	}
-
-	public void setPmtDisDate(Date pmtDisDate) {
-		this.pmtDisDate = pmtDisDate;
-	}
-
 	public String getRemark() {
 		return remark;
 	}
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
 	}
 
 	public String getLocationId() {

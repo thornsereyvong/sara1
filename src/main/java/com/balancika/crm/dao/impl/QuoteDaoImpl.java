@@ -118,7 +118,6 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 				quoteId = quote.getSaleId();
 			}
 			quote.setSaleId(quoteId);
-			quote.setPmtStatus("Unpaid");
 			quote.setPostStatus("Open");
 			session.persist(quote);
 			try {
@@ -157,7 +156,6 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		Session session = transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			quote.setPmtStatus("Unpaid");
 			quote.setPostStatus("Open");
 			session.update(quote);
 			session.getTransaction().commit();
