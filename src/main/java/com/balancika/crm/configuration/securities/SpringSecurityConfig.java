@@ -1,5 +1,7 @@
 package com.balancika.crm.configuration.securities;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private RestAuthenticationEntryPoint authenticationEntryPoint;
 	
+	@Autowired
+	private DataSource dataSource; 
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -30,7 +35,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/").permitAll()
+		http.authorizeRequests().antMatchers("/", "/api/config/**").permitAll()
 								.antMatchers("/api/**").access("hasRole('API')");
 		http.csrf().disable();
 		http.httpBasic();

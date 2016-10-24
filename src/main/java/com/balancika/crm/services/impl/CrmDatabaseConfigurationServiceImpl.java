@@ -19,6 +19,11 @@ public class CrmDatabaseConfigurationServiceImpl implements CrmDatabaseConfigura
 	public void changeDataSource(String dbName) {
 		configurationDao.changeDataSource(dbName);
 	}
+
+	@Override
+	public Object listDatabases() {
+		return configurationDao.listDatabases();
+	}
 	
 
 }

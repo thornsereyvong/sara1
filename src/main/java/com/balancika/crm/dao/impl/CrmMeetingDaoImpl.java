@@ -7,12 +7,15 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateConfiguration;
 import com.balancika.crm.dao.CrmMeetingDao;
+import com.balancika.crm.model.CrmDatabaseConfiguration;
 import com.balancika.crm.model.CrmMeeting;
 import com.balancika.crm.utilities.DateTimeOperation;
 import com.balancika.crm.utilities.CrmIdGenerator;
@@ -22,14 +25,28 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 
 	@Autowired
 	private HibernateTransactionManager transactionManager;
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private CrmDatabaseConfiguration config;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeeting> listMeetings() {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = sessionFactory.openSession();
+		try{
+		/*transactionManager.getSessionFactory().openSession();*/
 		SQLQuery query = session.createSQLQuery("CALL listCrmMeetings()");
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return null;
 	}
 
 	@Override

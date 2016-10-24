@@ -5,12 +5,16 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
@@ -38,19 +42,10 @@ public class HibernateConfiguration {
 		
 	    @Bean
 	    public DataSource dataSource() {
-	        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-	        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-	        //databaseConfiguration().setDbName("balancika_crm");
-	        System.err.println(databaseConfiguration().getDbName());
-	        if(databaseConfiguration().getDbName() == null || databaseConfiguration().getDbName().equals("")){
-	        	dataSource.setUrl("jdbc:mysql://192.168.0.2:3306/bmg_crm?useUnicode=true&characterEncoding=UTF-8");
-	        }else{
-	        	dataSource.setUrl("jdbc:mysql://192.168.0.2:3306/"+databaseConfiguration().getDbName()+"?useUnicode=true&characterEncoding=UTF-8");
-	        }
-	        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-	        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+	        DataSource dataSource = new DataSourceFactory(null).dataSource();
 	        return dataSource;
 	    }
+	    
 	    
 	    private Properties hibernateProperties() {
 	        Properties properties = new Properties();
@@ -65,6 +60,7 @@ public class HibernateConfiguration {
 	        properties.put("hibernate.c3p0.max_statements", environment.getRequiredProperty("hibernate.c3p0.max_statements"));
 	        properties.put("hibernate.c3p0.idle_test_period", environment.getRequiredProperty("hibernate.c3p0.idle_test_period"));
 	        properties.put("hibernate.c3p0.acquire_increment", environment.getRequiredProperty("hibernate.c3p0.acquire_increment"));
+	        properties.put("hibernate.connection.autocommit", environment.getRequiredProperty("hibernate.connection.autocommit"));
 	        return properties;        
 	    }
 	    
@@ -80,4 +76,20 @@ public class HibernateConfiguration {
 		public CrmDatabaseConfiguration databaseConfiguration(){ 
 			return new CrmDatabaseConfiguration();
 		}
+		
+		//@Bean
+		public SessionFactory getSessionFactory(CrmDatabaseConfiguration config) {
+	        SessionFactory sf = null;
+	        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
+	        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+	        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://"+config.getDbIP()+":"+config.getDbPort()+"/"+config.getDbName()+"?useUnicode=true&characterEncoding=UTF-8");
+	        configuration.setProperty("hibernate.connection.username", config.getDbUsername());
+	        configuration.setProperty("hibernate.connection.password", config.getDbPassword());
+	        configuration.setProperties(hibernateProperties());
+	        
+	        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
+	                applySettings(configuration.getProperties());
+	        sf = configuration.buildSessionFactory(builder.build());
+	        return sf;
+	    }
 }
