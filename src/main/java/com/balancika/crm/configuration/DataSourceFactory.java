@@ -2,7 +2,7 @@ package com.balancika.crm.configuration;
 
 import javax.sql.DataSource;
 
-import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
+import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.aop.target.HotSwappableTargetSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,25 +24,21 @@ public class DataSourceFactory {
 
 	public DataSource dataSource(){
 		DataSource realDataSource = null;
-		if(config != null){
+		//if(config != null){
 			realDataSource = getDataSourceFromBasicDataSource(config);
-		}else{
-			config.setDbIP("192.168.0.2");
-			config.setDbName("bmg_crm");
-			config.setDbPort("3306");
-			config.setDbPassword("Pa$$w0rd");
-			config.setDbUsername("posadmin");
-			realDataSource = getDataSourceFromBasicDataSource(config);
-		}
+		//}
 		return swapToDataSource(realDataSource);
 	}
 	
 	public DataSource getDataSourceFromBasicDataSource(final CrmDatabaseConfiguration config){
 		  BasicDataSource realDataSource = new BasicDataSource();
 		  realDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		  realDataSource.setUrl("jdbc:mysql://"+config.getDbIP()+":"+config.getDbPort()+"/"+config.getDbName()+"?useUnicode=true&characterEncoding=UTF-8");
-		  realDataSource.setUsername(config.getDbUsername());
-		  realDataSource.setPassword(config.getDbPassword());
+		  //realDataSource.setUrl("jdbc:mysql://"+config.getDbIP()+":"+config.getDbPort()+"/"+config.getDbName()+"?useUnicode=true&characterEncoding=UTF-8");
+		  //realDataSource.setUsername(config.getDbUsername());
+		  //realDataSource.setPassword(config.getDbPassword());
+		  realDataSource.setUrl("jdbc:mysql://192.168.0.2:3306/balancika_crm?useUnicode=true&characterEncoding=UTF-8");
+		  realDataSource.setUsername("posadmin");
+		  realDataSource.setPassword("Pa$$w0rd");
 		  return swapToDataSource(realDataSource);
 	}
 	
