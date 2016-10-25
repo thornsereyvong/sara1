@@ -37,6 +37,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			session.beginTransaction();
 			String custId = ameIdAutoGenerator("CUST");
 			customer.setCustID(custId);
+			customer.setCreateFrom("CRM");
 			session.persist(customer);
 			if(customer.getShipAddresses() != null){
 				for(int i = 0; i < customer.getShipAddresses().size(); i++){

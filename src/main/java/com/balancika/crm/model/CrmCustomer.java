@@ -64,6 +64,9 @@ public class CrmCustomer implements Serializable{
 	@Column(name="AID")
 	private String aId;
 	
+	@Column(name = "CreateFrom")
+	private String createFrom;
+	
 	@Column(name="TermNetDueIn", columnDefinition = "int default 0")
 	private int termNetDueIn;
 	
@@ -324,5 +327,13 @@ public class CrmCustomer implements Serializable{
 
 	public void setShipAddresses(List<CrmShipAddress> shipAddresses) {
 		this.shipAddresses = shipAddresses;
+	}
+
+	public String getCreateFrom() {
+		return createFrom;
+	}
+
+	public void setCreateFrom(String createFrom) {
+		this.createFrom = createFrom;
 	}
 }

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
-import com.balancika.crm.configuration.HibernateConfiguration;
 import com.balancika.crm.dao.CrmMeetingDao;
 import com.balancika.crm.model.CrmDatabaseConfiguration;
 import com.balancika.crm.model.CrmMeeting;

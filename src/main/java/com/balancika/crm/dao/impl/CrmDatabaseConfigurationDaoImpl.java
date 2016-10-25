@@ -7,7 +7,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.balancika.crm.configuration.HibernateConfiguration;
 import com.balancika.crm.dao.CrmDatabaseConfigurationDao;
 import com.balancika.crm.model.CrmDatabaseConfiguration;
 
