@@ -18,7 +18,9 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateConfiguration;
 import com.balancika.crm.dao.CrmUserDao;
+import com.balancika.crm.model.CrmDatabaseConfiguration;
 import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
@@ -31,6 +33,9 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private CrmDatabaseConfiguration config;
 	
 	private Session session = null;
 	
@@ -143,14 +148,20 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 
 	@Override
 	public CrmUser webLogin(String username) {
-		session = transactionManager.getSessionFactory().getCurrentSession();	
-		Criteria criteria = session.createCriteria(CrmUser.class);
-		criteria.add(Restrictions.eq("username", username));
-		criteria.add(Restrictions.eq("status", 1));
-		CrmUser user = (CrmUser)criteria.uniqueResult();
-		if(user != null){
-				return user;
-			}
+		try {
+			session =  HibernateConfiguration.getSessionFactory(config).openSession();
+			Criteria criteria = session.createCriteria(CrmUser.class);
+			criteria.add(Restrictions.eq("username", username));
+			criteria.add(Restrictions.eq("status", 1));
+			CrmUser user = (CrmUser)criteria.uniqueResult();
+			if(user != null){
+					return user;
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 		return null;
 	}
 

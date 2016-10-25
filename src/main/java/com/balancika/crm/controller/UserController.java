@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.balancika.crm.model.CrmDatabaseConfiguration;
 import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.services.CrmUserService;
 
@@ -22,6 +26,9 @@ public class UserController {
 
 	@Autowired
 	private CrmUserService userService; 
+	
+	@Autowired
+	private CrmDatabaseConfiguration config;
 	
 	@RequestMapping(value="/list", method = RequestMethod.GET, produces="application/json")
 	public ResponseEntity<Map<String, Object>> listAllUsers(){
@@ -110,8 +117,14 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/login/web", method = RequestMethod.POST, produces="application/json")
-	public ResponseEntity<Map<String, Object>> webLogin(@RequestBody CrmUser users){
+	public ResponseEntity<Map<String, Object>> webLogin(@RequestBody CrmUser users, HttpServletRequest request){
+		config.setDbIP(request.getHeader("dbIP"));
+		config.setDbName("balancika_crm");
+		config.setDbUsername(request.getHeader("dbUsername"));
+		config.setDbPassword(request.getHeader("dbPassword"));
+		config.setDbPort(request.getHeader("dbPort"));
 		
+		System.out.println(config.getDbName());
 		Map<String, Object> map = new HashMap<String, Object>();
 		CrmUser user = userService.webLogin(users.getUsername());
 		if(user != null){
