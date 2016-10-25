@@ -64,11 +64,11 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 			session.getTransaction().commit();
 			return "OK";
 		} catch(ConstraintViolationException ex){
-			ex.getMessage();
+			ex.printStackTrace();
 			session.getTransaction().rollback();
 			return "FOREIGN_KEY_CONSTRAIN";
 		} catch (HibernateException e) {
-			e.getMessage();
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.close();

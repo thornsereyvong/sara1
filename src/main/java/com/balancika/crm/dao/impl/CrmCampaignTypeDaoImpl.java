@@ -66,11 +66,11 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 			return "OK";
 		}catch (ConstraintViolationException ex) {
 			session.getTransaction().rollback();
-			ex.getMessage();
+			ex.printStackTrace();
 			return "FOREIGN_KEY_CONSTRAIN";
 		}catch (HibernateException e) {
 			session.getTransaction().rollback();
-			e.getMessage();
+			e.printStackTrace();
 			return "FAILED";
 		}
 		finally {

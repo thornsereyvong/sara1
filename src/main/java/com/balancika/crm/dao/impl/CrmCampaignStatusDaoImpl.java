@@ -65,12 +65,12 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 			return "OK";
 		} catch (ConstraintViolationException e){
 			session.getTransaction().rollback();
-			e.getMessage();
+			e.printStackTrace();
 			session.close();
 			return "FOREIGN_KEY_CONSTRAIN";
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
-			e.getMessage();
+			e.printStackTrace();
 			session.close();
 			return "FAILED";
 		}

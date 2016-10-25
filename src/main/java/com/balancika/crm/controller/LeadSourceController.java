@@ -31,7 +31,7 @@ public class LeadSourceController {
 		
 		List<CrmLeadSource> arrSource = sourceService.getAllLeadSource();
 		
-		if(arrSource.isEmpty() || arrSource == null){
+		if(arrSource == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);

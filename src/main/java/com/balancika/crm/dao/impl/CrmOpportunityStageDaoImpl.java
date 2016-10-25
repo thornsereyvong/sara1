@@ -62,11 +62,12 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 			session.getTransaction().commit();
 			return "OK";
 		} catch(ConstraintViolationException ex){
-			ex.getMessage();
+			ex.printStackTrace();
 			session.getTransaction().rollback();
 			return "FOREIGN_KEY_CONSTRAIN";
 		}catch (Exception e) {
 			session.getTransaction().rollback();
+			e.printStackTrace();
 		} finally {
 			session.close();
 		}

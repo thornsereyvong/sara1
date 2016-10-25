@@ -31,7 +31,7 @@ public class LeadStatusController {
 		
 		List<CrmLeadStatus> arrStatus = statusService.getAllLeadStatus();
 		
-		if(arrStatus.isEmpty() || arrStatus == null){
+		if(arrStatus == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
