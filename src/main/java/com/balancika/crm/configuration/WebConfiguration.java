@@ -9,6 +9,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.balancika.crm.model.CrmDatabaseConfiguration;
+import com.balancika.crm.model.MeDataSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
@@ -42,6 +44,16 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
 	@Bean
 	public ObjectMapper mapper(){
 		return new ObjectMapper();
+	}
+	
+	@Bean
+	public CrmDatabaseConfiguration databaseConfiguration(){ 
+		return new CrmDatabaseConfiguration();
+	}
+	
+	@Bean
+	public MeDataSource meDataSource(){
+		return new MeDataSource();
 	}
 	
 }

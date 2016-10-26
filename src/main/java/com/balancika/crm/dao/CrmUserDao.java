@@ -13,7 +13,7 @@ public interface CrmUserDao {
 	List<CrmUser> listAllUsers();
 	CrmUser findUserById(String userId);
 	List<CrmUser> listSubordinateUserByUsername(String username);
-	CrmUser webLogin(String username);
+	CrmUser webLogin(CrmUser user);
 	String checkChildOfUser(String username);
 	List<Object> listAllUsernameAndId();
 }

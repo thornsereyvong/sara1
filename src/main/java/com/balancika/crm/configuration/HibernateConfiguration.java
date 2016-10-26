@@ -8,7 +8,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -69,18 +68,13 @@ public class HibernateConfiguration {
 	        properties.put("hibernate.connection.autocommit", environment.getRequiredProperty("hibernate.connection.autocommit"));
 	        return properties;        
 	    }
-	    
+	     
 		@Bean
 	    @Autowired
 	    public HibernateTransactionManager transactionManager(SessionFactory s) {
 	       HibernateTransactionManager txManager = new HibernateTransactionManager();
 	       txManager.setSessionFactory(s);
 	       return txManager;
-	    }
-		
-		@Bean
-		public CrmDatabaseConfiguration databaseConfiguration(){ 
-			return new CrmDatabaseConfiguration();
 		}
 		
 		//@Bean
@@ -95,14 +89,12 @@ public class HibernateConfiguration {
 	        configuration.setProperty("hibernate.show_sql","true");
 	        configuration.setProperty("hibernate.format_sql","true");
 	        configuration.setProperty("hibernate.connection.autocommit", "true");
-	        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-	        context.scan("com.balancika.crm.model");
 	        configuration.addAnnotatedClass(CrmUser.class);
 	        configuration.addAnnotatedClass(CrmRole.class);
 	        configuration.addAnnotatedClass(CrmRoleDetail.class);
 	        configuration.addAnnotatedClass(CrmModule.class);
-	        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
-	                applySettings(configuration.getProperties());
+	        configuration.addPackage("com.balancika.crm.model");
+	        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
 	        sf = configuration.buildSessionFactory(builder.build());
 	        return sf;
 	    }

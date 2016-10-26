@@ -18,10 +18,11 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import com.balancika.crm.configuration.HibernateConfiguration;
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmUserDao;
 import com.balancika.crm.model.CrmDatabaseConfiguration;
 import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository("CrmUserDao")
@@ -38,6 +39,9 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	private CrmDatabaseConfiguration config;
 	
 	private Session session = null;
+	
+	@Autowired
+	private MeDataSource meDataSource;
 	
 	@Override
 	public boolean isInserted(CrmUser user) {
@@ -94,7 +98,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 
 	@Override
 	public CrmUser findUserByUsername(String username) {
-		session = transactionManager.getSessionFactory().getCurrentSession();
+		session = HibernateSessionFactory.getSessionFactory().getCurrentSession();
 		Criteria criteria = session.createCriteria(CrmUser.class);
 		criteria.add(Restrictions.eq("username", username));	
 		CrmUser user = (CrmUser)criteria.uniqueResult();
@@ -147,15 +151,15 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	}
 
 	@Override
-	public CrmUser webLogin(String username) {
+	public CrmUser webLogin(CrmUser user) {
 		try {
-			session =  HibernateConfiguration.getSessionFactory(config).openSession();
+			session =  HibernateSessionFactory.getSessionFactory().openSession();
 			Criteria criteria = session.createCriteria(CrmUser.class);
-			criteria.add(Restrictions.eq("username", username));
+			criteria.add(Restrictions.eq("username", user.getUsername()));
 			criteria.add(Restrictions.eq("status", 1));
-			CrmUser user = (CrmUser)criteria.uniqueResult();
-			if(user != null){
-					return user;
+			CrmUser result = (CrmUser)criteria.uniqueResult();
+			if(result != null){
+					return result;
 				}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -49,13 +50,9 @@ public class CrmUser implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="URoleID", nullable = false)
 	private CrmRole role;
-	
-	/*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "crm_user_db",
-				joinColumns = {@JoinColumn( name = "UID")},
-				inverseJoinColumns={@JoinColumn(name = "DB_ID")})
-	@Fetch(value = FetchMode.SUBSELECT)
-	private List<CrmDatabaseConfiguration> database;*/
+		
+	@Transient
+	private MeDataSource dataSource;
 
 	public CrmUser(){
 		
@@ -123,10 +120,12 @@ public class CrmUser implements Serializable{
 	public void setParentID(String parentID) {
 		this.parentID = parentID;
 	}
-	/*public List<CrmDatabaseConfiguration> getDatabase() {
-		return database;
+
+	public MeDataSource getDataSource() {
+		return dataSource;
 	}
-	public void setDatabase(List<CrmDatabaseConfiguration> database) {
-		this.database = database;
-	}*/
+
+	public void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 }

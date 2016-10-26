@@ -57,8 +57,8 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public CrmUser webLogin(String username) {
-		return userDao.webLogin(username);
+	public CrmUser webLogin(CrmUser user) {
+		return userDao.webLogin(user);
 	}
 
 	@Override
