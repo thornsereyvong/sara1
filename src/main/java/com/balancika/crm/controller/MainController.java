@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.balancika.crm.services.CrmCampaignService;
-import com.balancika.crm.services.CrmDatabaseConfigurationService;
+import com.balancika.crm.services.CompanyService;
 
 @Controller
 public class MainController {
@@ -16,7 +16,7 @@ public class MainController {
 	private CrmCampaignService campaignService;
 	
 	@Autowired
-	private CrmDatabaseConfigurationService configurationService;
+	private CompanyService configurationService;
 
 	@RequestMapping(value={"/","/index"}, method=RequestMethod.GET)
 	public String indexPage(ModelMap model){

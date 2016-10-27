@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.balancika.crm.model.CrmDatabaseConfiguration;
 import com.balancika.crm.model.CrmUser;
-import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -24,12 +22,6 @@ public class UserController {
 
 	@Autowired
 	private CrmUserService userService; 
-	
-	@Autowired
-	private CrmDatabaseConfiguration config;
-	
-	@Autowired
-	private MeDataSource meDataSource;
 	
 	@RequestMapping(value="/list", method = RequestMethod.GET, produces="application/json")
 	public ResponseEntity<Map<String, Object>> listAllUsers(){
@@ -66,11 +58,10 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/{username}", method = RequestMethod.GET, produces="application/json")
-	public ResponseEntity<Map<String, Object>> findUserByUsername(@PathVariable("username") String username){
-		
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> findUserByUsername(@RequestBody CrmUser users){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmUser user = userService.findUserByUsername(username);
+		CrmUser user = userService.findUserByUsername(users);
 		if(user != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -120,7 +111,7 @@ public class UserController {
 	@RequestMapping(value="/login/web", method = RequestMethod.POST, produces="application/json")
 	public ResponseEntity<Map<String, Object>> webLogin(@RequestBody CrmUser users){
 		Map<String, Object> map = new HashMap<String, Object>();
-		meDataSource = users.getDataSource();
+		System.out.println("Web Login Controller: "+users.getDataSource().getDb());
 		CrmUser user = userService.webLogin(users);
 		if(user != null){
 			map.put("MESSAGE", "SUCCESS");

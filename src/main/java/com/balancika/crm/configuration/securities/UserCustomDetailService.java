@@ -20,18 +20,17 @@ public class UserCustomDetailService implements UserDetailsService {
 
 	@Autowired
 	private CrmUserDao userDao;
-
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-		CrmUser user = userDao.findUserByUsername(username);
-
+		CrmUser us = new CrmUser();
+		us.setUsername(username);
+		CrmUser user = userDao.findUserByUsername(us);
 		if (user == null) {
 			System.out.println("User not found");
 			throw new UsernameNotFoundException("User not found");
 		}
 		System.out.println("User ID : " + user.getUserID());
-
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), true,
 				true, true, true, getGrantedAuthorities(user));
 	}
@@ -43,4 +42,5 @@ public class UserCustomDetailService implements UserDetailsService {
 		System.out.print("authorities :" + authorities);
 		return authorities;
 	}
+
 }

@@ -37,8 +37,8 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public CrmUser findUserByUsername(String username) {
-		return userDao.findUserByUsername(username);
+	public CrmUser findUserByUsername(CrmUser user) {
+		return userDao.findUserByUsername(user);
 	}
 
 	@Override

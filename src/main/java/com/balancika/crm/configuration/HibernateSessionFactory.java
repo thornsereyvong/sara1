@@ -4,17 +4,13 @@ import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 
 import com.balancika.crm.model.MeDataSource;
 
 public class HibernateSessionFactory {
 	
-	@Autowired
-	private static MeDataSource meDataSource;
-
-	public static SessionFactory getSessionFactory(){
+	public static SessionFactory getSessionFactory(MeDataSource meDataSource){
 		BasicDataSource basicDataSource = new BasicDataSource();
 		basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		basicDataSource.setUrl("jdbc:mysql://"+meDataSource.getIp()+":"+meDataSource.getPort()+"/"+meDataSource.getDb()+"?useUnicode=true&characterEncoding=UTF-8");
@@ -33,5 +29,9 @@ public class HibernateSessionFactory {
 	    properties.put("hibernate.format_sql", "true");
 	    properties.put("hibernate.connection.autocommit", "true");
 	    return properties;
+	}
+	
+	public static void shutdown(MeDataSource meDataSource){
+		getSessionFactory(meDataSource).close();
 	}
 }

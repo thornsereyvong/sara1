@@ -6,7 +6,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,11 +16,6 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.balancika.crm.model.CrmDatabaseConfiguration;
-import com.balancika.crm.model.CrmModule;
-import com.balancika.crm.model.CrmRole;
-import com.balancika.crm.model.CrmRoleDetail;
-import com.balancika.crm.model.CrmUser;
 
 @Configuration
 @EnableTransactionManagement
@@ -76,26 +70,4 @@ public class HibernateConfiguration {
 	       txManager.setSessionFactory(s);
 	       return txManager;
 		}
-		
-		//@Bean
-		public static SessionFactory getSessionFactory(CrmDatabaseConfiguration config) {
-	        SessionFactory sf = null;
-	        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
-	        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-	        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://"+config.getDbIP()+":"+config.getDbPort()+"/"+config.getDbName()+"?useUnicode=true&characterEncoding=UTF-8");
-	        configuration.setProperty("hibernate.connection.username", config.getDbUsername());
-	        configuration.setProperty("hibernate.connection.password", config.getDbPassword());
-	        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-	        configuration.setProperty("hibernate.show_sql","true");
-	        configuration.setProperty("hibernate.format_sql","true");
-	        configuration.setProperty("hibernate.connection.autocommit", "true");
-	        configuration.addAnnotatedClass(CrmUser.class);
-	        configuration.addAnnotatedClass(CrmRole.class);
-	        configuration.addAnnotatedClass(CrmRoleDetail.class);
-	        configuration.addAnnotatedClass(CrmModule.class);
-	        configuration.addPackage("com.balancika.crm.model");
-	        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-	        sf = configuration.buildSessionFactory(builder.build());
-	        return sf;
-	    }
 }

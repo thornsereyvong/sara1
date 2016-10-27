@@ -14,7 +14,7 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.dao.CrmMeetingDao;
-import com.balancika.crm.model.CrmDatabaseConfiguration;
+import com.balancika.crm.model.Company;
 import com.balancika.crm.model.CrmMeeting;
 import com.balancika.crm.utilities.DateTimeOperation;
 import com.balancika.crm.utilities.CrmIdGenerator;
@@ -29,7 +29,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 	private SessionFactory sessionFactory;
 	
 	@Autowired
-	private CrmDatabaseConfiguration config;
+	private Company config;
 
 	@SuppressWarnings("unchecked")
 	@Override

@@ -9,7 +9,7 @@ public interface CrmUserService {
 	boolean isInserted(CrmUser user);
 	boolean isUpdated(CrmUser user);
 	boolean isDeleted(String userId);
-	CrmUser findUserByUsername(String username);
+	CrmUser findUserByUsername(CrmUser user);
 	List<CrmUser> listAllUsers();
 	CrmUser findUserById(String userId);
 	List<CrmUser> listSubordinateUserByUsername(String username);
