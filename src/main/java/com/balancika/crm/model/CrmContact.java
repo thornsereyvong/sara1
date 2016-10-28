@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -116,6 +117,9 @@ public class CrmContact implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="CO_CustID", nullable = true)
 	private CrmCustomer customer;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getConID() {
 		return conID;
@@ -367,5 +371,13 @@ public class CrmContact implements Serializable{
 	 */
 	public void setConSalutation(String conSalutation) {
 		this.conSalutation = conSalutation;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -29,6 +30,9 @@ public class CrmAccountType implements Serializable{
 	
 	@Column(name="AT_Des")
 	private String accountDes;
+	
+	@Transient
+	private MeDataSource meDataSource;
 
 	public int getAccountID() {
 		return accountID;
@@ -53,4 +57,13 @@ public class CrmAccountType implements Serializable{
 	public void setAccountDes(String accountDes) {
 		this.accountDes = accountDes;
 	}
+
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
+	}
+
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
+	}
+	
 }

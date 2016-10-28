@@ -16,7 +16,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "crm_user")
+@Table(name = "tbluser")
 public class CrmUser implements Serializable{
 
 	private static final long serialVersionUID = 1L;

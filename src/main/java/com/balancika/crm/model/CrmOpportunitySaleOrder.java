@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -29,6 +30,9 @@ public class CrmOpportunitySaleOrder implements Serializable{
 	@NotEmpty
 	@Column(name="S_O_ID", nullable = false)
 	private String saleId;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getOpSaleId() {
 		return opSaleId;
@@ -52,5 +56,13 @@ public class CrmOpportunitySaleOrder implements Serializable{
 
 	public void setSaleId(String saleId) {
 		this.saleId = saleId;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

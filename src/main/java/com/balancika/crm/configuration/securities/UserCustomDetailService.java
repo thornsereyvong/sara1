@@ -38,9 +38,9 @@ public class UserCustomDetailService implements UserDetailsService {
 	private List<GrantedAuthority> getGrantedAuthorities(CrmUser user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		CrmRole userRole = user.getRole();
-		authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole.getRoleName()));
+		authorities.add(new SimpleGrantedAuthority("ROLE_"+userRole.getRoleName()));
 		System.out.print("authorities :" + authorities);
-		return authorities;
+		return authorities;	
 	}
 
 }

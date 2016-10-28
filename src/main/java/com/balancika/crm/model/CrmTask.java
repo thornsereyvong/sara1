@@ -95,6 +95,9 @@ public class CrmTask implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="TA_MDate", insertable = false, updatable = false)
 	private Date taskModifiedDate;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getTaskId() {
 		return taskId;
@@ -231,4 +234,13 @@ public class CrmTask implements Serializable{
 	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmUserDao;
 import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmUserService;
 
 @Service("CrmUserService")
@@ -32,8 +33,8 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public boolean isDeleted(String userId) {
-		return userDao.isDeleted(userId);
+	public boolean isDeleted(CrmUser user) {
+		return userDao.isDeleted(user);
 	}
 
 	@Override
@@ -42,18 +43,18 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public List<CrmUser> listAllUsers() {
-		return userDao.listAllUsers();
+	public List<CrmUser> listAllUsers(MeDataSource dataSource) {
+		return userDao.listAllUsers(dataSource);
 	}
 
 	@Override
-	public CrmUser findUserById(String userId) {
-		return userDao.findUserById(userId);
+	public CrmUser findUserById(CrmUser user) {
+		return userDao.findUserById(user);
 	}
 
 	@Override
-	public List<CrmUser> listSubordinateUserByUsername(String username) {
-		return userDao.listSubordinateUserByUsername(username);
+	public List<CrmUser> listSubordinateUserByUsername(CrmUser user) {
+		return userDao.listSubordinateUserByUsername(user);
 	}
 
 	@Override
@@ -62,12 +63,12 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public String checkChildOfUser(String username) {
-		return userDao.checkChildOfUser(username);
+	public String checkChildOfUser(CrmUser user) {
+		return userDao.checkChildOfUser(user);
 	}
 
 	@Override
-	public List<Object> listAllUsernameAndId() {
-		return userDao.listAllUsernameAndId();
+	public List<Object> listAllUsernameAndId(MeDataSource dataSource) {
+		return userDao.listAllUsernameAndId(dataSource);
 	}
 }

@@ -88,6 +88,9 @@ public class CrmCase implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="CS_MDate", insertable = false, updatable = false)
 	private Date modifyDate;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getCaseId() {
 		return caseId;
@@ -211,5 +214,13 @@ public class CrmCase implements Serializable{
 
 	public void setConvertCreateDate(String convertCreateDate) {
 		this.convertCreateDate = convertCreateDate;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

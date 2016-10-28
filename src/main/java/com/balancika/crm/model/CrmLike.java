@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="crm_user_like_collaboration")
@@ -25,6 +26,9 @@ public class CrmLike implements Serializable{
 	
 	@Column(name="LK_UserName")
 	private String username;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getLikeId() {
 		return likeId;
@@ -48,6 +52,14 @@ public class CrmLike implements Serializable{
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 }

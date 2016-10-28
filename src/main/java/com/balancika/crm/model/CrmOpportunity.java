@@ -123,6 +123,9 @@ public class CrmOpportunity implements Serializable{
 	@JoinColumn(name="OP_ID")*/
 	@Transient
 	private List<CrmOpportunityDetails> details;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getOpId() {
 		return opId;
@@ -335,4 +338,13 @@ public class CrmOpportunity implements Serializable{
 	public void setDetails(List<CrmOpportunityDetails> details) {
 		this.details = details;
 	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
 }

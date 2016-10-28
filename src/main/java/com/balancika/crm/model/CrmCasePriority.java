@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,6 +29,9 @@ public class CrmCasePriority implements Serializable{
 	
 	@Column(name="CSP_Des")
 	private String priorityDes;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getPriorityId() {
 		return priorityId;
@@ -51,6 +55,14 @@ public class CrmCasePriority implements Serializable{
 
 	public void setPriorityDes(String priorityDes) {
 		this.priorityDes = priorityDes;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 }

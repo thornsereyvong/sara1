@@ -91,6 +91,9 @@ public class CrmMeeting implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="M_MDate", insertable = false, updatable= false)
 	private Date meetingModifiedDate;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getMeetingId() {
 		return meetingId;
@@ -227,6 +230,13 @@ public class CrmMeeting implements Serializable{
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 	
 }

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,7 +29,9 @@ public class CrmLeadSource implements Serializable{
 
 	@Column(name="LS_Des")
 	private String description;
-	
+
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getSourceID() {
 		return sourceID;
@@ -52,6 +55,14 @@ public class CrmLeadSource implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 }

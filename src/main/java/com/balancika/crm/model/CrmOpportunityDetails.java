@@ -106,6 +106,17 @@ public class CrmOpportunityDetails implements Serializable{
 	
 	@Transient
 	private Object opportunity;
+	
+	@Transient
+	private MeDataSource dataSource;
+	
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 
 	public int getOpDetailsId() {
 		return opDetailsId;

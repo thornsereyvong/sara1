@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,6 +29,9 @@ public class CrmCallStatus implements Serializable{
 	
 	@Column(name="CLS_Des")
 	private String callStatusDes;
+	
+	@Transient
+	private MeDataSource meDataSource;
 
 	public int getCallStatusId() {
 		return callStatusId;
@@ -52,4 +56,13 @@ public class CrmCallStatus implements Serializable{
 	public void setCallStatusDes(String callStatusDes) {
 		this.callStatusDes = callStatusDes;
 	}
+
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
+	}
+
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
+	}
+	
 }

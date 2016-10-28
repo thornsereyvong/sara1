@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "tblshipaddress")
@@ -30,6 +31,9 @@ public class CrmShipAddress implements Serializable{
 	
 	@Column(name = "inactive")
 	private short inactive;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getModuleId() {
 		return moduleId;
@@ -69,5 +73,13 @@ public class CrmShipAddress implements Serializable{
 
 	public void setDocId(String docId) {
 		this.docId = docId;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -34,6 +35,17 @@ public class CrmOpportunityContact implements Serializable{
 	
 	@Column(name="OPCON_Role")
 	private String opConRole;
+	
+	@Transient
+	private MeDataSource dataSource;
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 
 	public int getOpConId() {
 		return opConId;

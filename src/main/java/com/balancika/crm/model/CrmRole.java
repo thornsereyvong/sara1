@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -60,6 +61,9 @@ public class CrmRole implements Serializable{
 	
 	@Column(name="RM_Status", nullable = false)
 	private int roleStatus;
+	
+	@Transient
+	private MeDataSource dataSource;
 	 
 	public String getRoleId() {
 		return roleId;
@@ -132,5 +136,12 @@ public class CrmRole implements Serializable{
 	public void setRoleStatus(int roleStatus) {
 		this.roleStatus = roleStatus;
 	}
-	
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 }

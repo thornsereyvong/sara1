@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -55,6 +56,8 @@ public class CrmRoleDetail implements Serializable{
 	@JoinColumn(name="RM_RoleID", nullable = true)
 	private CrmRole role;*/
 
+	@Transient
+	private MeDataSource dataSource;
 
 	public CrmModule getModule() {
 		return module;
@@ -128,6 +131,14 @@ public class CrmRoleDetail implements Serializable{
 		this.roleDetailId = roleDetailId;
 	}
 
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	/*public CrmRole getRole() {
 		return role;
 	}
@@ -135,4 +146,6 @@ public class CrmRoleDetail implements Serializable{
 	public void setRole(CrmRole role) {
 		this.role = role;
 	}*/
+	
+	
 }

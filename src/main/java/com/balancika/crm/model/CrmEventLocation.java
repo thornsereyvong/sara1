@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -66,6 +67,9 @@ public class CrmEventLocation implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="LO_MDate", insertable = false, updatable = false)
 	private Date loModifiedDate;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getLoId() {
 		return loId;

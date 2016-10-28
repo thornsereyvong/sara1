@@ -1,6 +1,9 @@
 package com.balancika.crm.model;
 
-public class MeDataSource {
+import java.io.Serializable;
+
+public class MeDataSource implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private String ip;
 	private String un;
 	private String pw;

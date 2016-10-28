@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
@@ -27,6 +28,9 @@ public class CrmOpportunityType implements Serializable{
 	
 	@Column(name = "OT_Des")
 	private String otDes;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getOtId() {
 		return otId;
@@ -50,6 +54,14 @@ public class CrmOpportunityType implements Serializable{
 
 	public void setOtDes(String otDes) {
 		this.otDes = otDes;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 }

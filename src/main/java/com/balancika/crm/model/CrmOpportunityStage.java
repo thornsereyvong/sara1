@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,6 +29,9 @@ public class CrmOpportunityStage implements Serializable{
 	
 	@Column(name = "OS_Des")
 	private String osDes;  //Opportunity stage description
+	
+	@Transient
+	private MeDataSource dataSource;
 	
 	public int getOsId() {
 		return osId;
@@ -51,6 +55,14 @@ public class CrmOpportunityStage implements Serializable{
 
 	public void setOsDes(String osDes) {
 		this.osDes = osDes;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 }

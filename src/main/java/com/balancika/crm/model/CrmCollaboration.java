@@ -80,6 +80,9 @@ public class CrmCollaboration implements Serializable{
 	
 	@Transient
 	private boolean checkLike;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getColId() {
 		return colId;
@@ -192,4 +195,13 @@ public class CrmCollaboration implements Serializable{
 	public void setCheckLike(boolean checkLike) {
 		this.checkLike = checkLike;
 	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
 }

@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -135,6 +136,9 @@ public class CrmLead implements Serializable{
 	
 	@Column(name="LA_MBy")
 	private String modifyBy;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getLeadID() {
 		return leadID;
@@ -369,6 +373,14 @@ public class CrmLead implements Serializable{
 
 	public void setSource(CrmLeadSource source) {
 		this.source = source;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 }

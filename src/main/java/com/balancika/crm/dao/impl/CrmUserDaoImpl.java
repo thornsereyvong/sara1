@@ -8,40 +8,42 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmUserDao;
 import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.PasswordEncrypt;
 
 @Repository("CrmUserDao")
 @Transactional
 public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 
 	@Autowired
-	private HibernateTransactionManager transactionManager;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	private Session session = null;
 	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	@Override
 	public boolean isInserted(CrmUser user) {
-		session = transactionManager.getSessionFactory().openSession();
+		session = HibernateSessionFactory.getSessionFactory(user.getDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			user.setUserID(IdAutoGenerator("UM"));	
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setPassword(new PasswordEncrypt().BalEncrypt(user.getPassword()));
 			session.save(user);
 			session.getTransaction().commit();
 			return true;
@@ -49,6 +51,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			session.getTransaction().rollback();
 			e.printStackTrace();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -56,7 +59,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 
 	@Override
 	public boolean isUpdated(CrmUser user) {
-		session = transactionManager.getSessionFactory().openSession();
+		session = HibernateSessionFactory.getSessionFactory(user.getDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(user);
@@ -65,24 +68,24 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public boolean isDeleted(String userId) {
-		session = transactionManager.getSessionFactory().openSession();
+	public boolean isDeleted(CrmUser user) {
+		session = HibernateSessionFactory.getSessionFactory(user.getDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmUser user = new CrmUser();
-			user.setUserID(userId);
 			session.delete(user);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -91,55 +94,91 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	@Override
 	public CrmUser findUserByUsername(CrmUser user) {
 		session = HibernateSessionFactory.getSessionFactory(user.getDataSource()).openSession();
-		Criteria criteria = session.createCriteria(CrmUser.class);
-		criteria.add(Restrictions.eq("username", user.getUsername()));	
-		CrmUser result = (CrmUser)criteria.uniqueResult();
-		if(result != null){
-			Hibernate.initialize(result.getRole());
+		try {
+			Criteria criteria = session.createCriteria(CrmUser.class);
+			criteria.add(Restrictions.eq("username", user.getUsername()));	
+			CrmUser result = (CrmUser)criteria.uniqueResult();
+			if(result != null){
+				Hibernate.initialize(result.getRole());
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
-		return result;
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmUser> listAllUsers() {
-		session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmUser.class, "user").createAlias("user.role", "role");
-		criteria.setProjection(Projections.projectionList()
-				.add(Projections.property("userID"),"userID")
-				.add(Projections.property("username"),"username")
-				.add(Projections.property("role.roleId"),"roleId")
-				.add(Projections.property("role.roleName"),"roleName")
-				.add(Projections.property("role.createDate"),"createDate"));
-		criteria.add(Restrictions.eq("status", 1));
-		criteria.add(Restrictions.ne("role.roleName", "CRM_ADMIN"));
-		criteria.addOrder(Order.desc("userID"));
-		criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return criteria.list();
+	public List<CrmUser> listAllUsers(MeDataSource meDataSource) {
+		session = HibernateSessionFactory.getSessionFactory(meDataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmUser.class, "user").createAlias("user.role", "role");
+			criteria.setProjection(Projections.projectionList()
+					.add(Projections.property("userID"),"userID")
+					.add(Projections.property("username"),"username")
+					.add(Projections.property("role.roleId"),"roleId")
+					.add(Projections.property("role.roleName"),"roleName")
+					.add(Projections.property("role.createDate"),"createDate"));
+			criteria.add(Restrictions.eq("status", 1));
+			criteria.add(Restrictions.ne("role.roleName", "CRM_ADMIN"));
+			criteria.addOrder(Order.desc("userID"));
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return criteria.list();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmUser findUserById(String userId) {
-		
-		return (CrmUser) transactionManager.getSessionFactory().getCurrentSession().get(CrmUser.class, userId);
+	public CrmUser findUserById(CrmUser user) {
+		session = HibernateSessionFactory.getSessionFactory(user.getDataSource()).openSession();
+		try {
+			session.beginTransaction();
+			CrmUser result = (CrmUser) session.get(CrmUser.class, user.getUserID());
+			session.getTransaction().commit();
+			session.clear();
+			session.close();
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmUser> listSubordinateUserByUsername(String username) {
-		session = transactionManager.getSessionFactory().getCurrentSession();
-		
-		DetachedCriteria subCriteria = DetachedCriteria.forClass(CrmUser.class);
-		subCriteria.add(Restrictions.eq("username", username));
-		subCriteria.setProjection((Projections.projectionList().add(Projections.property("userID"), "userID")))
-				   .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		Criteria criteria = session.createCriteria(CrmUser.class, "user");
-		criteria.setProjection(Projections.projectionList()
-				.add(Projections.property("user.userID"), "userID")
-				.add(Projections.property("user.username"), "username"));
-		criteria.add(Restrictions.or(Subqueries.propertyEq("parentID", subCriteria), Restrictions.eq("username", username)));
-		criteria.addOrder(Order.asc("userID")).setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return criteria.list();
+	public List<CrmUser> listSubordinateUserByUsername(CrmUser user) {
+		session = HibernateSessionFactory.getSessionFactory(user.getDataSource()).openSession();
+		try {
+			DetachedCriteria subCriteria = DetachedCriteria.forClass(CrmUser.class);
+			subCriteria.add(Restrictions.eq("username", user.getUsername()));
+			subCriteria.setProjection((Projections.projectionList().add(Projections.property("userID"), "userID")))
+					   .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			Criteria criteria = session.createCriteria(CrmUser.class, "user");
+			criteria.setProjection(Projections.projectionList()
+					.add(Projections.property("user.userID"), "userID")
+					.add(Projections.property("user.username"), "username"));
+			criteria.add(Restrictions.or(Subqueries.propertyEq("parentID", subCriteria), Restrictions.eq("username", user.getUsername())));
+			criteria.addOrder(Order.asc("userID")).setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return criteria.list();
+		}catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
@@ -162,12 +201,12 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	}
 
 	@Override
-	public String checkChildOfUser(String username) {
-		session = transactionManager.getSessionFactory().openSession();
+	public String checkChildOfUser(CrmUser user) {
+		session = HibernateSessionFactory.getSessionFactory(user.getDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("CALL checkChildOfUser(:username)");
-			query.setParameter("username", username);
+			query.setParameter("username", user.getUsername());
 			if(((Number)query.uniqueResult()).intValue() > 0){
 				return "EXIST";
 			}
@@ -182,14 +221,22 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> listAllUsernameAndId() {
-		session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmUser.class);
-		criteria.setProjection(Projections.projectionList().add(Projections.property("userID"), "userID").add(Projections.property("username"), "username"));
-		criteria.add(Restrictions.eq("status", 1));
-		criteria.addOrder(Order.asc("userID"));
-		criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return criteria.list();
+	public List<Object> listAllUsernameAndId(MeDataSource dataSource) {
+		session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmUser.class);
+			criteria.setProjection(Projections.projectionList().add(Projections.property("userID"), "userID").add(Projections.property("username"), "username"));
+			criteria.add(Restrictions.eq("status", 1));
+			criteria.addOrder(Order.asc("userID"));
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 }

@@ -91,6 +91,9 @@ public class CrmEvent implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="EV_MDate", insertable = false, updatable = false)
 	private Date evModifiedDate;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getEvId() {
 		return evId;
@@ -226,5 +229,13 @@ public class CrmEvent implements Serializable{
 
 	public void setEvRelatedToModuleId(String evRelatedToModuleId) {
 		this.evRelatedToModuleId = evRelatedToModuleId;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

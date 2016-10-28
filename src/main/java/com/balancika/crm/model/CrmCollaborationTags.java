@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Entity
 @Table(name="crm_colllaboration_tags")
 public class CrmCollaborationTags implements Serializable{
@@ -22,6 +24,9 @@ public class CrmCollaborationTags implements Serializable{
 	
 	@Column(name="username")
 	private String username;
+	
+	@Autowired
+	private MeDataSource dataSource;
 	
 	/*@ManyToOne
 	@JoinColumn(name="collapId", insertable=false, updatable=false, nullable=false)
@@ -41,5 +46,13 @@ public class CrmCollaborationTags implements Serializable{
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -29,6 +30,9 @@ public class CrmOpportunityQuotation implements Serializable{
 	@NotEmpty
 	@Column(name="QuotID", nullable = false)
 	private String quoteId;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getOpQuoteId() {
 		return opQuoteId;
@@ -52,5 +56,13 @@ public class CrmOpportunityQuotation implements Serializable{
 
 	public void setQuoteId(String quoteId) {
 		this.quoteId = quoteId;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

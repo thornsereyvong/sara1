@@ -67,6 +67,9 @@ public class CrmNote implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="N_Mdate", insertable = true, updatable = true)
 	private Date noteModifiedDate;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getNoteId() {
 		return noteId;
@@ -176,5 +179,13 @@ public class CrmNote implements Serializable{
 
 	public void setNoteRelatedName(String noteRelatedName) {
 		this.noteRelatedName = noteRelatedName;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

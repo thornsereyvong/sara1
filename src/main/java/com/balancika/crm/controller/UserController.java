@@ -7,13 +7,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -23,11 +23,11 @@ public class UserController {
 	@Autowired
 	private CrmUserService userService; 
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces="application/json")
-	public ResponseEntity<Map<String, Object>> listAllUsers(){
+	@RequestMapping(value="/list_all", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> listAllUsers(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmUser> arrUser = userService.listAllUsers();
+		List<CrmUser> arrUser = userService.listAllUsers(dataSource);
 		if(arrUser != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -40,11 +40,11 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/user_tags", method = RequestMethod.GET, produces="application/json")
-	public ResponseEntity<Map<String, Object>> listAllUsernameAndId(){
+	@RequestMapping(value="/list/user_tags", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> listAllUsernameAndId(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Object> arrUser = userService.listAllUsernameAndId();
+		List<Object> arrUser = userService.listAllUsernameAndId(dataSource);
 		if(arrUser != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -74,11 +74,11 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/id/{userId}", method = RequestMethod.GET, produces="application/json")
-	public ResponseEntity<Map<String, Object>> findUserById(@PathVariable("userId") String userId){
+	@RequestMapping(value="/list/id", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> findUserById(@RequestBody CrmUser users){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmUser user = userService.findUserById(userId);
+		CrmUser user = userService.findUserById(users);
 		if(user != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -91,11 +91,11 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/subordinate/{username}", method = RequestMethod.GET, produces="application/json")
-	public ResponseEntity<Map<String, Object>> listSubordinateUsers(@PathVariable("username") String username){
+	@RequestMapping(value="/list/subordinate", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> listSubordinateUsers(@RequestBody CrmUser user){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmUser> arrUser = userService.listSubordinateUserByUsername(username);
+		List<CrmUser> arrUser = userService.listSubordinateUserByUsername(user);
 		if(arrUser != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -111,7 +111,6 @@ public class UserController {
 	@RequestMapping(value="/login/web", method = RequestMethod.POST, produces="application/json")
 	public ResponseEntity<Map<String, Object>> webLogin(@RequestBody CrmUser users){
 		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println("Web Login Controller: "+users.getDataSource().getDb());
 		CrmUser user = userService.webLogin(users);
 		if(user != null){
 			map.put("MESSAGE", "SUCCESS");
@@ -140,7 +139,7 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces="application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces="application/json")
 	public ResponseEntity<Map<String, Object>> updateUser(@RequestBody CrmUser user){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -155,11 +154,11 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{userId}", method = RequestMethod.DELETE, produces="application/json")
-	public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable("userId") String userId){
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> deleteUser(@RequestBody CrmUser user){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(userService.isDeleted(userId) == true){
+		if(userService.isDeleted(user) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

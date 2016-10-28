@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name="crm_lead_status")
@@ -28,6 +29,9 @@ public class CrmLeadStatus implements Serializable{
 	
 	@Column(name="LST_Des")
 	private String description;
+	
+	@Autowired
+	private MeDataSource dataSource;
 	
 	public int getStatusID() {
 		return statusID;
@@ -51,5 +55,13 @@ public class CrmLeadStatus implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

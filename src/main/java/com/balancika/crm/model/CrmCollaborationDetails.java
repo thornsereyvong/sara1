@@ -40,6 +40,9 @@ public class CrmCollaborationDetails implements Serializable{
 	
 	@Transient
 	private String formatCreateDate;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getCommentId() {
 		return commentId;
@@ -87,6 +90,14 @@ public class CrmCollaborationDetails implements Serializable{
 
 	public void setFormatCreateDate(String formatCreateDate) {
 		this.formatCreateDate = formatCreateDate;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 }

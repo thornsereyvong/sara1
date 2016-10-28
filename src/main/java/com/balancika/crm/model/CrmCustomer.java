@@ -111,6 +111,9 @@ public class CrmCustomer implements Serializable{
 	@Transient
 	private List<CrmShipAddress> shipAddresses;
 	
+	@Transient
+	private MeDataSource dataSource;
+	
 	public String getCustID() {
 		return custID;
 	}
@@ -336,4 +339,13 @@ public class CrmCustomer implements Serializable{
 	public void setCreateFrom(String createFrom) {
 		this.createFrom = createFrom;
 	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
 }

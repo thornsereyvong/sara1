@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,6 +29,9 @@ public class CrmCaseType implements Serializable{
 	
 	@Column(name="CST_Des")
 	private String caseTypeDes;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public int getCaseTypeId() {
 		return caseTypeId;
@@ -52,5 +56,13 @@ public class CrmCaseType implements Serializable{
 	public void setCaseTypeDes(String caseTypeDes) {
 		this.caseTypeDes = caseTypeDes;
 	}
-	
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	 
 }

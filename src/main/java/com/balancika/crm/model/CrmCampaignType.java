@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,6 +29,9 @@ public class CrmCampaignType implements Serializable{
 	
 	@Column(name="CAT_Des")
 	private String description;
+	
+	@Transient
+	private MeDataSource dataSource;
 	
 	public int getTypeID() {
 		return typeID;
@@ -52,4 +56,13 @@ public class CrmCampaignType implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
 }

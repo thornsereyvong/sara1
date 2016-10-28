@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -94,6 +95,9 @@ public class CrmCampaign implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Type(type = "date")
 	private Date modifiedDate;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	@Column(name = "CA_MBy")
 	private String modifiedBy;
@@ -252,6 +256,14 @@ public class CrmCampaign implements Serializable {
 
 	public void setType(CrmCampaignType type) {
 		this.type = type;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 }
