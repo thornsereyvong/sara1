@@ -8,22 +8,19 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmTaskStatusDao;
 import com.balancika.crm.model.CrmTaskStatus;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-	
 	@Override
 	public boolean insertTaskStatus(CrmTaskStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -32,6 +29,7 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -39,7 +37,7 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 
 	@Override
 	public boolean updateTaskStatus(CrmTaskStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -48,18 +46,17 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public String deleteTaskStatus(int statusId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public String deleteTaskStatus(CrmTaskStatus status) {
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmTaskStatus status = new CrmTaskStatus();
-			status.setTaskStatusId(statusId);
 			session.delete(status);
 			session.getTransaction().commit();
 			return "OK";
@@ -71,6 +68,7 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return "FAILED";
@@ -78,20 +76,36 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmTaskStatus> lisTaskStatus() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmTaskStatus.class);
-		criteria.addOrder(Order.asc("taskStatusId"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	public List<CrmTaskStatus> lisTaskStatus(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmTaskStatus.class);
+			criteria.addOrder(Order.asc("taskStatusId"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmTaskStatus findTaskStatusById(int statusId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmTaskStatus.class);
-		criteria.add(Restrictions.eq("taskStatusId", statusId));
-		return (CrmTaskStatus)criteria.uniqueResult();
+	public CrmTaskStatus findTaskStatusById(int statusId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmTaskStatus.class);
+			criteria.add(Restrictions.eq("taskStatusId", statusId));
+			return (CrmTaskStatus)criteria.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 }

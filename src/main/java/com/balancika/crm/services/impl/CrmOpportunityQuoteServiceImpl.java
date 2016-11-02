@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmOpportunityQuoteDao;
 import com.balancika.crm.model.CrmOpportunityQuotation;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityQuoteService;
 
 @Service
@@ -27,23 +28,23 @@ public class CrmOpportunityQuoteServiceImpl implements CrmOpportunityQuoteServic
 	}
 
 	@Override
-	public boolean deleteOpportunityQuote(int opQuoteId) {
-		return opportunityQuoteDao.deleteOpportunityQuote(opQuoteId);
+	public boolean deleteOpportunityQuote(CrmOpportunityQuotation opQuote) {
+		return opportunityQuoteDao.deleteOpportunityQuote(opQuote);
 	}
 
 	@Override
-	public CrmOpportunityQuotation findOpportunityQuotationById(int opQuoteId) {
-		return opportunityQuoteDao.findOpportunityQuotationById(opQuoteId);
+	public CrmOpportunityQuotation findOpportunityQuotationById(int opQuoteId, MeDataSource dataSource) {
+		return opportunityQuoteDao.findOpportunityQuotationById(opQuoteId, dataSource);
 	}
 
 	@Override
-	public Integer checkOpportunityQuotationIsExist(String opId, String quoteId) {
-		return opportunityQuoteDao.checkOpportunityQuotationIsExist(opId, quoteId);
+	public Integer checkOpportunityQuotationIsExist(String opId, String quoteId, MeDataSource dataSource) {
+		return opportunityQuoteDao.checkOpportunityQuotationIsExist(opId, quoteId, dataSource);
 	}
 
 	@Override
-	public Object viewOpportunityQuotationById(int opQuoteId) {
-		return opportunityQuoteDao.viewOpportunityQuotationById(opQuoteId);
+	public Object viewOpportunityQuotationById(int opQuoteId, MeDataSource dataSource) {
+		return opportunityQuoteDao.viewOpportunityQuotationById(opQuoteId, dataSource);
 	}
 
 }

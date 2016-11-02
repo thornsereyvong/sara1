@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmTaskStatusDao;
 import com.balancika.crm.model.CrmTaskStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmTaskStatusService;
 
 @Service
@@ -29,17 +30,17 @@ public class CrmTaskStatusServiceImpl implements CrmTaskStatusService{
 	}
 
 	@Override
-	public String deleteTaskStatus(int statusId) {
-		return statusDao.deleteTaskStatus(statusId);
+	public String deleteTaskStatus(CrmTaskStatus status) {
+		return statusDao.deleteTaskStatus(status);
 	}
 
 	@Override
-	public List<CrmTaskStatus> lisTaskStatus() {
-		return statusDao.lisTaskStatus();
+	public List<CrmTaskStatus> lisTaskStatus(MeDataSource dataSource) {
+		return statusDao.lisTaskStatus(dataSource);
 	}
 
 	@Override
-	public CrmTaskStatus findTaskStatusById(int statusId) {
-		return statusDao.findTaskStatusById(statusId);
+	public CrmTaskStatus findTaskStatusById(int statusId, MeDataSource dataSource) {
+		return statusDao.findTaskStatusById(statusId, dataSource);
 	}
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCaseType;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCaseTypeService;
 
 @RestController
@@ -23,10 +24,10 @@ public class CaseTypeController {
 	@Autowired
 	private CrmCaseTypeService typeService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCaseTypes(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCaseTypes(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCaseType> arrType = typeService.listCaseTypes();
+		List<CrmCaseType> arrType = typeService.listCaseTypes(dataSource);
 		if(arrType != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -39,10 +40,10 @@ public class CaseTypeController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/{typeId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCaseTypeById(@PathVariable("typeId") int typeId){
+	@RequestMapping(value="/list/{typeId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findCaseTypeById(@PathVariable("typeId") int typeId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCaseType type = typeService.findCaseTypeById(typeId);
+		CrmCaseType type = typeService.findCaseTypeById(typeId, dataSource);
 		if(type != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -84,16 +85,16 @@ public class CaseTypeController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{typeId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> updateCaseType(@PathVariable("typeId") int typeId){
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteCaseType(@RequestBody CrmCaseType type){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(typeService.deleteCaseType(typeId).equalsIgnoreCase("OK")){
+		if(typeService.deleteCaseType(type).equalsIgnoreCase("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(typeService.deleteCaseType(typeId).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(typeService.deleteCaseType(type).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

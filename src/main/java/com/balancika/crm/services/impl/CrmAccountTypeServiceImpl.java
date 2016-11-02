@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.balancika.crm.dao.CrmAccountTypeDao;
 import com.balancika.crm.model.CrmAccountType;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmAccountTypeService;
 
 @Service
@@ -28,17 +29,17 @@ public class CrmAccountTypeServiceImpl implements CrmAccountTypeService {
 	}
 
 	@Override
-	public boolean deleteAccountType(int accountTypeID) {
-		return accountTypeDao.deleteAccountType(accountTypeID);
+	public boolean deleteAccountType(CrmAccountType accountType) {
+		return accountTypeDao.deleteAccountType(accountType);
 	}
 
 	@Override
-	public List<CrmAccountType> listAccountTypes() {
-		return accountTypeDao.listAccountTypes();
+	public List<CrmAccountType> listAccountTypes(MeDataSource dataSource) {
+		return accountTypeDao.listAccountTypes(dataSource);
 	}
 
 	@Override
-	public CrmAccountType findAccountTypeById(int accountTypeId) {
-		return accountTypeDao.findAccountTypeById(accountTypeId);
+	public CrmAccountType findAccountTypeById(CrmAccountType accountType) {
+		return accountTypeDao.findAccountTypeById(accountType);
 	}
 }

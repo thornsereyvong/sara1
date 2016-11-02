@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCollaborationDetails;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCollaborationDetailsService;
 
 @RestController
@@ -23,10 +24,10 @@ public class CollaborationDetailsController {
 	@Autowired
 	private CrmCollaborationDetailsService detailsService;
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCollaborationDetails(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCollaborationDetails(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCollaborationDetails> details = detailsService.listCollaborationDetails();
+		List<CrmCollaborationDetails> details = detailsService.listCollaborationDetails(dataSource);
 		if(details != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -40,9 +41,9 @@ public class CollaborationDetailsController {
 	}
 	
 	@RequestMapping(value = "/list/{detailsId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCollaborationDetailsById(@PathVariable("detailsId") int detailsId){
+	public ResponseEntity<Map<String, Object>> findCollaborationDetailsById(@PathVariable("detailsId") int detailsId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCollaborationDetails details = detailsService.findCollaborationDetailsById(detailsId);
+		CrmCollaborationDetails details = detailsService.findCollaborationDetailsById(detailsId, dataSource);
 		if(details != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -62,7 +63,7 @@ public class CollaborationDetailsController {
 		if(detailsService.insertCollaborationDetails(details) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
-			map.put("COMMENTS", detailsService.findCollaborationDetailsById(details.getCommentId()));
+			map.put("COMMENTS", detailsService.findCollaborationDetailsById(details.getCommentId(), details.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
@@ -71,7 +72,7 @@ public class CollaborationDetailsController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateCollaborationDetails(@RequestBody CrmCollaborationDetails details){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(detailsService.updateCollaborationDetails(details) == true){
@@ -85,10 +86,10 @@ public class CollaborationDetailsController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove/{detailsId}", method = RequestMethod.PUT, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteCollaborationDetails(@PathVariable("detailsId") int detailsId){
+	@RequestMapping(value = "/remove", method = RequestMethod.PUT, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteCollaborationDetails(@RequestBody CrmCollaborationDetails details){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(detailsService.deleteCollaborationDetails(detailsId) == true){
+		if(detailsService.deleteCollaborationDetails(details) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

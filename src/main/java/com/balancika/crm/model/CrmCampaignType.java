@@ -31,7 +31,7 @@ public class CrmCampaignType implements Serializable{
 	private String description;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 	
 	public int getTypeID() {
 		return typeID;
@@ -57,12 +57,12 @@ public class CrmCampaignType implements Serializable{
 		this.description = description;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
 	
 }

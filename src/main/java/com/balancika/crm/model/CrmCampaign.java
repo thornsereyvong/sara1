@@ -97,7 +97,7 @@ public class CrmCampaign implements Serializable {
 	private Date modifiedDate;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	@Column(name = "CA_MBy")
 	private String modifiedBy;
@@ -258,12 +258,11 @@ public class CrmCampaign implements Serializable {
 		this.type = type;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
-	
 }

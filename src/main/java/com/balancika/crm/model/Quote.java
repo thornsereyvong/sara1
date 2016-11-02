@@ -99,6 +99,17 @@ public class Quote implements Serializable{
 	
 	@Transient
 	private List<QuoteDetails> quoteDetails;
+	
+	@Transient
+	private MeDataSource meDataSource;
+
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
+	}
+
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
+	}
 
 	public String getSaleId() {
 		return saleId;

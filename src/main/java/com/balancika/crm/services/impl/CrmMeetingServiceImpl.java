@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmMeetingDao;
 import com.balancika.crm.model.CrmMeeting;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMeetingService;
 
 @Service
@@ -19,8 +20,8 @@ public class CrmMeetingServiceImpl implements CrmMeetingService{
 	private CrmMeetingDao meetingDao;
 
 	@Override
-	public List<CrmMeeting> listMeetings() {
-		return meetingDao.listMeetings();
+	public List<CrmMeeting> listMeetings(MeDataSource dataSource) {
+		return meetingDao.listMeetings(dataSource);
 	}
 
 	@Override
@@ -34,33 +35,33 @@ public class CrmMeetingServiceImpl implements CrmMeetingService{
 	}
 
 	@Override
-	public boolean deleteMeeting(String meetingId) {
-		return meetingDao.deleteMeeting(meetingId);
+	public boolean deleteMeeting(CrmMeeting meeting) {
+		return meetingDao.deleteMeeting(meeting);
 	}
 
 	@Override
-	public Object findMeetingById(String meetingId) {
-		return meetingDao.findMeetingById(meetingId);
+	public Object findMeetingById(String meetingId, MeDataSource dataSource) {
+		return meetingDao.findMeetingById(meetingId, dataSource);
 	}
 
 	@Override
-	public CrmMeeting findMeetingDetailsById(String meetingId) {
-		return meetingDao.findMeetingDetailsById(meetingId);
+	public CrmMeeting findMeetingDetailsById(String meetingId , MeDataSource dataSource) {
+		return meetingDao.findMeetingDetailsById(meetingId, dataSource);
 	}
 
 	@Override
-	public List<CrmMeeting> listMeetingsRelatedToLead(String leadId) {
-		return meetingDao.listMeetingsRelatedToLead(leadId);
+	public List<CrmMeeting> listMeetingsRelatedToLead(String leadId, MeDataSource dataSource) {
+		return meetingDao.listMeetingsRelatedToLead(leadId, dataSource);
 	}
 
 	@Override
-	public List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId) {
-		return meetingDao.listMeetingsRelatedToOpportunity(opId);
+	public List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId, MeDataSource dataSource) {
+		return meetingDao.listMeetingsRelatedToOpportunity(opId, dataSource);
 	}
 
 	@Override
-	public List<CrmMeeting> listMeetingsRelatedToModule(String moduleId) {
-		return meetingDao.listMeetingsRelatedToModule(moduleId);
+	public List<CrmMeeting> listMeetingsRelatedToModule(String moduleId, MeDataSource dataSource) {
+		return meetingDao.listMeetingsRelatedToModule(moduleId, dataSource);
 	}
 	
 	

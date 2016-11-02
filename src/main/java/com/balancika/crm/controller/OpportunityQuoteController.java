@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunityQuotation;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityQuoteService;
 
 @RestController
@@ -25,7 +26,7 @@ public class OpportunityQuoteController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addOpportunityQuote(@RequestBody CrmOpportunityQuotation opQuote){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityQuoteService.checkOpportunityQuotationIsExist(opQuote.getOpId(), opQuote.getQuoteId()) > 0){
+		if(opportunityQuoteService.checkOpportunityQuotationIsExist(opQuote.getOpId(), opQuote.getQuoteId(),opQuote.getMeDataSource()) > 0){
 			map.put("MESSAGE", "EXIST");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -33,7 +34,7 @@ public class OpportunityQuoteController {
 			if(opportunityQuoteService.insertOpportunityQuote(opQuote) == true){
 				map.put("MESSAGE", "INSERTED");
 				map.put("STATUS", HttpStatus.CREATED.value());
-				map.put("DATA", opportunityQuoteService.viewOpportunityQuotationById(opQuote.getOpQuoteId()));
+				map.put("DATA", opportunityQuoteService.viewOpportunityQuotationById(opQuote.getOpQuoteId(), opQuote.getMeDataSource()));
 				return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 			}
 			
@@ -57,10 +58,10 @@ public class OpportunityQuoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove/{opQuoteId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Map<String, Object>> deleteOpportunityContact(@PathVariable("opQuoteId") int opQuoteId){
+	@RequestMapping(value = "/remove", method = RequestMethod.DELETE)
+	public ResponseEntity<Map<String, Object>> deleteOpportunityContact(@RequestBody CrmOpportunityQuotation opQuote){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityQuoteService.deleteOpportunityQuote(opQuoteId) == true){
+		if(opportunityQuoteService.deleteOpportunityQuote(opQuote) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -72,9 +73,9 @@ public class OpportunityQuoteController {
 	}
 	
 	@RequestMapping(value = "/view/{opQuoteId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> viewOpportunityQuote(@PathVariable("opQuoteId") int opQuoteId){
+	public ResponseEntity<Map<String, Object>> viewOpportunityQuote(@PathVariable("opQuoteId") int opQuoteId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmOpportunityQuotation opportunityQuote = opportunityQuoteService.findOpportunityQuotationById(opQuoteId);
+		CrmOpportunityQuotation opportunityQuote = opportunityQuoteService.findOpportunityQuotationById(opQuoteId, dataSource);
 		if(opportunityQuote != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());

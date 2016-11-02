@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunitySaleOrder;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunitySaleOrderService;
 
 @RestController
@@ -25,7 +26,7 @@ public class OpportunitySaleOrderController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addOpportunitySaleOrder(@RequestBody CrmOpportunitySaleOrder opSaleOrder){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunitySaleOrderService.checkOpportunitySaleOrderIsExist(opSaleOrder.getOpId(), opSaleOrder.getSaleId()) > 0){
+		if(opportunitySaleOrderService.checkOpportunitySaleOrderIsExist(opSaleOrder.getOpId(), opSaleOrder.getSaleId(), opSaleOrder.getMeDataSource()) > 0){
 			map.put("MESSAGE", "EXIST");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -33,7 +34,7 @@ public class OpportunitySaleOrderController {
 			if(opportunitySaleOrderService.insertOpportunitySaleOrder(opSaleOrder) == true){
 				map.put("MESSAGE", "INSERTED");
 				map.put("STATUS", HttpStatus.CREATED.value());
-				map.put("DATA", opportunitySaleOrderService.viewOpportunitySaleOrder(opSaleOrder.getOpSaleId()));
+				map.put("DATA", opportunitySaleOrderService.viewOpportunitySaleOrder(opSaleOrder.getOpSaleId(), opSaleOrder.getMeDataSource()));
 				return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 			}
 			
@@ -43,7 +44,7 @@ public class OpportunitySaleOrderController {
 		}
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> updateOpportunitySaleOrder(@RequestBody CrmOpportunitySaleOrder opSaleOrder){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(opportunitySaleOrderService.insertOpportunitySaleOrder(opSaleOrder) == true){
@@ -57,10 +58,10 @@ public class OpportunitySaleOrderController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove/{opSaleOrderId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Map<String, Object>> deleteOpportunitySaleOrder(@PathVariable("opSaleOrderId") int opSaleOrderId){
+	@RequestMapping(value = "/remove/{opSaleOrderId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> deleteOpportunitySaleOrder(@RequestBody CrmOpportunitySaleOrder opSaleOrder){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunitySaleOrderService.deleteOpportunitySaleOrder(opSaleOrderId) == true){
+		if(opportunitySaleOrderService.deleteOpportunitySaleOrder(opSaleOrder) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -71,10 +72,10 @@ public class OpportunitySaleOrderController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove/{opSaleOrderId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> findOpportunitySaleOrderById(@PathVariable("opSaleOrderId") int opSaleOrderId){
+	@RequestMapping(value = "/list/{opSaleOrderId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> findOpportunitySaleOrderById(@PathVariable("opSaleOrderId") int opSaleOrderId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmOpportunitySaleOrder opportunitySaleOrder = opportunitySaleOrderService.findOpportunitySaleOrder(opSaleOrderId);
+		CrmOpportunitySaleOrder opportunitySaleOrder = opportunitySaleOrderService.findOpportunitySaleOrder(opSaleOrderId, dataSource);
 		if(opportunitySaleOrder != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("OPPORTUNITY_SALE_ORDER", opportunitySaleOrder);

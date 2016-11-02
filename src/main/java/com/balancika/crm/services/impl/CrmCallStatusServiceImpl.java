@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCallStatusDao;
 import com.balancika.crm.model.CrmCallStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallStatusService;
 
 @Service
@@ -29,17 +30,17 @@ public class CrmCallStatusServiceImpl implements CrmCallStatusService{
 	}
 
 	@Override
-	public String deleteCallStatus(int statusId) {
-		return statusDao.deleteCallStatus(statusId);
+	public String deleteCallStatus(CrmCallStatus status) {
+		return statusDao.deleteCallStatus(status);
 	}
 
 	@Override
-	public List<CrmCallStatus> listCallStatus() {
-		return statusDao.listCallStatus();
+	public List<CrmCallStatus> listCallStatus(MeDataSource dataSource) {
+		return statusDao.listCallStatus(dataSource);
 	}
 
 	@Override
-	public CrmCallStatus findCallStatusById(int statusId) {
-		return statusDao.findCallStatusById(statusId);
+	public CrmCallStatus findCallStatusById(CrmCallStatus status) {
+		return statusDao.findCallStatusById(status);
 	}
 }

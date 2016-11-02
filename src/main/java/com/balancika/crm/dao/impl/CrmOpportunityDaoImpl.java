@@ -10,24 +10,22 @@ import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmContactDao;
 import com.balancika.crm.dao.CrmOpportunityDao;
 import com.balancika.crm.dao.QuoteDao;
 import com.balancika.crm.dao.SaleOrderDao;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.CrmOpportunityDetails;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityDetailsService;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
 public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportunityDao{
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-	
 	@Autowired
 	private CrmContactDao contactDao;
 	
@@ -42,7 +40,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	
 	@Override
 	public boolean isInsertOpportunity(CrmOpportunity opportunity) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(opportunity.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			opportunity.setOpId(IdAutoGenerator("OP"));
@@ -53,6 +51,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -60,7 +59,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 
 	@Override
 	public boolean isUpdateOpportunity(CrmOpportunity opportunity) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(opportunity.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(opportunity);
@@ -70,22 +69,21 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public boolean isDeleteOpportunity(String opId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public boolean isDeleteOpportunity(CrmOpportunity opportunity) {
+		Session session = HibernateSessionFactory.getSessionFactory(opportunity.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmOpportunity opportunity = new CrmOpportunity();
-			opportunity.setOpId(opId);
 			session.delete(opportunity);
-			detailsService.deleteOpportunityDetails(opId);
-			this.deleteOpportunityQuote(opId);
-			this.deleteOpportunitySaleOrder(opId);
+			detailsService.deleteOpportunityDetails(opportunity.getOpId(), opportunity.getMeDataSource());
+			this.deleteOpportunityQuote(opportunity.getOpId(), opportunity.getMeDataSource());
+			this.deleteOpportunitySaleOrder(opportunity.getOpId(), opportunity.getMeDataSource());
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
@@ -97,32 +95,58 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	}
 
 	@Override
-	public Object findOpportunityById(String opId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		SQLQuery query = session.createSQLQuery("CALL findCrmOpportunityById(:opId)");
-		query.setParameter("opId", opId);
-		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return query.uniqueResult();
+	public Object findOpportunityById(String opId, MeDataSource  dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL findCrmOpportunityById(:opId)");
+			query.setParameter("opId", opId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmOpportunity> listOpportunities() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		SQLQuery query = session.createSQLQuery("CALL listCrmOpportunities()");
-		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return query.list();
+	public List<CrmOpportunity> listOpportunities(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listCrmOpportunities()");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmOpportunity findOpportunityDetailsById(String opId) {
-		return (CrmOpportunity)transactionManager.getSessionFactory().getCurrentSession().get(CrmOpportunity.class, opId);
+	public CrmOpportunity findOpportunityDetailsById(String opId,MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmOpportunity)session.get(CrmOpportunity.class, opId);
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
+		
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> listOpportunitiesWithSpecificUser(String username) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<Object> listOpportunitiesWithSpecificUser(String username, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listOpportunityWithSpecificUser(:username)");
 			query.setParameter("username", username);
@@ -130,14 +154,17 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			return query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object> listContactsRelatedToOpportuntiy(String opId){
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<Object> listContactsRelatedToOpportuntiy(String opId, MeDataSource dataSource){
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listContactsRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -145,14 +172,17 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			return query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object> listQuotationsRelatedToOpportuntiy(String opId){
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<Object> listQuotationsRelatedToOpportuntiy(String opId, MeDataSource dataSource){
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listQuotationRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -160,14 +190,17 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			return query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object> listSaleOrdersRelatedToOpportuntiy(String opId){
-		Session  session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<Object> listSaleOrdersRelatedToOpportuntiy(String opId, MeDataSource dataSource){
+		Session  session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listSaleOrdersRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -175,24 +208,27 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			return query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 
 	@Override
-	public Map<String, Object> listInformationRelateToOpportunity(String opId) {
+	public Map<String, Object> listInformationRelateToOpportunity(String opId, MeDataSource dataSource) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("QUOTATIONS", listQuotationsRelatedToOpportuntiy(opId));
-		map.put("SALE_ORDERS", listSaleOrdersRelatedToOpportuntiy(opId));
-		map.put("CONTACTS", listContactsRelatedToOpportuntiy(opId));
-		map.put("ALL_CONTACTS", contactDao.listSomeFieldsOfContact());
-		map.put("ALL_SALE_ORDERS", saleOrderDao.listSomeFieldsOfSaleOrder(opId));
-		map.put("ALL_QUOTATIONS", quoteDao.listCustomFieldOfQuotes(opId));
+		map.put("QUOTATIONS", listQuotationsRelatedToOpportuntiy(opId, dataSource));
+		map.put("SALE_ORDERS", listSaleOrdersRelatedToOpportuntiy(opId, dataSource));
+		map.put("CONTACTS", listContactsRelatedToOpportuntiy(opId, dataSource));
+		map.put("ALL_CONTACTS", contactDao.listSomeFieldsOfContact(dataSource));
+		map.put("ALL_SALE_ORDERS", saleOrderDao.listSomeFieldsOfSaleOrder(opId, dataSource));
+		map.put("ALL_QUOTATIONS", quoteDao.listCustomFieldOfQuotes(opId, dataSource));
 		return map;
 	}
 	
-	private void deleteOpportunityQuote(String opId){
-		Session session = transactionManager.getSessionFactory().openSession();
+	private void deleteOpportunityQuote(String opId, MeDataSource dataSource){
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_quote WHERE OP_ID = :opId ;");
@@ -203,11 +239,14 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.close();
+		} finally {
+			session.clear();
+			session.close();
 		}
 	}
 	
-	private void deleteOpportunitySaleOrder(String opId){
-		Session session = transactionManager.getSessionFactory().openSession();
+	private void deleteOpportunitySaleOrder(String opId, MeDataSource dataSource){
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_saleorder WHERE OP_ID = :opId ;");
@@ -217,6 +256,9 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			session.close();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+			session.close();
+		} finally {
+			session.clear();
 			session.close();
 		}
 	}
@@ -230,7 +272,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 
 	@Override
 	public boolean updateCustomFieldsOfOpprotunity(CrmOpportunity opp) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(opp.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			CrmOpportunity opportunity = (CrmOpportunity) session.load(CrmOpportunity.class, opp.getOpId());
@@ -242,7 +284,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			opportunity.setDisInvPer(opp.getDisInvPer());
 			opportunity.setOpAmount(opp.getOpAmount());
 			if(opp.getDetails() != null){
-				detailsService.deleteOpportunityDetails(opp.getOpId());
+				detailsService.deleteOpportunityDetails(opp.getOpId(), opp.getMeDataSource());
 				for(CrmOpportunityDetails details : opp.getDetails()){
 					details.setOpId(opp.getOpId());
 					details.setDisInv(generateDisInvByItem(details.getNetTotalAmt(), opportunity.getDisInvPer()));
@@ -251,10 +293,12 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			}
 			session.merge(opportunity);
 			session.getTransaction().commit();
+			session.clear();
 			session.close();
 			return true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
+			session.clear();
 			session.close();
 		}
 		return false;

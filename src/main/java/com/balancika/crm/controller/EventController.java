@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmEvent;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmEventService;
 
 @RestController
@@ -23,10 +24,10 @@ public class EventController {
 	@Autowired
 	private CrmEventService eventService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listEvents(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listEvents(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmEvent> arrEvent = eventService.listEvents();
+		List<CrmEvent> arrEvent = eventService.listEvents(dataSource);
 		if(arrEvent != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -39,10 +40,10 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/{evId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findEventById(@PathVariable("evId") String evId){
+	@RequestMapping(value="/list/{evId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findEventById(@PathVariable("evId") String evId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		Object event = eventService.findEventById(evId);
+		Object event = eventService.findEventById(evId, dataSource);
 		if(event != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -55,10 +56,10 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listEventRelatedToLead(@PathVariable("leadId") String leadId){
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listEventRelatedToLead(@PathVariable("leadId") String leadId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmEvent> events = eventService.listEventsRelatedToLead(leadId);
+		List<CrmEvent> events = eventService.listEventsRelatedToLead(leadId, dataSource);
 		if(events != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -71,10 +72,10 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listEventRelatedToOpportuntity(@PathVariable("opId") String opId){
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listEventRelatedToOpportuntity(@PathVariable("opId") String opId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmEvent> events = eventService.listEventsRelatedToOpportunity(opId);
+		List<CrmEvent> events = eventService.listEventsRelatedToOpportunity(opId, dataSource);
 		if(events != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -87,10 +88,10 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listEventRelatedToModule(@PathVariable("moduleId") String moduleId){
+	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listEventRelatedToModule(@PathVariable("moduleId") String moduleId,@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmEvent> events = eventService.listEventsRelatedToModule(moduleId);
+		List<CrmEvent> events = eventService.listEventsRelatedToModule(moduleId, dataSource);
 		if(events != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -103,10 +104,10 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/details/{evId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findEventDetailsById(@PathVariable("evId") String evId){
+	@RequestMapping(value="/list/details/{evId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findEventDetailsById(@PathVariable("evId") String evId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmEvent event = eventService.findEventDetailsById(evId);
+		CrmEvent event = eventService.findEventDetailsById(evId, dataSource);
 		if(event != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -133,7 +134,7 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateEvent(@RequestBody CrmEvent event){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(eventService.updateEvent(event) == true){
@@ -147,10 +148,10 @@ public class EventController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{evId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> addEvents(@PathVariable("evId") String evId){
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> addEvents(@RequestBody CrmEvent event){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(eventService.deleteEnvent(evId) == true){
+		if(eventService.deleteEnvent(event) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);

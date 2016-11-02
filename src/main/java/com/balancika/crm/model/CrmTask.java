@@ -97,7 +97,7 @@ public class CrmTask implements Serializable{
 	private Date taskModifiedDate;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public String getTaskId() {
 		return taskId;
@@ -235,12 +235,11 @@ public class CrmTask implements Serializable{
 		this.dueDate = dueDate;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
-	
 }

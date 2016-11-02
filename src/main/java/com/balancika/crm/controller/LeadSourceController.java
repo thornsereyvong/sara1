@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmLeadSource;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmLeadSourceService;
 
 @RestController
@@ -24,12 +25,12 @@ public class LeadSourceController {
 	private CrmLeadSourceService sourceService;
 	
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> getAllLeadSource(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> getAllLeadSource(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmLeadSource> arrSource = sourceService.getAllLeadSource();
+		List<CrmLeadSource> arrSource = sourceService.getAllLeadSource(dataSource);
 		
 		if(arrSource == null){
 			map.put("MESSAGE", "FAILED");
@@ -44,11 +45,9 @@ public class LeadSourceController {
 	}
 	
 	@RequestMapping(value = "/list/{sourceID}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findLeadSourceById(@PathVariable("sourceID") int sourceID){
-		
+	public ResponseEntity<Map<String, Object>> findLeadSourceById(@PathVariable("sourceID") int sourceID, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		CrmLeadSource source = sourceService.findLeadSourceById(sourceID);
+		CrmLeadSource source = sourceService.findLeadSourceById(sourceID, dataSource);
 		
 		if(source == null){
 			map.put("MESSAGE", "FAILED");
@@ -79,7 +78,7 @@ public class LeadSourceController {
 	}
 	
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateLeadSource(@RequestBody CrmLeadSource source){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -95,17 +94,17 @@ public class LeadSourceController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove/{sourceId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteLeadSource(@PathVariable("sourceId") int sourceId){
+	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteLeadSource(@RequestBody CrmLeadSource source){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(sourceService.deleteLeadSource(sourceId).equalsIgnoreCase("OK")){
+		if(sourceService.deleteLeadSource(source).equalsIgnoreCase("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
-		if(sourceService.deleteLeadSource(sourceId).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(sourceService.deleteLeadSource(source).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

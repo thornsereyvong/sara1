@@ -7,13 +7,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmAccountType;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmAccountTypeService;
 
 @RestController
@@ -23,11 +23,11 @@ public class AccountTypeController {
 	@Autowired
 	private CrmAccountTypeService accountTypeService;
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listAccountTypes(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listAccountTypes(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmAccountType> arrType = accountTypeService.listAccountTypes();
+		List<CrmAccountType> arrType = accountTypeService.listAccountTypes(dataSource);
 		if(arrType != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -41,11 +41,11 @@ public class AccountTypeController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/list/{accountTypeId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findAccountTypeById(@PathVariable("accountTypeId") int accountTypeId){
+	@RequestMapping(value = "/view", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findAccountTypeById(@RequestBody CrmAccountType type){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmAccountType accountType = accountTypeService.findAccountTypeById(accountTypeId);
+		CrmAccountType accountType = accountTypeService.findAccountTypeById(type);
 		if(accountType != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -74,7 +74,7 @@ public class AccountTypeController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateAccountType(@RequestBody CrmAccountType accountType){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -89,11 +89,11 @@ public class AccountTypeController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/remove/{accountTypeId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteAccountType(@PathVariable("accountTypeId") int accountTypeId){
+	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteAccountType(@RequestBody CrmAccountType accountType){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(accountTypeService.deleteAccountType(accountTypeId) == true){
+		if(accountTypeService.deleteAccountType(accountType) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

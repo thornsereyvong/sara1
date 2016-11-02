@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.balancika.crm.dao.CrmCustomerDao;
 import com.balancika.crm.model.AmeClass;
 import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.services.CrmCustomerService;
 
@@ -31,38 +32,38 @@ public class CrmCustomerServiceImpl implements CrmCustomerService{
 	}
 
 	@Override
-	public boolean deleteCustomer(String custID) {
-		return customerDao.deleteCustomer(custID);
+	public boolean deleteCustomer(CrmCustomer customer) {
+		return customerDao.deleteCustomer(customer);
 	}
 
 	@Override
-	public List<CrmCustomer> listCustomers() {
-		return customerDao.listCustomers();
+	public List<CrmCustomer> listCustomers(MeDataSource dataSource) {
+		return customerDao.listCustomers(dataSource);
 	}
 
 	@Override
-	public CrmCustomer findCustomerById(String custID) {
-		return customerDao.findCustomerById(custID);
+	public CrmCustomer findCustomerById(String custID, MeDataSource dataSource) {
+		return customerDao.findCustomerById(custID, dataSource);
 	}
 
 	@Override
-	public List<Object> listCustomerIdAndName() {
-		return customerDao.listCustomerIdAndName();
+	public List<Object> listCustomerIdAndName(MeDataSource dataSource) {
+		return customerDao.listCustomerIdAndName(dataSource);
 	}
 
 	@Override
-	public List<PriceCode> listPriceCode() {
-		return customerDao.listPriceCode();
+	public List<PriceCode> listPriceCode(MeDataSource dataSource) {
+		return customerDao.listPriceCode(dataSource);
 	}
 
 	@Override
-	public CrmCustomer viewCustomerDetails(String custId) {
-		return customerDao.viewCustomerDetails(custId);
+	public CrmCustomer viewCustomerDetails(String custId, MeDataSource dataSource) {
+		return customerDao.viewCustomerDetails(custId, dataSource);
 	}
 
 	@Override
-	public List<AmeClass> listAmeClasses() {
-		return customerDao.listAmeClasses();
+	public List<AmeClass> listAmeClasses(MeDataSource dataSource) {
+		return customerDao.listAmeClasses(dataSource);
 	}
 
 }

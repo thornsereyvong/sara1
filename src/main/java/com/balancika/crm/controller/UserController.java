@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,10 +59,10 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list", method = RequestMethod.POST, produces="application/json")
-	public ResponseEntity<Map<String, Object>> findUserByUsername(@RequestBody CrmUser users){
+	@RequestMapping(value="/list/{username}", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> findUserByUsername(@PathVariable("username") String username,@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmUser user = userService.findUserByUsername(users);
+		CrmUser user = userService.findUserByUsername(username, dataSource);
 		if(user != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -74,11 +75,11 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/id", method = RequestMethod.POST, produces="application/json")
-	public ResponseEntity<Map<String, Object>> findUserById(@RequestBody CrmUser users){
+	@RequestMapping(value="/list/id/{userID}", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> findUserById(@PathVariable("userID") String userID, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmUser user = userService.findUserById(users);
+		CrmUser user = userService.findUserById(userID, dataSource);
 		if(user != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -91,11 +92,11 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/subordinate", method = RequestMethod.POST, produces="application/json")
-	public ResponseEntity<Map<String, Object>> listSubordinateUsers(@RequestBody CrmUser user){
+	@RequestMapping(value="/list/subordinate/{username}", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> listSubordinateUsers(@RequestBody MeDataSource dataSource, @PathVariable("username") String username){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmUser> arrUser = userService.listSubordinateUserByUsername(user);
+		List<CrmUser> arrUser = userService.listSubordinateUserByUsername(username, dataSource);
 		if(arrUser != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());

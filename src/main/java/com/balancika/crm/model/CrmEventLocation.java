@@ -69,7 +69,7 @@ public class CrmEventLocation implements Serializable{
 	private Date loModifiedDate;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public String getLoId() {
 		return loId;
@@ -182,4 +182,13 @@ public class CrmEventLocation implements Serializable{
 	public void setLoModifiedDate(Date loModifiedDate) {
 		this.loModifiedDate = loModifiedDate;
 	}
+
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
+	}
+
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
+	}
+	
 }

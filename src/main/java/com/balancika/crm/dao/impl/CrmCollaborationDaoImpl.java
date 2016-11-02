@@ -12,21 +12,19 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCollaborationDao;
 import com.balancika.crm.dao.CrmCollaborationTagsDao;
 import com.balancika.crm.dao.CrmLikeDao;
 import com.balancika.crm.model.CrmCollaboration;
 import com.balancika.crm.model.CrmCollaborationDetails;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
-	
-	@Autowired
-	private HibernateTransactionManager transactionManager;
 	
 	@Autowired
 	private CrmCollaborationTagsDao tagsDao;
@@ -36,17 +34,19 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 
 	@Override
 	public boolean insertCollaboration(CrmCollaboration collaboration) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(collaboration.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			collaboration.setColCreateDate(LocalDateTime.now());
 			collaboration.setColOwn("true");
 			session.save(collaboration);
 			session.getTransaction().commit();
+			session.clear();
 			session.close();
 			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
+			session.clear();
 			session.close();
 			e.printStackTrace();
 		}
@@ -55,15 +55,17 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 
 	@Override
 	public boolean updateCollaboration(CrmCollaboration collaboration) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(collaboration.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(collaboration);
 			session.getTransaction().commit();
+			session.clear();
 			session.close();
 			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
+			session.clear();
 			session.close();
 			e.printStackTrace();
 		}
@@ -71,18 +73,18 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 	}
 
 	@Override
-	public boolean deleteCollaboration(int colId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public boolean deleteCollaboration(CrmCollaboration collaboration) {
+		Session session = HibernateSessionFactory.getSessionFactory(collaboration.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmCollaboration collaboration = new CrmCollaboration();
-			collaboration.setColId(colId);
 			session.delete(collaboration);
 			session.getTransaction().commit();
+			session.clear();
 			session.close();
 			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
+			session.clear();
 			session.close();
 			e.printStackTrace();
 		}
@@ -91,8 +93,8 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCollaboration> listCollaborations(String moduleId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<CrmCollaboration> listCollaborations(String moduleId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		List<CrmCollaboration> collaborations = new ArrayList<CrmCollaboration>();
 		try {
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
@@ -105,19 +107,22 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 				for(CrmCollaborationDetails details : collaborations.get(i).getDetails()){
 					details.setFormatCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(details.getCreateDate()));
 				}
-				collaborations.get(i).setLike(likeDao.countLike(collaborations.get(i).getColId()));
-				collaborations.get(i).setCheckLike(likeDao.checkUserLike(collaborations.get(i).getColUser(),collaborations.get(i).getColId()));
+				collaborations.get(i).setLike(likeDao.countLike(collaborations.get(i).getColId(), dataSource));
+				collaborations.get(i).setCheckLike(likeDao.checkUserLike(collaborations.get(i).getColUser(),collaborations.get(i).getColId(), dataSource));
 			}
 			return collaborations;
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} 
+		} finally {
+			session.clear();
+			session.close();
+		}
 		return null;
 	}
 
 	@Override
-	public CrmCollaboration findCollaborationById(int collapId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public CrmCollaboration findCollaborationById(int collapId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
 			criteria.add(Restrictions.eq("colId", collapId));
@@ -126,14 +131,17 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			return collaboration;
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} 
+		} finally {
+			session.clear();
+			session.close();
+		}
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Map<String, Object>> listAllCollaboration(String username, String moduleType, String moduleId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<Map<String, Object>> listAllCollaboration(String username, String moduleType, String moduleId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listAllCollaborationRelatedToModule(:username, :moduleType, :moduleId)");
 			query.setParameter("username", username);
@@ -144,7 +152,10 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			return coList;
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} 
+		} finally {
+			session.clear();
+			session.close();
+		}
 		return null;
 	}
 

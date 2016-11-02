@@ -20,6 +20,7 @@ import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.CrmLeadStatus;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.CrmOpportunityContact;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmAccountTypeService;
 import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
@@ -39,8 +40,6 @@ import com.balancika.crm.services.CrmOpportunityTypeService;
 import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserService;
 import com.balancika.crm.services.CustomerGroupService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/lead")
@@ -103,10 +102,10 @@ public class LeadController {
 	@Autowired
 	private CrmOpportunityContactService opContactService;
 	
-	@RequestMapping(value = "/list_all", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> getAllLead(){
+	@RequestMapping(value = "/list_all", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> getAllLead(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmLead> arrLead = leadService.getAllLead();
+		List<CrmLead> arrLead = leadService.getAllLead(dataSource);
 		if(arrLead.isEmpty()){
 			map.put("MESSAGE", "NOT_FOUND");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -120,19 +119,10 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> getLeadBySpecificUser(@RequestBody String json){
-		
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> userMap = new HashMap<String, String>();
-		try {
-			userMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	@RequestMapping(value = "/list/user/{username}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> getLeadBySpecificUser(@RequestBody MeDataSource dataSource, @PathVariable("username") String username){
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		List<CrmLead> arrLead = leadService.getLeadBySpecificUser(userMap.get("username").toString());
+		List<CrmLead> arrLead = leadService.getLeadBySpecificUser(username, dataSource);
 		
 		if(arrLead.isEmpty()){
 			map.put("MESSAGE", "NOT_FOUND");
@@ -147,33 +137,26 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/edit/startup", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> editLeadOnStartup(@RequestBody String json){
+	@RequestMapping(value = "/edit/startup/{leadId}/{username}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> editLeadOnStartup(@RequestBody MeDataSource dataSource, @PathVariable("leadId") String leadId,  @PathVariable("username") String username){
 		
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> leadMap = new HashMap<String, String>();
-		try {
-			leadMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("LEAD", leadService.findLeadById(leadMap.get("leadId").toString()));
-		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
-		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
-		map.put("INDUSTRY", industryService.listIndustries());
-		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
-		map.put("CHILD", userService.checkChildOfUser(leadMap.get("username").toString()));
+		map.put("LEAD", leadService.findLeadById(leadId, dataSource));
+		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus(dataSource));
+		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource(dataSource));
+		map.put("INDUSTRY", industryService.listIndustries(dataSource));
+		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign(dataSource));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("CHILD", userService.checkChildOfUser(username,dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/{leadID}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> findLeadById(@PathVariable("leadID") String leadID){
+	@RequestMapping(value = "/list/{leadID}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> findLeadById(@PathVariable("leadID") String leadID, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		Object Lead = leadService.findLeadById(leadID);
+		Object Lead = leadService.findLeadById(leadID, dataSource);
 		
 		if(Lead == null){
 			map.put("MESSAGE", "NOT_FOUND");
@@ -187,38 +170,31 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/view", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> viewActivitiesOfLeadById(@RequestBody String json){
+	@RequestMapping(value = "/view/{leadId}/{username}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> viewActivitiesOfLeadById(@RequestBody MeDataSource dataSource, @PathVariable("leadId") String leadId, @PathVariable("username") String username){
 		
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> leadMap = new HashMap<String, String>();
-		try {
-			leadMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Map<String, Object> map = leadService.viewActivitiesOfLeadById(leadMap.get("leadId").toString());
-		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
-		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
-		map.put("INDUSTRY", industryService.listIndustries());
-		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
-		map.put("CALL_STATUS", callStatusService.listCallStatus());
-		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
-		map.put("EVENT_LOCATION", locationService.listEventLocations());
-		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
-		map.put("COLLABORATIONS", collaborationService.listCollaborations(leadMap.get("leadId").toString()));
-		map.put("TAG_TO", userService.listAllUsernameAndId());
-		map.put("CONTACTS", contactService.listSomeFieldsOfContact());
+		Map<String, Object> map = leadService.viewActivitiesOfLeadById(leadId, dataSource);
+		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus(dataSource));
+		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource(dataSource));
+		map.put("INDUSTRY", industryService.listIndustries(dataSource));
+		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign(dataSource));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("CALL_STATUS", callStatusService.listCallStatus(dataSource));
+		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
+		map.put("EVENT_LOCATION", locationService.listEventLocations(dataSource));
+		map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(leadId, dataSource));
+		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
+		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/list/details/{leadID}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> findLeadDetailsById(@PathVariable("leadID") String leadID){
+	public ResponseEntity<Map<String, Object>> findLeadDetailsById(@PathVariable("leadID") String leadID, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		CrmLead Lead = leadService.findLeadDetailById(leadID);
+		CrmLead Lead = leadService.findLeadDetailById(leadID, dataSource);
 		
 		if(Lead == null){
 			map.put("MESSAGE", "NOT_FOUND");
@@ -233,23 +209,15 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/add/startup", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> addLeadOnStartup(@RequestBody String json){
-		
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> leadMap = new HashMap<String, String>();
-		try {
-			leadMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	@RequestMapping(value = "/add/startup/{username}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> addLeadOnStartup(@RequestBody MeDataSource dataSource, @PathVariable("username") String username){
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
-		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
-		map.put("INDUSTRY", industryService.listIndustries());
-		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(leadMap.get("username").toString()));
-		map.put("CHILD", userService.checkChildOfUser(leadMap.get("username").toString()));
+		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus(dataSource));
+		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource(dataSource));
+		map.put("INDUSTRY", industryService.listIndustries(dataSource));
+		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign(dataSource));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("CHILD", userService.checkChildOfUser(username, dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -284,17 +252,14 @@ public class LeadController {
 		
 	}
 	
-	@RequestMapping(value = "/edit/status", method = RequestMethod.PUT)
-	public ResponseEntity<Map<String, Object>> updateLeadStatusToConverted(@RequestBody String json){
-		System.err.println(json);
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		try {
-			jsonMap = new ObjectMapper().readValue(json, new TypeReference<Map<String, Object>>() {});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	@RequestMapping(value = "/edit/status/{leadId}/{custId}/{opId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> updateLeadStatusToConverted(
+			@RequestBody MeDataSource dataSource, 
+			@PathVariable("leadId") String leadId, 
+			@PathVariable("custId") String custId, 
+			@PathVariable("opId") String opId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(leadService.updateLeadStatusToConverted(jsonMap.get("leadID").toString(),jsonMap.get("custId").toString(),jsonMap.get("opId").toString())== true){
+		if(leadService.updateLeadStatusToConverted(leadId,custId,opId, dataSource)== true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
@@ -306,12 +271,12 @@ public class LeadController {
 		
 	}
 	
-	@RequestMapping(value = "/remove/{leadID}", method = RequestMethod.DELETE)
-	public ResponseEntity<Map<String, Object>> deleteList(@PathVariable("leadID") String leadID){
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> deleteList(@RequestBody CrmLead lead){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(leadService.deleteLead(leadID) == true){
+		if(leadService.deleteLead(lead) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
@@ -323,21 +288,24 @@ public class LeadController {
 	}
 	
 	@RequestMapping(value = "/convert/startup/{username}/{leadId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> convertLeadStartup(@PathVariable("username") String username, @PathVariable("leadId") String leadId){
+	public ResponseEntity<Map<String, Object>> convertLeadStartup(
+			@PathVariable("username") String username, 
+			@PathVariable("leadId") String leadId, 
+			@RequestBody MeDataSource dataSource){
 		Map<String , Object> map = new HashMap<String, Object>();
-		map.put("GROUP", groupService.listCustomerGroups());
-		map.put("PRICE_CODE", customerService.listPriceCode());
-		map.put("CUSTOMER", customerService.listCustomerIdAndName());
-		map.put("CONTACT", contactService.listContactRelatedToModule());
-		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus());
-		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource());
-		map.put("INDUSTRY", industryService.listIndustries());
-		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign());
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
-		map.put("OPP_TYPES", typeService.listOpportunityTypes());
-		map.put("OPP_STAGES", stageService.listOpportunityStages());
-		map.put("CUSTOMER_TYPE", accountTypeService.listAccountTypes());
-		map.put("LEAD", leadService.findLeadById(leadId));
+		map.put("GROUP", groupService.listCustomerGroups(dataSource));
+		map.put("PRICE_CODE", customerService.listPriceCode(dataSource));
+		map.put("CUSTOMER", customerService.listCustomerIdAndName(dataSource));
+		map.put("CONTACT", contactService.listContactRelatedToModule(dataSource));
+		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus(dataSource));
+		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource(dataSource));
+		map.put("INDUSTRY", industryService.listIndustries(dataSource));
+		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign(dataSource));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("OPP_TYPES", typeService.listOpportunityTypes(dataSource));
+		map.put("OPP_STAGES", stageService.listOpportunityStages(dataSource));
+		map.put("CUSTOMER_TYPE", accountTypeService.listAccountTypes(dataSource));
+		map.put("LEAD", leadService.findLeadById(leadId,dataSource));
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	

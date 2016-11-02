@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.services.CrmAccountTypeService;
 import com.balancika.crm.services.CrmCallService;
@@ -89,11 +90,11 @@ public class CustomerController {
 	@Autowired
 	private CrmContactService contactService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCustomers(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCustomers(@RequestBody MeDataSource datasource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCustomer> arrCustomer = customerService.listCustomers();
+		List<CrmCustomer> arrCustomer = customerService.listCustomers(datasource);
 		
 		if(arrCustomer != null){
 			map.put("MESSAGE", "SUCCESS");
@@ -108,33 +109,33 @@ public class CustomerController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/view/{custId}/{username}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> viewCustomer(@PathVariable("custId") String custId, @PathVariable("username") String username){
+	@RequestMapping(value="/view/{custId}/{username}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewCustomer(@PathVariable("custId") String custId, @PathVariable("username") String username, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCustomer customer = customerService.viewCustomerDetails(custId);
+		CrmCustomer customer = customerService.viewCustomerDetails(custId, dataSource);
 		
 		if(customer != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("CUSTOMER", customer);
-			map.put("NOTES", noteService.listNoteRelatedToEachModule(custId));
-			map.put("COLLABORATIONS", collaborationService.listCollaborations(custId));
-			map.put("GROUP", groupService.listCustomerGroups());
-			map.put("PRICE_CODE", customerService.listPriceCode());
-			map.put("INDUSTRY", industryService.listIndustries());
-			map.put("TYPE", typeService.listAccountTypes());
-			map.put("CALLS",callService.listCallsRelatedToModule(custId));
-			map.put("EVENTS", eventService.listEventsRelatedToModule(custId));
-			map.put("TASKS", taskService.listTasksRelatedToModule(custId));
-			map.put("MEETINGS", meetingService.listMeetingsRelatedToModule(custId));
-			map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
-			map.put("EVENT_LOCATION", locationService.listEventLocations());
-			map.put("CALL_STATUS", callStatusService.listCallStatus());
-			map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
-			map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
-			map.put("TAG_TO", userService.listAllUsernameAndId());
-			map.put("CONTACTS", contactService.listSomeFieldsOfContact());
+			map.put("NOTES", noteService.listNoteRelatedToEachModule(custId, dataSource));
+			map.put("COLLABORATIONS", collaborationService.listCollaborations(custId, dataSource));
+			map.put("GROUP", groupService.listCustomerGroups(dataSource));
+			map.put("PRICE_CODE", customerService.listPriceCode(dataSource));
+			map.put("INDUSTRY", industryService.listIndustries(dataSource));
+			map.put("TYPE", typeService.listAccountTypes(dataSource));
+			map.put("CALLS",callService.listCallsRelatedToModule(custId, dataSource));
+			map.put("EVENTS", eventService.listEventsRelatedToModule(custId, dataSource));
+			map.put("TASKS", taskService.listTasksRelatedToModule(custId, dataSource));
+			map.put("MEETINGS", meetingService.listMeetingsRelatedToModule(custId, dataSource));
+			map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username,dataSource));
+			map.put("EVENT_LOCATION", locationService.listEventLocations(dataSource));
+			map.put("CALL_STATUS", callStatusService.listCallStatus(dataSource));
+			map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
+			map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
+			map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
+			map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
@@ -143,11 +144,11 @@ public class CustomerController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/{custID}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCustomerById(@PathVariable("custID") String custID){
+	@RequestMapping(value="/list/{custID}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findCustomerById(@PathVariable("custID") String custID, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCustomer customer = customerService.findCustomerById(custID);
+		CrmCustomer customer = customerService.findCustomerById(custID, dataSource);
 		
 		if(customer != null){
 			map.put("MESSAGE", "SUCCESS");
@@ -162,24 +163,24 @@ public class CustomerController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/add/startup", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> addStartupPage(){
+	@RequestMapping(value="/add/startup", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> addStartupPage(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("GROUP", groupService.listCustomerGroups());
-		map.put("PRICE_CODE", customerService.listPriceCode());
-		map.put("INDUSTRY", industryService.listIndustries());
-		map.put("TYPE", typeService.listAccountTypes());
+		map.put("GROUP", groupService.listCustomerGroups(dataSource));
+		map.put("PRICE_CODE", customerService.listPriceCode(dataSource));
+		map.put("INDUSTRY", industryService.listIndustries(dataSource));
+		map.put("TYPE", typeService.listAccountTypes(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/edit/startup/{custId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> editStartupPage(@PathVariable("custId") String custId){
+	@RequestMapping(value="/edit/startup/{custId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> editStartupPage(@PathVariable("custId") String custId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("GROUP", groupService.listCustomerGroups());
-		map.put("PRICE_CODE", customerService.listPriceCode());
-		map.put("INDUSTRY", industryService.listIndustries());
-		map.put("TYPE", typeService.listAccountTypes());
-		map.put("CUSTOMER", customerService.findCustomerById(custId));
+		map.put("GROUP", groupService.listCustomerGroups(dataSource));
+		map.put("PRICE_CODE", customerService.listPriceCode(dataSource));
+		map.put("INDUSTRY", industryService.listIndustries(dataSource));
+		map.put("TYPE", typeService.listAccountTypes(dataSource));
+		map.put("CUSTOMER", customerService.findCustomerById(custId, dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -217,12 +218,12 @@ public class CustomerController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{custID}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteCustomer(@PathVariable("custID") String custID){
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteCustomer(@RequestBody CrmCustomer customer){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(customerService.deleteCustomer(custID) == true){
+		if(customerService.deleteCustomer(customer) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			
@@ -235,11 +236,11 @@ public class CustomerController {
 	}
 	
 	
-	@RequestMapping(value="/price_code/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listPriceCode(){
+	@RequestMapping(value="/price_code/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listPriceCode(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<PriceCode> priceCodes = customerService.listPriceCode();
+		List<PriceCode> priceCodes = customerService.listPriceCode(dataSource);
 		
 		if(priceCodes != null){
 			map.put("MESSAGE", "SUCCESS");

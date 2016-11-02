@@ -5,22 +5,19 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmIndustryDao;
 import com.balancika.crm.model.CrmIndustry;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmIndustryDaoImpl implements CrmIndustryDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean insertIndustry(CrmIndustry industry) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(industry.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(industry);
@@ -29,6 +26,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -36,7 +34,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 
 	@Override
 	public boolean updateIndustry(CrmIndustry industry) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(industry.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(industry);
@@ -45,24 +43,24 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public boolean deleteIndustry(int industID) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public boolean deleteIndustry(CrmIndustry industry) {
+		Session session = HibernateSessionFactory.getSessionFactory(industry.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmIndustry industry = new CrmIndustry();
-			industry.setIndustID(industID);
 			session.delete(industry);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -70,19 +68,34 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmIndustry> listIndustries() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmIndustry.class);
-		criteria.addOrder(Order.asc("industID"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		// criteria.setProjection(Projections.groupProperty(""));
-		return criteria.list();
+	public List<CrmIndustry> listIndustries(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmIndustry.class);
+			criteria.addOrder(Order.asc("industID"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmIndustry finIndustryById(int industID) {
-
-		return (CrmIndustry) transactionManager.getSessionFactory().getCurrentSession().get(CrmIndustry.class, industID);
+	public CrmIndustry finIndustryById(int industID, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmIndustry) session.get(CrmIndustry.class, industID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 }

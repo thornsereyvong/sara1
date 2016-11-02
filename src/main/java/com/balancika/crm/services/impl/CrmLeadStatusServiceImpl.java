@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmLeadStatusDao;
 import com.balancika.crm.model.CrmLeadStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmLeadStatusService;
 
 @Service
@@ -29,17 +30,17 @@ public class CrmLeadStatusServiceImpl implements CrmLeadStatusService {
 	}
 
 	@Override
-	public String deleteLeadStatus(int statusID) {
-		return statusDao.deleteLeadStatus(statusID);
+	public String deleteLeadStatus(CrmLeadStatus status) {
+		return statusDao.deleteLeadStatus(status);
 	}
 
 	@Override
-	public List<CrmLeadStatus> getAllLeadStatus() {
-		return statusDao.getAllLeadStatus();
+	public List<CrmLeadStatus> getAllLeadStatus(MeDataSource dataSource) {
+		return statusDao.getAllLeadStatus(dataSource);
 	}
 
 	@Override
-	public CrmLeadStatus findLeadStatusById(int statusID) {
-		return statusDao.findLeadStatusById(statusID);
+	public CrmLeadStatus findLeadStatusById(int statusID, MeDataSource dataSource) {
+		return statusDao.findLeadStatusById(statusID, dataSource);
 	}
 }

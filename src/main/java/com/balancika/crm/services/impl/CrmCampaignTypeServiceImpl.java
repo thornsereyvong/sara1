@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCampaignTypeDao;
 import com.balancika.crm.model.CrmCampaignType;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCampaignTypeService;
 
 @Service
@@ -30,22 +30,17 @@ public class CrmCampaignTypeServiceImpl implements CrmCampaignTypeService{
 	}
 
 	@Override
-	public String deleteCampaignType(int typeID) {
-		return typeDao.deleteCampaignType(typeID);
+	public String deleteCampaignType(CrmCampaignType type) {
+		return typeDao.deleteCampaignType(type);
 	}
 
 	@Override
-	public List<CrmCampaignType> listAllCampaignType() {
-		try{
-			return typeDao.listAllCampaignType();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+	public List<CrmCampaignType> listAllCampaignType(MeDataSource dataSource) {
+		return typeDao.listAllCampaignType(dataSource);
 	}
 
 	@Override
-	public CrmCampaignType findCampaignTypeById(int typeID) {
-		return typeDao.findCampaignTypeById(typeID);
+	public CrmCampaignType findCampaignTypeById(int typeID, MeDataSource dataSource) {
+		return typeDao.findCampaignTypeById(typeID,dataSource);
 	}
 }

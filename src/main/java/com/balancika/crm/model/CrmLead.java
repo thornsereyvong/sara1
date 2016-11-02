@@ -138,7 +138,7 @@ public class CrmLead implements Serializable{
 	private String modifyBy;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public String getLeadID() {
 		return leadID;
@@ -375,12 +375,11 @@ public class CrmLead implements Serializable{
 		this.source = source;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
-	
 }

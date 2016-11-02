@@ -57,7 +57,7 @@ public class CrmRoleDetail implements Serializable{
 	private CrmRole role;*/
 
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public CrmModule getModule() {
 		return module;
@@ -131,12 +131,12 @@ public class CrmRoleDetail implements Serializable{
 		this.roleDetailId = roleDetailId;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
 
 	/*public CrmRole getRole() {

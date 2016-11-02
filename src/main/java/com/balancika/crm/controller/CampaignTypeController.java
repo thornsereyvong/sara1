@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCampaignType;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCampaignTypeService;
 
 @RestController
@@ -23,12 +24,12 @@ public class CampaignTypeController {
 	@Autowired
 	private CrmCampaignTypeService typeService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> getCampaignTypes(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> getCampaignTypes(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmCampaignType> arrType = typeService.listAllCampaignType();
+		List<CrmCampaignType> arrType = typeService.listAllCampaignType(dataSource);
 		if(arrType != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -41,12 +42,12 @@ public class CampaignTypeController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/{typeID}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCampaignTypeById(@PathVariable("typeID") int typeID){
+	@RequestMapping(value="/list/{typeID}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findCampaignTypeById(@PathVariable("typeID") int typeID, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		CrmCampaignType type = typeService.findCampaignTypeById(typeID);
+		CrmCampaignType type = typeService.findCampaignTypeById(typeID,dataSource);
 		if(type != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -91,18 +92,18 @@ public class CampaignTypeController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{typeId}", method = RequestMethod.DELETE , produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteCampaignType(@PathVariable("typeId") int typeId){
+	@RequestMapping(value="/remove", method = RequestMethod.POST , produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteCampaignType(@RequestBody CrmCampaignType type){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(typeService.deleteCampaignType(typeId).equals("OK")){
+		if(typeService.deleteCampaignType(type).equals("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(typeService.deleteCampaignType(typeId).equals("FOREIGN_KEY_CONSTRAIN")){
+		if(typeService.deleteCampaignType(type).equals("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

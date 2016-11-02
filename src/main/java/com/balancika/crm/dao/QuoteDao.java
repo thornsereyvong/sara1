@@ -3,19 +3,20 @@ package com.balancika.crm.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.Quote;
 
 public interface QuoteDao {
 
-	List<Object> listQuoteStartupPage();
+	List<Object> listQuoteStartupPage(MeDataSource dataSource);
 	boolean insertQuote(Quote quote);
 	boolean updateQuote(Quote quote);
-	boolean deleteQuote(String quoteId);
-	Quote findQuoteById(String quoteId);
-	Map<String, String> findItemChange(String priceCode, String itemId); 
-	Map<String, String> findQuantityAvailable(String itemId, String locationId);
-	String checkQuoteIdExist(String quoteId);
-	List<Quote> listQuotes();
-	String convertQuoteToSaleOrder();
-	List<Quote> listCustomFieldOfQuotes(String opId);
+	boolean deleteQuote(Quote quote);
+	Quote findQuoteById(String quoteId, MeDataSource dataSource);
+	Map<String, String> findItemChange(String priceCode, String itemId, MeDataSource dataSource); 
+	Map<String, String> findQuantityAvailable(String itemId, String locationId, MeDataSource dataSource);
+	String checkQuoteIdExist(String quoteId, MeDataSource dataSource);
+	List<Quote> listQuotes(MeDataSource dataSource);
+	String convertQuoteToSaleOrder(MeDataSource dataSource);
+	List<Quote> listCustomFieldOfQuotes(String opId, MeDataSource dataSource);
 }

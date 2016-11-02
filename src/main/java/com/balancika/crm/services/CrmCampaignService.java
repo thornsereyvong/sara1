@@ -4,18 +4,19 @@ import java.util.List;
 
 import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.model.CrmOpportunity;
+import com.balancika.crm.model.MeDataSource;
 
 public interface CrmCampaignService {
 
 	public boolean insertCampaign(CrmCampaign cmp);
-	public List<CrmCampaign> listCampaigns();
+	public List<CrmCampaign> listCampaigns(MeDataSource dataSource);
 	public boolean updateCampaign(CrmCampaign cmp);
-	public String deleteCampaign(String campID);
-	Object findCampaignById(String campID);
-	CrmCampaign findCampaignDetailsById(String campID);
-	boolean isCampaignNameExist(String campName);
-	List<Object> listCampaignIsNotEqual(String campID);
-	List<Object> listCampaignParents();
-	List<Object> listIdAndNameOfCompaign();
-	List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID);
+	public String deleteCampaign(String campID, MeDataSource dataSource);
+	Object findCampaignById(String campID, MeDataSource dataSource);
+	CrmCampaign findCampaignDetailsById(String campID, MeDataSource dataSource);
+	boolean isCampaignNameExist(String campName, MeDataSource dataSource);
+	List<Object> listCampaignIsNotEqual(String campID, MeDataSource dataSource);
+	List<Object> listCampaignParents(MeDataSource dataSource);
+	List<Object> listIdAndNameOfCompaign(MeDataSource dataSource);
+	List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource);
 }

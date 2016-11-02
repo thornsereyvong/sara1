@@ -2,7 +2,6 @@ package com.balancika.crm.configuration.securities;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,10 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
-	
-	@Autowired
-	@Qualifier("UserCustomDetailService")
-	private UserCustomDetailService userDetailsService;
 	
 	@Autowired
 	private RestAuthenticationEntryPoint authenticationEntryPoint;

@@ -26,12 +26,8 @@ public class CrmCollaborationTags implements Serializable{
 	private String username;
 	
 	@Autowired
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 	
-	/*@ManyToOne
-	@JoinColumn(name="collapId", insertable=false, updatable=false, nullable=false)
-	private CrmCollaboration collaboration;*/
-
 	public int getTagId() {
 		return tagId;
 	}
@@ -48,11 +44,12 @@ public class CrmCollaborationTags implements Serializable{
 		this.username = username;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
+
 }

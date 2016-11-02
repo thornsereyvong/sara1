@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCollaborationDao;
 import com.balancika.crm.model.CrmCollaboration;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCollaborationService;
 
 @Service
@@ -30,23 +31,23 @@ public class CrmCollaborationServiceImpl implements CrmCollaborationService{
 	}
 
 	@Override
-	public boolean deleteCollaboration(int colId) {
-		return dao.deleteCollaboration(colId);
+	public boolean deleteCollaboration(CrmCollaboration collaboration) {
+		return dao.deleteCollaboration(collaboration);
 	}
 
 	@Override
-	public List<CrmCollaboration> listCollaborations(String moduleId) {
-		return dao.listCollaborations(moduleId);
+	public List<CrmCollaboration> listCollaborations(String moduleId, MeDataSource dataSource) {
+		return dao.listCollaborations(moduleId, dataSource);
 	}
 
 	@Override
-	public CrmCollaboration findCollaborationById(int collapId) {
-		return dao.findCollaborationById(collapId);
+	public CrmCollaboration findCollaborationById(int collapId, MeDataSource dataSource) {
+		return dao.findCollaborationById(collapId, dataSource);
 	}
 
 	@Override
-	public List<Map<String, Object>> listAllCollaboration(String username, String moduleType, String moduleId) {
-		return dao.listAllCollaboration(username, moduleType, moduleId);
+	public List<Map<String, Object>> listAllCollaboration(String username, String moduleType, String moduleId, MeDataSource dataSource) {
+		return dao.listAllCollaboration(username, moduleType, moduleId, dataSource);
 	}
 
 }

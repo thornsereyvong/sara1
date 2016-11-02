@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCaseTypeDao;
 import com.balancika.crm.model.CrmCaseType;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCaseTypeService;
 
 @Service
@@ -29,17 +30,17 @@ public class CrmCaseTypeServiceImpl implements CrmCaseTypeService{
 	}
 
 	@Override
-	public String deleteCaseType(int typeId) {
-		return typeDao.deleteCaseType(typeId);
+	public String deleteCaseType(CrmCaseType type) {
+		return typeDao.deleteCaseType(type);
 	}
 
 	@Override
-	public List<CrmCaseType> listCaseTypes() {
-		return typeDao.listCaseTypes();
+	public List<CrmCaseType> listCaseTypes(MeDataSource dataSource) {
+		return typeDao.listCaseTypes(dataSource);
 	}
 
 	@Override
-	public CrmCaseType findCaseTypeById(int typeId) {
-		return typeDao.findCaseTypeById(typeId);
+	public CrmCaseType findCaseTypeById(int typeId, MeDataSource dataSource) {
+		return typeDao.findCaseTypeById(typeId, dataSource);
 	}
 }

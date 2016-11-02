@@ -38,8 +38,8 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public CrmUser findUserByUsername(CrmUser user) {
-		return userDao.findUserByUsername(user);
+	public CrmUser findUserByUsername(String username, MeDataSource dataSource) {
+		return userDao.findUserByUsername(username, dataSource);
 	}
 
 	@Override
@@ -48,13 +48,13 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public CrmUser findUserById(CrmUser user) {
-		return userDao.findUserById(user);
+	public CrmUser findUserById(String userID, MeDataSource dataSource) {
+		return userDao.findUserById(userID , dataSource);
 	}
 
 	@Override
-	public List<CrmUser> listSubordinateUserByUsername(CrmUser user) {
-		return userDao.listSubordinateUserByUsername(user);
+	public List<CrmUser> listSubordinateUserByUsername(String username, MeDataSource dataSource) {
+		return userDao.listSubordinateUserByUsername(username, dataSource);
 	}
 
 	@Override
@@ -63,8 +63,8 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public String checkChildOfUser(CrmUser user) {
-		return userDao.checkChildOfUser(user);
+	public String checkChildOfUser(String username, MeDataSource dataSource) {
+		return userDao.checkChildOfUser(username ,dataSource);
 	}
 
 	@Override

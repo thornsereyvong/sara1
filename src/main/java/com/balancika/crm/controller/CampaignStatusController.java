@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCampaignStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCampaignStatusService;
 
 @RestController
@@ -23,12 +24,12 @@ public class CampaignStatusController {
 	@Autowired
 	private CrmCampaignStatusService statusService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> listCampaignStatus(){
+	@RequestMapping(value="/list", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listCampaignStatus(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmCampaignStatus> arrStatus = statusService.listAllCampaignStatus();
+		List<CrmCampaignStatus> arrStatus = statusService.listAllCampaignStatus(dataSource);
 		
 		if(arrStatus == null){
 			
@@ -50,10 +51,10 @@ public class CampaignStatusController {
 	}
 	
 	@RequestMapping(value="/list/{statusID}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> findCampaignStatusById(@PathVariable("statusID") int statusID){
+	public ResponseEntity<Map<String, Object>> findCampaignStatusById(@PathVariable("statusID") int statusID, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCampaignStatus status = statusService.findCampaignStatusById(statusID);
+		CrmCampaignStatus status = statusService.findCampaignStatusById(statusID, dataSource);
 		if(status == null){
 			
 			map.put("MESSAGE", "FAILED");
@@ -101,18 +102,18 @@ public class CampaignStatusController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{statusID}", method = RequestMethod.DELETE)
-	public ResponseEntity<Map<String, Object>> deletCampaignStatus(@PathVariable("statusID") int statusID){
+	@RequestMapping(value="/remove", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> deletCampaignStatus(@RequestBody CrmCampaignStatus status){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(statusService.deleteCampaignStatus(statusID).equals("OK")){
+		if(statusService.deleteCampaignStatus(status).equals("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(statusService.deleteCampaignStatus(statusID).equals("FOREIGN_KEY_CONSTRAIN")){
+		if(statusService.deleteCampaignStatus(status).equals("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

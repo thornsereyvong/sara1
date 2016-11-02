@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunityStage;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityStageService;
 
 @RestController
@@ -23,11 +24,11 @@ public class OpportunityStageController {
 	@Autowired
 	private CrmOpportunityStageService stageService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listOpportunityStages(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listOpportunityStages(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmOpportunityStage> arrStage = stageService.listOpportunityStages();
+		List<CrmOpportunityStage> arrStage = stageService.listOpportunityStages(dataSource);
 		
 		if(arrStage != null){
 			map.put("MESSAGE", "SUCCESS");
@@ -40,11 +41,11 @@ public class OpportunityStageController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/{stageID}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findOpportunityStageById(@PathVariable("stageID") int stageID){
+	@RequestMapping(value="/list/{stageID}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findOpportunityStageById(@PathVariable("stageID") int stageID, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		CrmOpportunityStage stage = stageService.findOpportunityStage(stageID);
+		CrmOpportunityStage stage = stageService.findOpportunityStage(stageID, dataSource);
 		
 		if(stage != null){
 			map.put("MESSAGE", "SUCCESS");
@@ -70,7 +71,7 @@ public class OpportunityStageController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateOpportunityStage(@RequestBody CrmOpportunityStage stage){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(stageService.updateOpportunityStage(stage) == true){
@@ -84,16 +85,16 @@ public class OpportunityStageController {
 	}
 	
 	
-	@RequestMapping(value="/remove/{opStageId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteOpportunityStage(@PathVariable("opStageId") int opStageId){
+	@RequestMapping(value="/remove", method = RequestMethod.DELETE, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteOpportunityStage(@RequestBody CrmOpportunityStage stage){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(stageService.deleteOpportunityStage(opStageId).equalsIgnoreCase("OK")){
+		if(stageService.deleteOpportunityStage(stage).equalsIgnoreCase("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(stageService.deleteOpportunityStage(opStageId).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(stageService.deleteOpportunityStage(stage).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

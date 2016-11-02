@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCaseDao;
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCaseService;
 
 @Service
@@ -21,56 +21,31 @@ public class CrmCaseServiceImpl implements CrmCaseService{
 	
 	@Override
 	public boolean insertCase(CrmCase cases) {
-		try{
-			return caseDao.insertCase(cases);
-		}catch(HibernateException e){
-			return false;
-		}
+		return caseDao.insertCase(cases);
 	}
 
 	@Override
 	public boolean updateCase(CrmCase cases) {
-		try{
-			return caseDao.updateCase(cases);
-		}catch(HibernateException e){
-			return false;
-		}
+		return caseDao.updateCase(cases);
 	}
 
 	@Override
-	public boolean deleteCase(String caseId) {
-		try{
-			return caseDao.deleteCase(caseId);
-		}catch(HibernateException e){
-			return false;
-		}
+	public boolean deleteCase(CrmCase cases) {
+		return caseDao.deleteCase(cases);
 	}
 
 	@Override
-	public List<CrmCase> listCases() {
-		try{
-			return caseDao.listCases();
-		}catch(HibernateException e){
-			return null;
-		}
+	public List<CrmCase> listCases(MeDataSource dataSource) {
+		return caseDao.listCases(dataSource);
 	}
 
 	@Override
-	public Object findCaseById(String caseId) {
-		try{
-			return caseDao.findCaseById(caseId);
-		}catch(HibernateException e){
-			return null;
-		}
+	public Object findCaseById(String caseId, MeDataSource dataSource) {
+		return caseDao.findCaseById(caseId, dataSource);
 	}
 
 	@Override
-	public CrmCase findCaseDetailsById(String caseId) {
-		try{
-			return caseDao.findCaseDetailsById(caseId);
-		}catch(HibernateException e){
-			return null;
-		}
+	public CrmCase findCaseDetailsById(String caseId, MeDataSource dataSource) {
+		return caseDao.findCaseDetailsById(caseId, dataSource);
 	}
-
 }

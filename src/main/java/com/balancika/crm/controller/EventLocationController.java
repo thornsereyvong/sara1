@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmEventLocation;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmEventLocationService;
 
 @RestController
@@ -23,10 +24,10 @@ public class EventLocationController {
 	@Autowired
 	private CrmEventLocationService locationService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listEventLocations(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listEventLocations(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmEventLocation> arrLocation = locationService.listEventLocations();
+		List<CrmEventLocation> arrLocation = locationService.listEventLocations(dataSource);
 		if(arrLocation != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -38,10 +39,10 @@ public class EventLocationController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/{id}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findEventLocationById(@PathVariable("id") String id){
+	@RequestMapping(value="/list/{id}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findEventLocationById(@PathVariable("id") String id, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmEventLocation location = locationService.findEventLocationById(id);
+		CrmEventLocation location = locationService.findEventLocationById(id, dataSource);
 		if(location != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -79,16 +80,16 @@ public class EventLocationController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{id}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteEventLocation(@PathVariable("id") String id){
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteEventLocation(@RequestBody CrmEventLocation location){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(locationService.deleteEventLocation(id).equals("OK")){
+		if(locationService.deleteEventLocation(location).equals("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(locationService.deleteEventLocation(id).equals("FOREIGN_KEY_CONSTRAIN")){
+		if(locationService.deleteEventLocation(location).equals("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

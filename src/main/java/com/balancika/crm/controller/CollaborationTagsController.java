@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCollaborationTags;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCollaborationTagsService;
 
 @RestController
@@ -24,10 +25,10 @@ public class CollaborationTagsController {
 	private CrmCollaborationTagsService tagsService;
 	
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listTags(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTags(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCollaborationTags> tags = tagsService.listCollaborationTags();
+		List<CrmCollaborationTags> tags = tagsService.listCollaborationTags(dataSource);
 		if(tags != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -41,7 +42,7 @@ public class CollaborationTagsController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/add", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addTags(@RequestBody List<CrmCollaborationTags> tags){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(tagsService.insertCollaborationTags(tags) == true){
@@ -56,9 +57,9 @@ public class CollaborationTagsController {
 	}
 	
 	@RequestMapping(value = "/remove/{collapId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteTags(@PathVariable("collapId") int collapId){
+	public ResponseEntity<Map<String, Object>> deleteTags(@PathVariable("collapId") int collapId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(tagsService.deleteCollaborationTagsByCollaborationId(collapId) == true){
+		if(tagsService.deleteCollaborationTagsByCollaborationId(collapId, dataSource) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

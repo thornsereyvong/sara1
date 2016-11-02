@@ -7,22 +7,20 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCaseTypeDao;
 import com.balancika.crm.model.CrmCaseType;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
 
 	@Override
 	public boolean insertCaseType(CrmCaseType type) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(type);
@@ -31,6 +29,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -38,7 +37,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 
 	@Override
 	public boolean updateCaseType(CrmCaseType type) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(type);
@@ -47,18 +46,17 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public String deleteCaseType(int typeId) {
-		Session session = transactionManager.getSessionFactory().openSession();
-		CrmCaseType type = new CrmCaseType();
+	public String deleteCaseType(CrmCaseType type) {
+		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			type.setCaseTypeId(typeId);
 			session.delete(type);
 			session.getTransaction().commit();
 			return "OK";
@@ -70,6 +68,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 			session.getTransaction().rollback();
 			e.printStackTrace();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return "FAILED";
@@ -78,17 +77,34 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCaseType> listCaseTypes() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmCaseType.class);
-		criteria.addOrder(Order.asc("caseTypeId"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	public List<CrmCaseType> listCaseTypes(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmCaseType.class);
+			criteria.addOrder(Order.asc("caseTypeId"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmCaseType findCaseTypeById(int typeId) {
-		return (CrmCaseType) transactionManager.getSessionFactory().getCurrentSession().get(CrmCaseType.class, typeId);
+	public CrmCaseType findCaseTypeById(int typeId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmCaseType) session.get(CrmCaseType.class, typeId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 }

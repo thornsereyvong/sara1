@@ -42,7 +42,7 @@ public class CrmCollaborationDetails implements Serializable{
 	private String formatCreateDate;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public int getCommentId() {
 		return commentId;
@@ -92,12 +92,12 @@ public class CrmCollaborationDetails implements Serializable{
 		this.formatCreateDate = formatCreateDate;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
 
 }

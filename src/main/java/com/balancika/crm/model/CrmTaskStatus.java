@@ -31,7 +31,7 @@ public class CrmTaskStatus implements Serializable{
 	private String taskStatusDes;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public int getTaskStatusId() {
 		return taskStatusId;
@@ -57,11 +57,11 @@ public class CrmTaskStatus implements Serializable{
 		this.taskStatusDes = taskStatusDes;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
 }

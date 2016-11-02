@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmNote;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmNoteService;
 
 @RestController
@@ -23,10 +24,10 @@ public class NoteController {
 	@Autowired
 	private CrmNoteService noteService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listNotes(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listNotes(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmNote> arrNote = noteService.listNotes();
+		List<CrmNote> arrNote = noteService.listNotes(dataSource);
 		if(arrNote != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -39,9 +40,9 @@ public class NoteController {
 	}
 
 	@RequestMapping(value="/list/{noteId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findNoteById(@PathVariable("noteId") String noteId){
+	public ResponseEntity<Map<String, Object>> findNoteById(@PathVariable("noteId") String noteId, MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmNote note = noteService.findNoteById(noteId);
+		CrmNote note = noteService.findNoteById(noteId, dataSource);
 		if(note != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -53,10 +54,10 @@ public class NoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listNoteRelatedToLead(@PathVariable("leadId") String leadId){
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listNoteRelatedToLead(@PathVariable("leadId") String leadId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmNote> note = noteService.listNoteRelatedToLead(leadId);
+		List<CrmNote> note = noteService.listNoteRelatedToLead(leadId, dataSource);
 		if(note != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -69,10 +70,10 @@ public class NoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listNoteRelatedToOpportuntity(@PathVariable("opId") String opId){
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listNoteRelatedToOpportuntity(@PathVariable("opId") String opId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmNote> note = noteService.listNotesRelatedToOpportunity(opId);
+		List<CrmNote> note = noteService.listNotesRelatedToOpportunity(opId, dataSource);
 		if(note != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -85,10 +86,10 @@ public class NoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listNoteRelatedToModule(@PathVariable("moduleId") String moduleId){
+	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listNoteRelatedToModule(@PathVariable("moduleId") String moduleId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmNote> note = noteService.listNoteRelatedToEachModule(moduleId);
+		List<CrmNote> note = noteService.listNoteRelatedToEachModule(moduleId, dataSource);
 		if(note != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -114,7 +115,7 @@ public class NoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateNote(@RequestBody CrmNote note){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(noteService.updateNote(note) == true){
@@ -127,10 +128,10 @@ public class NoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{noteId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteNote(@PathVariable("noteId") String noteId){
+	@RequestMapping(value="/remove", method = RequestMethod.DELETE, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteNote(@RequestBody CrmNote note){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(noteService.deleteNote(noteId) == true){
+		if(noteService.deleteNote(note) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

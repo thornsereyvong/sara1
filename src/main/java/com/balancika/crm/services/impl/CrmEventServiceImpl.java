@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmEventDao;
 import com.balancika.crm.model.CrmEvent;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmEventService;
 
 @Service
@@ -29,37 +30,37 @@ public class CrmEventServiceImpl implements CrmEventService{
 	}
 
 	@Override
-	public boolean deleteEnvent(String evId) {
-		return eventDao.deleteEnvent(evId);
+	public boolean deleteEnvent(CrmEvent event) {
+		return eventDao.deleteEnvent(event);
 	}
 
 	@Override
-	public List<CrmEvent> listEvents() {
-		return eventDao.listEvents();
+	public List<CrmEvent> listEvents(MeDataSource dataSource) {
+		return eventDao.listEvents(dataSource);
 	}
 
 	@Override
-	public Object findEventById(String evId) {
-		return eventDao.findEventById(evId);
+	public Object findEventById(String evId,MeDataSource dataSource) {
+		return eventDao.findEventById(evId, dataSource);
 	}
 
 	@Override
-	public CrmEvent findEventDetailsById(String evId) {
-		return eventDao.findEventDetailsById(evId);
+	public CrmEvent findEventDetailsById(String evId, MeDataSource dataSource) {
+		return eventDao.findEventDetailsById(evId, dataSource);
 	}
 
 	@Override
-	public List<CrmEvent> listEventsRelatedToLead(String leadId) {
-		return eventDao.listEventsRelatedToLead(leadId);
+	public List<CrmEvent> listEventsRelatedToLead(String leadId, MeDataSource dataSource) {
+		return eventDao.listEventsRelatedToLead(leadId, dataSource);
 	}
 
 	@Override
-	public List<CrmEvent> listEventsRelatedToOpportunity(String opId) {
-		return eventDao.listEventsRelatedToOpportunity(opId);
+	public List<CrmEvent> listEventsRelatedToOpportunity(String opId, MeDataSource dataSource) {
+		return eventDao.listEventsRelatedToOpportunity(opId, dataSource);
 	}
 
 	@Override
-	public List<CrmEvent> listEventsRelatedToModule(String moduleId) {
-		return eventDao.listEventsRelatedToModule(moduleId);
+	public List<CrmEvent> listEventsRelatedToModule(String moduleId, MeDataSource dataSource) {
+		return eventDao.listEventsRelatedToModule(moduleId, dataSource);
 	}
 }

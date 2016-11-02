@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmLeadDao;
 import com.balancika.crm.model.CrmLead;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmLeadService;
 
 @Service
@@ -31,43 +32,39 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 	}
 
 	@Override
-	public boolean deleteLead(String leadID) {
-		return dao.deleteLead(leadID);
+	public boolean deleteLead(CrmLead lead) {
+		return dao.deleteLead(lead);
 	}
 
 	@Override
-	public List<CrmLead> getAllLead() {
-		return dao.getAllLead();
+	public List<CrmLead> getAllLead(MeDataSource dataSource) {
+		return dao.getAllLead(dataSource);
 	}
 
 	@Override
-	public Object findLeadById(String leadID) {
-		return dao.findLeadById(leadID);
+	public Object findLeadById(String leadID, MeDataSource dataSource) {
+		return dao.findLeadById(leadID, dataSource);
 	}
 
 	@Override
-	public CrmLead findLeadDetailById(String leadID) {
-		return dao.findLeadDetailById(leadID);
+	public CrmLead findLeadDetailById(String leadID, MeDataSource dataSource) {
+		return dao.findLeadDetailById(leadID, dataSource);
+	}
+
+
+	@Override
+	public List<CrmLead> getLeadBySpecificUser(String username, MeDataSource dataSource) {
+		return dao.getLeadBySpecificUser(username, dataSource);
 	}
 
 	@Override
-	public boolean convertLead(String json) {
-		return dao.convertLead(json);
+	public Map<String, Object> viewActivitiesOfLeadById(String leadId, MeDataSource dataSource) {
+		return dao.viewActivitiesOfLeadById(leadId, dataSource);
 	}
 
 	@Override
-	public List<CrmLead> getLeadBySpecificUser(String username) {
-		return dao.getLeadBySpecificUser(username);
-	}
-
-	@Override
-	public Map<String, Object> viewActivitiesOfLeadById(String leadId) {
-		return dao.viewActivitiesOfLeadById(leadId);
-	}
-
-	@Override
-	public boolean updateLeadStatusToConverted(String leadID, String custId, String opId) {
-		return dao.updateLeadStatusToConverted(leadID,custId,opId);
+	public boolean updateLeadStatusToConverted(String leadID, String custId, String opId, MeDataSource dataSource) {
+		return dao.updateLeadStatusToConverted(leadID,custId,opId,dataSource);
 	}
 
 }

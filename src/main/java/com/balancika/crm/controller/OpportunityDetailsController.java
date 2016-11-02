@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunityDetails;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityDetailsService;
 
 @RestController
@@ -23,15 +24,15 @@ public class OpportunityDetailsController {
 	@Autowired
 	private CrmOpportunityDetailsService opportunityDetailsService;
 	
-	@RequestMapping(value="/startup", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> startupPage(){
-		return new ResponseEntity<Map<String,Object>>(opportunityDetailsService.startUpPage(), HttpStatus.OK);
+	@RequestMapping(value="/startup", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> startupPage(@RequestBody MeDataSource dataSource){
+		return new ResponseEntity<Map<String,Object>>(opportunityDetailsService.startUpPage(dataSource), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> listOpportunityDetails(){
+	@RequestMapping(value="/list", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listOpportunityDetails(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmOpportunityDetails> details = opportunityDetailsService.listOpportunityDetails();
+		List<CrmOpportunityDetails> details = opportunityDetailsService.listOpportunityDetails(dataSource);
 		if(details != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -46,9 +47,9 @@ public class OpportunityDetailsController {
 	}
 	
 	@RequestMapping(value="/list/{opDetailsId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> findOpportunityById(@PathVariable("opDetailsId") int opDetailsId){
+	public ResponseEntity<Map<String, Object>> findOpportunityById(@PathVariable("opDetailsId") int opDetailsId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmOpportunityDetails details = opportunityDetailsService.findOpportunityDetailsById(opDetailsId);
+		CrmOpportunityDetails details = opportunityDetailsService.findOpportunityDetailsById(opDetailsId, dataSource);
 		if(details != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -68,7 +69,7 @@ public class OpportunityDetailsController {
 		if(opportunityDetailsService.insertOpportunityDetails(details) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
-			map.put("DATA", opportunityDetailsService.findOpportunityDetailsById(details.getOpDetailsId()));
+			map.put("DATA", opportunityDetailsService.findOpportunityDetailsById(details.getOpDetailsId(), details.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
@@ -91,10 +92,10 @@ public class OpportunityDetailsController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove/{opDetailsId}", method = RequestMethod.PUT)
-	public ResponseEntity<Map<String, Object>> deleteOpportunity(@PathVariable("opDetailsId") int opDetailsId){
+	@RequestMapping(value="/remove", method = RequestMethod.PUT)
+	public ResponseEntity<Map<String, Object>> deleteOpportunity(@RequestBody CrmOpportunityDetails details){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityDetailsService.deleteOpportunityDetails(opDetailsId) == true){
+		if(opportunityDetailsService.deleteOpportunityDetails(details) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

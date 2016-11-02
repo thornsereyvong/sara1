@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCaseStatusDao;
 import com.balancika.crm.model.CrmCaseStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCaseStatusService;
 
 @Service
@@ -29,18 +30,18 @@ public class CrmCaseStatusServiceImpl implements CrmCaseStatusService{
 	}
 
 	@Override
-	public String deleteCaseStatus(int statusId) {
-		return statusDao.deleteCaseStatus(statusId);
+	public String deleteCaseStatus(CrmCaseStatus status) {
+		return statusDao.deleteCaseStatus(status);
 	}
 
 	@Override
-	public List<CrmCaseStatus> listCaseStatus() {
-		return statusDao.listCaseStatus();
+	public List<CrmCaseStatus> listCaseStatus(MeDataSource dataSource) {
+		return statusDao.listCaseStatus(dataSource);
 	}
 
 	@Override
-	public CrmCaseStatus findCaseStatusById(int statusId) {
-		return statusDao.findCaseStatusById(statusId);
+	public CrmCaseStatus findCaseStatusById(int statusId, MeDataSource dataSource) {
+		return statusDao.findCaseStatusById(statusId,dataSource);
 	}
 
 }

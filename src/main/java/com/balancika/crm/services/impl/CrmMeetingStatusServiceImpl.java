@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmMeetingStatusDao;
 import com.balancika.crm.model.CrmMeetingStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMeetingStatusService;
 
 @Service
@@ -29,17 +30,17 @@ public class CrmMeetingStatusServiceImpl implements CrmMeetingStatusService{
 	}
 
 	@Override
-	public String deleteMeetingStatus(int statusId) {
-		return statusDao.deleteMeetingStatus(statusId);
+	public String deleteMeetingStatus(CrmMeetingStatus status) {
+		return statusDao.deleteMeetingStatus(status);
 	}
 
 	@Override
-	public CrmMeetingStatus findMeetingStatusById(int statusId) {
-		return statusDao.findMeetingStatusById(statusId);
+	public CrmMeetingStatus findMeetingStatusById(int statusId, MeDataSource dataSource) {
+		return statusDao.findMeetingStatusById(statusId, dataSource);
 	}
 
 	@Override
-	public List<CrmMeetingStatus> listMeetingStatus() {
-		return statusDao.listMeetingStatus();
+	public List<CrmMeetingStatus> listMeetingStatus(MeDataSource dataSource) {
+		return statusDao.listMeetingStatus(dataSource);
 	}
 }

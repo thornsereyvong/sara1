@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmContact;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCollaborationService;
@@ -75,12 +76,12 @@ public class ContactController {
 	@Autowired
 	private CrmEventLocationService eventLocationService;
 
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listContacts(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listContacts(@RequestBody MeDataSource dataSource){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmContact> arrContact = contactService.listContacts();
+		List<CrmContact> arrContact = contactService.listContacts(dataSource);
 		if( arrContact == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -93,12 +94,12 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/{conId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findContactById(@PathVariable("conId") String conId){
+	@RequestMapping(value="/list/{conId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findContactById(@PathVariable("conId") String conId, @RequestBody MeDataSource dataSource){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		Object contact = contactService.findContactById(conId);
+		Object contact = contactService.findContactById(conId, dataSource);
 		if( contact == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -111,36 +112,36 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/view/{conId}/{username}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> viewContact(@PathVariable("conId") String conId, @PathVariable("username") String username){
+	@RequestMapping(value="/view/{conId}/{username}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewContact(@PathVariable("conId") String conId, @PathVariable("username") String username, @RequestBody MeDataSource dataSource){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
-		map = contactService.viewContact(conId);
-		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
-		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
-		map.put("REPORT_TO", contactService.listParentOfContact());
-		map.put("COLLABORATIONS", collaborationService.listCollaborations(conId));
-		map.put("NOTES", noteService.listNoteRelatedToEachModule(conId));
-		map.put("CALLS", callService.listCallsRelatedToModule(conId));
-		map.put("TASKS", taskService.listTasksRelatedToModule(conId));
-		map.put("METTINGS", meetingService.listMeetingsRelatedToModule(conId));
-		map.put("EVENTS", eventService.listEventsRelatedToModule(conId));
-		map.put("TAG_TO", userService.listAllUsernameAndId());
-		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus());
-		map.put("TASK_STATUS", taskStatusService.lisTaskStatus());
-		map.put("CALL_STATUS", callStatusService.listCallStatus());
-		map.put("EVENT_LOCATION", eventLocationService.listEventLocations());
-		map.put("CONTACTS", contactService.listSomeFieldsOfContact());
+		map = contactService.viewContact(conId, dataSource);
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("LEAD_SOURCE", sourceService.getAllLeadSource(dataSource));
+		map.put("REPORT_TO", contactService.listParentOfContact(dataSource));
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(conId, dataSource));
+		map.put("NOTES", noteService.listNoteRelatedToEachModule(conId, dataSource));
+		map.put("CALLS", callService.listCallsRelatedToModule(conId, dataSource));
+		map.put("TASKS", taskService.listTasksRelatedToModule(conId, dataSource));
+		map.put("METTINGS", meetingService.listMeetingsRelatedToModule(conId, dataSource));
+		map.put("EVENTS", eventService.listEventsRelatedToModule(conId, dataSource));
+		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
+		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
+		map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
+		map.put("CALL_STATUS", callStatusService.listCallStatus(dataSource));
+		map.put("EVENT_LOCATION", eventLocationService.listEventLocations(dataSource));
+		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/details/{conId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findContactDetailsById(@PathVariable("conId") String conId){
+	@RequestMapping(value="/list/details/{conId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findContactDetailsById(@PathVariable("conId") String conId, @RequestBody MeDataSource dataSource){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		CrmContact contact = contactService.findContactDetailsById(conId);
+		CrmContact contact = contactService.findContactDetailsById(conId, dataSource);
 		if( contact == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -153,15 +154,15 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/startup/{username}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> addStartupPage(@PathVariable("username") String username){
+	@RequestMapping(value="/startup/{username}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> addStartupPage(@PathVariable("username") String username, @RequestBody MeDataSource dataSource){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
-		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
-		map.put("REPORT_TO", contactService.listParentOfContact());
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("LEAD_SOURCE", sourceService.getAllLeadSource(dataSource));
+		map.put("REPORT_TO", contactService.listParentOfContact(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -180,18 +181,18 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value="/startup/{username}/{conId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> editStartupPage(@PathVariable("username") String username, @PathVariable("conId") String conId){
+	@RequestMapping(value="/startup/{username}/{conId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> editStartupPage(@PathVariable("username") String username, @PathVariable("conId") String conId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("CUSTOMERS", customerService.listCustomerIdAndName());
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username));
-		map.put("LEAD_SOURCE", sourceService.getAllLeadSource());
-		map.put("REPORT_TO", contactService.listParentOfContact());
-		map.put("CONTACT", contactService.findContactById(conId));
+		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
+		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("LEAD_SOURCE", sourceService.getAllLeadSource(dataSource));
+		map.put("REPORT_TO", contactService.listParentOfContact(dataSource));
+		map.put("CONTACT", contactService.findContactById(conId, dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateContact(@RequestBody CrmContact contact){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(contactService.updateContact(contact) == false){
@@ -205,11 +206,11 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove/{conId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteContact(@PathVariable("conId") String conId){
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteContact(@RequestBody CrmContact contact){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(contactService.deleteContact(conId) == false){
+		if(contactService.deleteContact(contact) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 

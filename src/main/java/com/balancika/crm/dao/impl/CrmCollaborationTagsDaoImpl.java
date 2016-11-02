@@ -4,22 +4,19 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCollaborationTagsDao;
 import com.balancika.crm.model.CrmCollaborationTags;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 	
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean insertCollaborationTags(List<CrmCollaborationTags> tags) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(tags.get(0).getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			for(int i = 0; i < tags.size(); i++){
@@ -30,29 +27,33 @@ public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 				}
 			}
 			session.getTransaction().commit();
+			session.clear();
 			session.close();
 			return true;
 		} catch (Exception e) {
 			session.getTransaction().rollback();
+			session.clear();
 			session.close();
 			e.printStackTrace();
-		}
+		} 
 		return false;
 	}
 
 	@Override
-	public boolean deleteCollaborationTagsByCollaborationId(int collapId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public boolean deleteCollaborationTagsByCollaborationId(int collapId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			CrmCollaborationTags tag = new CrmCollaborationTags();
 			tag.setTagId(collapId);
 			session.delete(tag);
 			session.getTransaction().commit();
+			session.clear();
 			session.close();
 			return true;
 		} catch (Exception e) {
 			session.getTransaction().rollback();
+			session.clear();
 			session.close();
 			e.printStackTrace();
 		}
@@ -61,8 +62,8 @@ public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCollaborationTags> listCollaborationTags() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<CrmCollaborationTags> listCollaborationTags(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCollaborationTags.class);
@@ -70,7 +71,10 @@ public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
-		} 
+		} finally {
+			session.clear();
+			session.close();
+		}
 		return null;
 	}
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmOpportunitySaleOrderDao;
 import com.balancika.crm.model.CrmOpportunitySaleOrder;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunitySaleOrderService;
 
 @Service
@@ -27,23 +28,23 @@ public class CrmOpportunitySaleOrderServiceImpl implements CrmOpportunitySaleOrd
 	}
 
 	@Override
-	public boolean deleteOpportunitySaleOrder(int opSaleOrderId) {
-		return opportunitySaleOrderDao.deleteOpportunitySaleOrder(opSaleOrderId);
+	public boolean deleteOpportunitySaleOrder(CrmOpportunitySaleOrder opSaleOrder) {
+		return opportunitySaleOrderDao.deleteOpportunitySaleOrder(opSaleOrder);
 	}
 
 	@Override
-	public CrmOpportunitySaleOrder findOpportunitySaleOrder(int opSaleOrderId) {
-		return opportunitySaleOrderDao.findOpportunitySaleOrder(opSaleOrderId);
+	public CrmOpportunitySaleOrder findOpportunitySaleOrder(int opSaleOrderId, MeDataSource dataSource) {
+		return opportunitySaleOrderDao.findOpportunitySaleOrder(opSaleOrderId, dataSource);
 	}
 
 	@Override
-	public Integer checkOpportunitySaleOrderIsExist(String opId, String saleOrderId) {
-		return opportunitySaleOrderDao.checkOpportunitySaleOrderIsExist(opId, saleOrderId);
+	public Integer checkOpportunitySaleOrderIsExist(String opId, String saleOrderId, MeDataSource dataSource) {
+		return opportunitySaleOrderDao.checkOpportunitySaleOrderIsExist(opId, saleOrderId, dataSource);
 	}
 
 	@Override
-	public Object viewOpportunitySaleOrder(int opSaleOrderId) {
-		return opportunitySaleOrderDao.viewOpportunitySaleOrder(opSaleOrderId);
+	public Object viewOpportunitySaleOrder(int opSaleOrderId, MeDataSource dataSource) {
+		return opportunitySaleOrderDao.viewOpportunitySaleOrder(opSaleOrderId, dataSource);
 	}
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmOpportunityDao;
 import com.balancika.crm.model.CrmOpportunity;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityService;
 
 
@@ -31,48 +32,48 @@ public class CrmOpportunityServiceImpl implements CrmOpportunityService{
 	}
 
 	@Override
-	public boolean isDeleteOpportunity(String opId) {
-		return opDao.isDeleteOpportunity(opId);
+	public boolean isDeleteOpportunity(CrmOpportunity opportunity) {
+		return opDao.isDeleteOpportunity(opportunity);
 	}
 
 	@Override
-	public Object findOpportunityById(String opId) {
-		return opDao.findOpportunityById(opId);
+	public Object findOpportunityById(String opId, MeDataSource dataSource) {
+		return opDao.findOpportunityById(opId, dataSource);
 	}
 
 	@Override
-	public List<CrmOpportunity> listOpportunities() {
-		return opDao.listOpportunities();
+	public List<CrmOpportunity> listOpportunities(MeDataSource dataSource) {
+		return opDao.listOpportunities(dataSource);
 	}
 
 	@Override
-	public CrmOpportunity findOpportunityDetailsById(String opId) {
-		return opDao.findOpportunityDetailsById(opId);
+	public CrmOpportunity findOpportunityDetailsById(String opId, MeDataSource dataSource) {
+		return opDao.findOpportunityDetailsById(opId, dataSource);
 	}
 
 	@Override
-	public List<Object> listOpportunitiesWithSpecificUser(String username) {
-		return opDao.listOpportunitiesWithSpecificUser(username);
+	public List<Object> listOpportunitiesWithSpecificUser(String username, MeDataSource dataSource) {
+		return opDao.listOpportunitiesWithSpecificUser(username, dataSource);
 	}
 
 	@Override
-	public Map<String, Object> listInformationRelateToOpportunity(String opId) {
-		return opDao.listInformationRelateToOpportunity(opId);
+	public Map<String, Object> listInformationRelateToOpportunity(String opId, MeDataSource dataSource) {
+		return opDao.listInformationRelateToOpportunity(opId, dataSource);
 	}
 
 	@Override
-	public List<Object> listContactsRelatedToOpportuntiy(String opId) {
-		return opDao.listContactsRelatedToOpportuntiy(opId);
+	public List<Object> listContactsRelatedToOpportuntiy(String opId, MeDataSource dataSource) {
+		return opDao.listContactsRelatedToOpportuntiy(opId, dataSource);
 	}
 
 	@Override
-	public List<Object> listQuotationsRelatedToOpportuntiy(String opId) {
-		return opDao.listQuotationsRelatedToOpportuntiy(opId);
+	public List<Object> listQuotationsRelatedToOpportuntiy(String opId, MeDataSource dataSource) {
+		return opDao.listQuotationsRelatedToOpportuntiy(opId, dataSource);
 	}
 
 	@Override
-	public List<Object> listSaleOrdersRelatedToOpportuntiy(String opId) {
-		return opDao.listSaleOrdersRelatedToOpportuntiy(opId);
+	public List<Object> listSaleOrdersRelatedToOpportuntiy(String opId, MeDataSource dataSource) {
+		return opDao.listSaleOrdersRelatedToOpportuntiy(opId, dataSource);
 	}
 
 	@Override

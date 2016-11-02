@@ -9,10 +9,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCustomerDao;
 import com.balancika.crm.model.AmeClass;
 import com.balancika.crm.model.CrmCase;
@@ -20,6 +19,7 @@ import com.balancika.crm.model.CrmContact;
 import com.balancika.crm.model.CrmCustomer;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.CrmShipAddress;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.utilities.CrmIdGenerator;
 import com.balancika.crm.utilities.DateTimeOperation;
@@ -27,12 +27,9 @@ import com.balancika.crm.utilities.DateTimeOperation;
 @Repository
 public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao{
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-	
 	@Override
 	public boolean insertCustomer(CrmCustomer customer) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(customer.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			String custId = ameIdAutoGenerator("CUST");
@@ -57,6 +54,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}finally{
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -64,7 +62,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 
 	@Override
 	public boolean updateCustomer(CrmCustomer customer) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(customer.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(customer);
@@ -85,21 +83,22 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		}finally{
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public boolean deleteCustomer(String custID) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public boolean deleteCustomer(CrmCustomer customer) {
+		Session session = HibernateSessionFactory.getSessionFactory(customer.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM tblcustomer WHERE CustID = :custID");
-			query.setParameter("custID", custID);
+			query.setParameter("custID", customer.getCustID());
 			if(query.executeUpdate() > 0){
 				SQLQuery detailsQuery = session.createSQLQuery("DELETE FROM tblshipaddress WHERE moduleid = :custId");
-				detailsQuery.setParameter("custId", custID);
+				detailsQuery.setParameter("custId", customer.getCustID());
 				session.getTransaction().commit();
 				detailsQuery.executeUpdate();
 				return true;
@@ -115,34 +114,59 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCustomer> listCustomers() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmCustomer.class);
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	public List<CrmCustomer> listCustomers(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmCustomer.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<CrmShipAddress> listShipAdressesByCustId(String custId){
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmShipAddress.class);
-		criteria.add(Restrictions.eq("docId", custId));
-		criteria.addOrder(Order.asc("shipId"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	private List<CrmShipAddress> listShipAdressesByCustId(String custId, MeDataSource dataSource){
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmShipAddress.class);
+			criteria.add(Restrictions.eq("docId", custId));
+			criteria.addOrder(Order.asc("shipId"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmCustomer findCustomerById(String custID) {
-		CrmCustomer customer = (CrmCustomer)transactionManager.getSessionFactory().getCurrentSession().get(CrmCustomer.class, custID);
-		customer.setShipAddresses(listShipAdressesByCustId(custID));
-		return customer;
+	public CrmCustomer findCustomerById(String custID, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			CrmCustomer customer =(CrmCustomer)session.get(CrmCustomer.class, custID);
+			customer.setShipAddresses(listShipAdressesByCustId(custID, dataSource));
+			return customer;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> listCustomerIdAndName() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<Object> listCustomerIdAndName(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
 			criteria.setProjection(Projections.projectionList()
@@ -154,59 +178,81 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PriceCode> listPriceCode() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(PriceCode.class);
-		criteria.addOrder(Order.asc("priceCode"));
-		return (List<PriceCode>)criteria.list();
+	public List<PriceCode> listPriceCode(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(PriceCode.class);
+			criteria.addOrder(Order.asc("priceCode"));
+			return (List<PriceCode>)criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AmeClass> listAmeClasses(){
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(AmeClass.class);
-		return criteria.list();
+	public List<AmeClass> listAmeClasses(MeDataSource dataSource){
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(AmeClass.class);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 	
 	@Override
-	public CrmCustomer viewCustomerDetails(String custId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public CrmCustomer viewCustomerDetails(String custId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
 			criteria.add(Restrictions.eq("custID", custId));
 			CrmCustomer customer = (CrmCustomer)criteria.uniqueResult();
-			List<CrmContact> contacts = getContactRelatedToCustomer(custId);
+			List<CrmContact> contacts = getContactRelatedToCustomer(custId, dataSource);
 			if(contacts != null){
 				customer.setContacts(contacts);
 			}
 			
-			List<CrmCase> cases = getCasesRelatedToCustomer(custId);
+			List<CrmCase> cases = getCasesRelatedToCustomer(custId, dataSource);
 			if(cases != null){
 				customer.setCases(cases);
 			}
 			
-			List<CrmOpportunity> opportunities = getOpportunityRelatedToCustomer(custId);
+			List<CrmOpportunity> opportunities = getOpportunityRelatedToCustomer(custId, dataSource);
 			if(opportunities != null){
 				customer.setOpportunities(opportunities);
 			}
-			customer.setShipAddresses(listShipAdressesByCustId(custId));
+			customer.setShipAddresses(listShipAdressesByCustId(custId,dataSource));
 			return customer;
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<CrmContact> getContactRelatedToCustomer(String custId){
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	private List<CrmContact> getContactRelatedToCustomer(String custId, MeDataSource dataSource){
+		Session session =  HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmContact.class, "con").createAlias("con.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));
@@ -224,13 +270,16 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			return criteria.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<CrmCase> getCasesRelatedToCustomer(String custId){
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	private List<CrmCase> getCasesRelatedToCustomer(String custId, MeDataSource dataSource){
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));
@@ -248,14 +297,17 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			return cases;
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 	
 	
 	@SuppressWarnings("unchecked")
-	private List<CrmOpportunity> getOpportunityRelatedToCustomer(String custId){
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	private List<CrmOpportunity> getOpportunityRelatedToCustomer(String custId, MeDataSource dataSource){
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op").createAlias("op.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));
@@ -269,6 +321,9 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			return criteria.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}

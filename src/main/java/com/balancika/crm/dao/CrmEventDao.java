@@ -3,15 +3,16 @@ package com.balancika.crm.dao;
 import java.util.List;
 
 import com.balancika.crm.model.CrmEvent;
+import com.balancika.crm.model.MeDataSource;
 
 public interface CrmEventDao {
 	boolean insertEvent(CrmEvent event);
 	boolean updateEvent(CrmEvent event);
-	boolean deleteEnvent(String evId);
-	List<CrmEvent> listEvents();
-	Object findEventById(String evId);
-	CrmEvent findEventDetailsById(String evId);
-	List<CrmEvent> listEventsRelatedToLead(String leadId);
-	List<CrmEvent> listEventsRelatedToOpportunity(String opId);
-	List<CrmEvent> listEventsRelatedToModule(String moduleId);
+	boolean deleteEnvent(CrmEvent event);
+	List<CrmEvent> listEvents(MeDataSource dataSource);
+	Object findEventById(String evId, MeDataSource dataSource);
+	CrmEvent findEventDetailsById(String evId, MeDataSource dataSource);
+	List<CrmEvent> listEventsRelatedToLead(String leadId, MeDataSource dataSource);
+	List<CrmEvent> listEventsRelatedToOpportunity(String opId, MeDataSource dataSource);
+	List<CrmEvent> listEventsRelatedToModule(String moduleId, MeDataSource dataSource);
 }

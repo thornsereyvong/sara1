@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmIndustryDao;
 import com.balancika.crm.model.CrmIndustry;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmIndustryService;
 
 
@@ -22,52 +22,26 @@ public class CrmIndustryServiceImpl implements CrmIndustryService{
 	
 	@Override
 	public boolean insertIndustry(CrmIndustry industry) {
-		try{
-			return industDao.insertIndustry(industry);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return industDao.insertIndustry(industry);
 	}
 
 	@Override
 	public boolean updateIndustry(CrmIndustry industry) {
-		try{
-			return industDao.updateIndustry(industry);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return industDao.updateIndustry(industry);
 	}
 
 	@Override
-	public boolean deleteIndustry(int industID) {
-		try{
-			return industDao.deleteIndustry(industID);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+	public boolean deleteIndustry(CrmIndustry industry) {
+		return industDao.deleteIndustry(industry);
 	}
 
 	@Override
-	public List<CrmIndustry> listIndustries() {
-		try{
-			return industDao.listIndustries();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+	public List<CrmIndustry> listIndustries(MeDataSource dataSource) {
+		return industDao.listIndustries(dataSource);
 	}
 
 	@Override
-	public CrmIndustry finIndustryById(int industID) {
-		try{
-			return industDao.finIndustryById(industID);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+	public CrmIndustry finIndustryById(int industID, MeDataSource dataSource) {
+		return industDao.finIndustryById(industID, dataSource);
 	}
-
 }

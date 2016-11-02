@@ -125,7 +125,7 @@ public class CrmOpportunity implements Serializable{
 	private List<CrmOpportunityDetails> details;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public String getOpId() {
 		return opId;
@@ -339,12 +339,12 @@ public class CrmOpportunity implements Serializable{
 		this.details = details;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
-	
+
 }

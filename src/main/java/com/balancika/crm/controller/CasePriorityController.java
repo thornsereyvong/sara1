@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCasePriority;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCasePriorityService;
 
 @RestController
@@ -23,10 +24,10 @@ public class CasePriorityController {
 	@Autowired
 	private CrmCasePriorityService priorityService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCasePriorities(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCasePriorities(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCasePriority> arrPriority = priorityService.listCasePriorities();
+		List<CrmCasePriority> arrPriority = priorityService.listCasePriorities(dataSource);
 		if(arrPriority != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -40,10 +41,10 @@ public class CasePriorityController {
 	}
 	
 	
-	@RequestMapping(value="/list/{priorityId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCasePriorityById(@PathVariable("priorityId") int priorityId){
+	@RequestMapping(value="/list/{priorityId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findCasePriorityById(@PathVariable("priorityId") int priorityId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCasePriority priority = priorityService.findCasePriorityById(priorityId);
+		CrmCasePriority priority = priorityService.findCasePriorityById(priorityId, dataSource);
 		if(priority != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -84,16 +85,16 @@ public class CasePriorityController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{priorityId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteCasePriority(@PathVariable("priorityId") int priorityId){
+	@RequestMapping(value="/remove/", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteCasePriority(@RequestBody CrmCasePriority priority){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(priorityService.deleteCasePriority(priorityId).equalsIgnoreCase("OK")){
+		if(priorityService.deleteCasePriority(priority).equalsIgnoreCase("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(priorityService.deleteCasePriority(priorityId).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(priorityService.deleteCasePriority(priority).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

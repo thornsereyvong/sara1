@@ -7,22 +7,19 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmMeetingStatusDao;
 import com.balancika.crm.model.CrmMeetingStatus;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean insertMeetingStatus(CrmMeetingStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -31,6 +28,7 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -38,7 +36,7 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 
 	@Override
 	public boolean updateMeetingStatus(CrmMeetingStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -47,18 +45,17 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public String deleteMeetingStatus(int statusId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public String deleteMeetingStatus(CrmMeetingStatus status) {
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmMeetingStatus status = new CrmMeetingStatus();
-			status.setStatusId(statusId);
 			session.delete(status);
 			session.getTransaction().commit();
 			return "OK";
@@ -76,19 +73,35 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 	}
 
 	@Override
-	public CrmMeetingStatus findMeetingStatusById(int statusId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmMeetingStatus.class);
-		criteria.add(Restrictions.eq("statusId", statusId));
-		return (CrmMeetingStatus)criteria.uniqueResult();
+	public CrmMeetingStatus findMeetingStatusById(int statusId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmMeetingStatus.class);
+			criteria.add(Restrictions.eq("statusId", statusId));
+			return (CrmMeetingStatus)criteria.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmMeetingStatus> listMeetingStatus() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmMeetingStatus.class);
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	public List<CrmMeetingStatus> listMeetingStatus(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmMeetingStatus.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 }

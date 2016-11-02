@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmRoleDao;
 import com.balancika.crm.model.CrmRole;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmRoleService;
 
 @Service("CrmRoleService")
@@ -23,53 +23,27 @@ public class CrmRoleServiceImpl implements CrmRoleService{
 	
 	@Override
 	public boolean isInsertedRole(CrmRole role) {
-		try{
-			return roleDao.isInsertedRole(role);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
-		
+		return roleDao.isInsertedRole(role);
 	}
 
 	@Override
 	public boolean isUpdatedRole(CrmRole role) {
-		try{
-			return roleDao.isUpdatedRole(role);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+		return roleDao.isUpdatedRole(role);
 	}
 
 	@Override
-	public boolean isDeletedRole(String roleId) {
-		try{
-			return roleDao.isDeletedRole(roleId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return false;
-		}
+	public boolean isDeletedRole(CrmRole role) {
+		return roleDao.isDeletedRole(role);
 	}
 
 	@Override
-	public CrmRole findRoleById(String roleId) {
-		try{
-			return roleDao.findRoleById(roleId);
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+	public CrmRole findRoleById(String roleId, MeDataSource dataSource) {
+		return roleDao.findRoleById(roleId, dataSource);
 	}
 
 	@Override
-	public List<CrmRole> listAllRoles() {
-		try{
-			return roleDao.listAllRoles();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			return null;
-		}
+	public List<CrmRole> listAllRoles(MeDataSource dataSource) {
+		return roleDao.listAllRoles(dataSource);
 	}
 
 }

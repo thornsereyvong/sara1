@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCollaborationDetailsDao;
 import com.balancika.crm.model.CrmCollaborationDetails;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCollaborationDetailsService;
 
 @Service
@@ -29,18 +30,18 @@ public class CrmCollaborationDetailsServiceImpl implements CrmCollaborationDetai
 	}
 
 	@Override
-	public boolean deleteCollaborationDetails(int detailsId) {
-		return dao.deleteCollaborationDetails(detailsId);
+	public boolean deleteCollaborationDetails(CrmCollaborationDetails details) {
+		return dao.deleteCollaborationDetails(details);
 	}
 
 	@Override
-	public List<CrmCollaborationDetails> listCollaborationDetails() {
-		return dao.listCollaborationDetails();
+	public List<CrmCollaborationDetails> listCollaborationDetails(MeDataSource dataSource) {
+		return dao.listCollaborationDetails(dataSource);
 	}
 
 	@Override
-	public CrmCollaborationDetails findCollaborationDetailsById(int detailsId) {
-		return dao.findCollaborationDetailsById(detailsId);
+	public CrmCollaborationDetails findCollaborationDetailsById(int detailsId, MeDataSource dataSource) {
+		return dao.findCollaborationDetailsById(detailsId, dataSource);
 	}
 
 }

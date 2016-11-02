@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCallDao;
 import com.balancika.crm.model.CrmCall;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
 
 @Service
@@ -29,38 +30,38 @@ public class CrmCallServiceImpl implements CrmCallService{
 	}
 
 	@Override
-	public boolean deleteCall(String callId) {
-		return callDao.deleteCall(callId);
+	public boolean deleteCall(CrmCall call) {
+		return callDao.deleteCall(call);
 	}
 
 	@Override
-	public List<CrmCall> listCalls() {
-		return callDao.listCalls();
+	public List<CrmCall> listCalls(MeDataSource dataSource) {
+		return callDao.listCalls(dataSource);
 	}
 
 	@Override
-	public Object findCallById(String callId) {
-		return callDao.findCallById(callId);
+	public Object findCallById(CrmCall call) {
+		return callDao.findCallById(call);
 	}
 
 	@Override
-	public CrmCall listCallStructureDetailsById(String callId) {
-		return callDao.listCallStructureDetailsById(callId);
+	public CrmCall listCallStructureDetailsById(CrmCall call) {
+		return callDao.listCallStructureDetailsById(call);
 	}
 
 	@Override
-	public List<CrmCall> listCallsRelatedToLead(String leadId) {
-		return callDao.listCallsRelatedToLead(leadId);
+	public List<CrmCall> listCallsRelatedToLead(String leadId, MeDataSource dataSource) {
+		return callDao.listCallsRelatedToLead(leadId,dataSource);
 	}
 
 	@Override
-	public List<CrmCall> listCallsRelatedToOpportunity(String opId) {
-		return callDao.listCallsRelatedToOpportunity(opId);
+	public List<CrmCall> listCallsRelatedToOpportunity(String opId, MeDataSource dataSource) {
+		return callDao.listCallsRelatedToOpportunity(opId,dataSource);
 	}
 
 	@Override
-	public List<CrmCall> listCallsRelatedToModule(String moduleId) {
-		return callDao.listCallsRelatedToModule(moduleId);
+	public List<CrmCall> listCallsRelatedToModule(String moduleId, MeDataSource dataSource) {
+		return callDao.listCallsRelatedToModule(moduleId,dataSource);
 	}
 
 }

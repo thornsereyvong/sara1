@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CustomerGroupDao;
 import com.balancika.crm.model.CustomerGroup;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CustomerGroupService;
 
 @Service
@@ -19,8 +20,8 @@ public class CustomerGroupServiceImpl implements CustomerGroupService{
 	private CustomerGroupDao groupDao;
 	
 	@Override
-	public List<CustomerGroup> listCustomerGroups() {
-		return groupDao.listCustomerGroups();
+	public List<CustomerGroup> listCustomerGroups(MeDataSource dataSource) {
+		return groupDao.listCustomerGroups(dataSource);
 	}
 
 }

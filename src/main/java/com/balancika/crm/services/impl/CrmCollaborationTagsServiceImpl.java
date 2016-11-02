@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCollaborationTagsDao;
 import com.balancika.crm.model.CrmCollaborationTags;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCollaborationTagsService;
 
 @Service
@@ -24,13 +25,13 @@ public class CrmCollaborationTagsServiceImpl implements CrmCollaborationTagsServ
 	}
 
 	@Override
-	public boolean deleteCollaborationTagsByCollaborationId(int collapId) {
-		return tagsDao.deleteCollaborationTagsByCollaborationId(collapId);
+	public boolean deleteCollaborationTagsByCollaborationId(int collapId, MeDataSource dataSource) {
+		return tagsDao.deleteCollaborationTagsByCollaborationId(collapId, dataSource);
 	}
 
 	@Override
-	public List<CrmCollaborationTags> listCollaborationTags() {
-		return tagsDao.listCollaborationTags();
+	public List<CrmCollaborationTags> listCollaborationTags(MeDataSource dataSource) {
+		return tagsDao.listCollaborationTags(dataSource);
 	}
 
 }

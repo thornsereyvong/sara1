@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmRole;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmRoleService;
 
 @RestController
@@ -25,11 +26,11 @@ public class RoleController {
 	@Qualifier("CrmRoleService")
 	private CrmRoleService roleService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces="application/json")
-	public ResponseEntity<Map<String, Object>> listAllRoles(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> listAllRoles(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmRole> arrRole = roleService.listAllRoles();
+		List<CrmRole> arrRole = roleService.listAllRoles(dataSource);
 		if(arrRole != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -42,11 +43,11 @@ public class RoleController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/{roleId}", method = RequestMethod.GET, produces="application/json")
-	public ResponseEntity<Map<String, Object>> findRoleById(@PathVariable("roleId") String roleId){
+	@RequestMapping(value="/list/{roleId}", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> findRoleById(@PathVariable("roleId") String roleId, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmRole roles = roleService.findRoleById(roleId);
+		CrmRole roles = roleService.findRoleById(roleId, dataSource);
 		if(roles != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -90,10 +91,10 @@ public class RoleController {
 	}
 	
 	@RequestMapping(value="/remove/{roleId}", method = RequestMethod.DELETE, produces="application/json")
-	public ResponseEntity<Map<String, Object>> deleteRole(@PathVariable("roleId") String roleId){
+	public ResponseEntity<Map<String, Object>> deleteRole(@RequestBody CrmRole role){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(roleService.isDeletedRole(roleId) == true){
+		if(roleService.isDeletedRole(role) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

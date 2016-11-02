@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmContactDao;
 import com.balancika.crm.model.CrmContact;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmContactService;
 
 @Service
@@ -31,43 +32,43 @@ public class CrmContactServiceImpl implements CrmContactService{
 	}
 
 	@Override
-	public boolean deleteContact(String conId) {
-		return contactDao.deleteContact(conId);
+	public boolean deleteContact(CrmContact contact) {
+		return contactDao.deleteContact(contact);
 	}
 
 	@Override
-	public List<CrmContact> listContacts() {
-		return contactDao.listContacts();
+	public List<CrmContact> listContacts(MeDataSource dataSource) {
+		return contactDao.listContacts(dataSource);
 	}
 
 	@Override
-	public Object findContactById(String conId) {
-		return contactDao.findContactById(conId);
+	public Object findContactById(String conId, MeDataSource dataSource) {
+		return contactDao.findContactById(conId, dataSource);
 	}
 
 	@Override
-	public CrmContact findContactDetailsById(String conId) {
-		return contactDao.findContactDetailsById(conId);
+	public CrmContact findContactDetailsById(String conId, MeDataSource dataSource) {
+		return contactDao.findContactDetailsById(conId, dataSource);
 	}
 
 	@Override
-	public List<Object> listContactRelatedToModule() {
-		return contactDao.listContactRelatedToModule();
+	public List<Object> listContactRelatedToModule(MeDataSource dataSource) {
+		return contactDao.listContactRelatedToModule(dataSource);
 	}
 
 	@Override
-	public List<Object> listParentOfContact() {
-		return contactDao.listParentOfContact();
+	public List<Object> listParentOfContact(MeDataSource dataSource) {
+		return contactDao.listParentOfContact(dataSource);
 	}
 
 	@Override
-	public Map<String, Object> viewContact(String conId) {
-		return contactDao.viewContact(conId);
+	public Map<String, Object> viewContact(String conId, MeDataSource dataSource) {
+		return contactDao.viewContact(conId, dataSource);
 	}
 
 	@Override
-	public List<CrmContact> listSomeFieldsOfContact() {
-		return contactDao.listSomeFieldsOfContact();
+	public List<CrmContact> listSomeFieldsOfContact(MeDataSource dataSource) {
+		return contactDao.listSomeFieldsOfContact(dataSource);
 	}
 
 }

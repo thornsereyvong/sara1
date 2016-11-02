@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCaseStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCaseStatusService;
 
 @RestController
@@ -23,10 +24,10 @@ public class CaseStatusController {
 	@Autowired
 	private CrmCaseStatusService statusService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCaseStatus(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCaseStatus(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCaseStatus> arrStatus = statusService.listCaseStatus();
+		List<CrmCaseStatus> arrStatus = statusService.listCaseStatus(dataSource);
 		if(arrStatus != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -40,9 +41,9 @@ public class CaseStatusController {
 	}
 	
 	@RequestMapping(value="/list/{statusId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCaseStatusById(@PathVariable("statusId") int statusId){
+	public ResponseEntity<Map<String, Object>> findCaseStatusById(@PathVariable("statusId") int statusId,@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCaseStatus status = statusService.findCaseStatusById(statusId);
+		CrmCaseStatus status = statusService.findCaseStatusById(statusId, dataSource);
 		if(status != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -86,17 +87,17 @@ public class CaseStatusController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{statusId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteCaseStatus(@PathVariable("statusId") int statusId){
+	@RequestMapping(value="/remove", method = RequestMethod.DELETE, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteCaseStatus(@RequestBody CrmCaseStatus caseStatus){
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(statusService.deleteCaseStatus(statusId).equalsIgnoreCase("OK")){
+		if(statusService.deleteCaseStatus(caseStatus).equalsIgnoreCase("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(statusService.deleteCaseStatus(statusId).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(statusService.deleteCaseStatus(caseStatus).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

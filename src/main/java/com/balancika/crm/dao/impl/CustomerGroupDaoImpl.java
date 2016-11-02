@@ -5,26 +5,30 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CustomerGroupDao;
 import com.balancika.crm.model.CustomerGroup;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CustomerGroupDaoImpl implements CustomerGroupDao{
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CustomerGroup> listCustomerGroups() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CustomerGroup.class);
-		criteria.addOrder(Order.asc("custGroupId"));
-		return criteria.list();
+	public List<CustomerGroup> listCustomerGroups(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CustomerGroup.class);
+			criteria.addOrder(Order.asc("custGroupId"));
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
-
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmTaskStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmTaskStatusService;
 
 @RestController
@@ -23,10 +24,10 @@ public class TaskStatusController {
 	@Autowired
 	private CrmTaskStatusService statusService;
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listTaskStatus(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTaskStatus(@RequestBody MeDataSource dataSource){
 		Map<String, Object> statusMap = new HashMap<String, Object>();
-		List<CrmTaskStatus> arrStatus = statusService.lisTaskStatus();
+		List<CrmTaskStatus> arrStatus = statusService.lisTaskStatus(dataSource);
 		if(arrStatus != null){
 			statusMap.put("MESSAGE", "SUCCESS");
 			statusMap.put("STATUS", HttpStatus.OK.value());
@@ -39,10 +40,10 @@ public class TaskStatusController {
 		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/list/{statusId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findTaskStatusById(@PathVariable("statusId") int statusId){
+	@RequestMapping(value = "/list/{statusId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findTaskStatusById(@PathVariable("statusId") int statusId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> statusMap = new HashMap<String, Object>();
-		CrmTaskStatus status = statusService.findTaskStatusById(statusId);
+		CrmTaskStatus status = statusService.findTaskStatusById(statusId, dataSource);
 		if(status != null){
 			statusMap.put("MESSAGE", "SUCCESS");
 			statusMap.put("STATUS", HttpStatus.OK.value());
@@ -69,7 +70,7 @@ public class TaskStatusController {
 		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateTaskStatus(@RequestBody CrmTaskStatus status){
 		Map<String, Object> statusMap = new HashMap<String, Object>();
 		if(statusService.updateTaskStatus(status) == true){
@@ -83,16 +84,16 @@ public class TaskStatusController {
 		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/remove/{statusId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteTaskStatus(@PathVariable("statusId") int statusId){
+	@RequestMapping(value = "/remove/{statusId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteTaskStatus(@RequestBody CrmTaskStatus status){
 		Map<String, Object> statusMap = new HashMap<String, Object>();
-		if(statusService.deleteTaskStatus(statusId).equalsIgnoreCase("OK")){
+		if(statusService.deleteTaskStatus(status).equalsIgnoreCase("OK")){
 			statusMap.put("MESSAGE", "DELETED");
 			statusMap.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.OK);
 		}
 		
-		if(statusService.deleteTaskStatus(statusId).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(statusService.deleteTaskStatus(status).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			statusMap.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			statusMap.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.OK);

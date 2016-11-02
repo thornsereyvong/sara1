@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmRoleDetailDao;
 import com.balancika.crm.model.CrmRoleDetail;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmRoleDetailService;
 
 @Service
@@ -30,24 +31,24 @@ public class CrmRoleDetailServiceImpl implements CrmRoleDetailService{
 	}
 
 	@Override
-	public boolean deleteRoleDetail(int roleDetailId) {
-		return roleDetailDao.deleteRoleDetail(roleDetailId); 
+	public boolean deleteRoleDetail(CrmRoleDetail roleDetail) {
+		return roleDetailDao.deleteRoleDetail(roleDetail); 
 	}
 
 	@Override
-	public List<CrmRoleDetail> listRoleDetails() {
-		return roleDetailDao.listRoleDetails();
+	public List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource) {
+		return roleDetailDao.listRoleDetails(dataSource);
 	}
 
 	@Override
-	public CrmRoleDetail findRoleDetailById(int roleDetailId) {
-		return roleDetailDao.findRoleDetailById(roleDetailId);
+	public CrmRoleDetail findRoleDetailById(int roleDetailId, MeDataSource dataSource) {
+		return roleDetailDao.findRoleDetailById(roleDetailId, dataSource);
 	}
 
 	@Override
-	public Object findRoleDetailsByUsername(String username,String moduleId) {
+	public Object findRoleDetailsByUsername(String username,String moduleId, MeDataSource dataSource) {
 		
-		return roleDetailDao.findRoleDetailsByUsername(username,moduleId);
+		return roleDetailDao.findRoleDetailsByUsername(username,moduleId, dataSource);
 	}
 
 }

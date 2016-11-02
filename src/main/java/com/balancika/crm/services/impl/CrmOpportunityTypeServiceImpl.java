@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmOpportunityTypeDao;
 import com.balancika.crm.model.CrmOpportunityType;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityTypeService;
 
 @Service
@@ -29,17 +30,17 @@ public class CrmOpportunityTypeServiceImpl implements CrmOpportunityTypeService{
 	}
 
 	@Override
-	public String deleteOpportunityType(int typeID) {
-		return typeDao.deleteOpportunityType(typeID);
+	public String deleteOpportunityType(CrmOpportunityType type) {
+		return typeDao.deleteOpportunityType(type);
 	}
 
 	@Override
-	public List<CrmOpportunityType> listOpportunityTypes() {
-		return typeDao.listOpportunityTypes();
+	public List<CrmOpportunityType> listOpportunityTypes(MeDataSource dataSource) {
+		return typeDao.listOpportunityTypes(dataSource);
 	}
 
 	@Override
-	public CrmOpportunityType findOpportunityTypeById(int typeID) {
-		return typeDao.findOpportunityTypeById(typeID);
+	public CrmOpportunityType findOpportunityTypeById(int typeID, MeDataSource dataSource) {
+		return typeDao.findOpportunityTypeById(typeID, dataSource);
 	}
 }

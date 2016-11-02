@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmLikeDao;
 import com.balancika.crm.model.CrmLike;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmLikeService;
 
 @Service
@@ -22,13 +23,13 @@ public class CrmLikeServiceImpl implements CrmLikeService{
 	}
 
 	@Override
-	public boolean deleteLike(int collapId) {
-		return likeDao.deleteLike(collapId);
+	public boolean deleteLike(int collapId,MeDataSource dataSource) {
+		return likeDao.deleteLike(collapId,dataSource);
 	}
 
 	@Override
-	public Integer countLike(int collapId) {
-		return likeDao.countLike(collapId);
+	public Integer countLike(int collapId, MeDataSource dataSource) {
+		return likeDao.countLike(collapId, dataSource);
 	}
 
 }

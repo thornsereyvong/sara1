@@ -3,11 +3,13 @@ package com.balancika.crm.services.impl;
 import java.util.List;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmLeadSourceDao;
 import com.balancika.crm.model.CrmLeadSource;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmLeadSourceService;
 
 @Service
@@ -28,17 +30,17 @@ public class CrmLeadSourceServiceImpl implements CrmLeadSourceService{
 	}
 
 	@Override
-	public String deleteLeadSource(int sourceID) {
-		return sourceDao.deleteLeadSource(sourceID);
+	public String deleteLeadSource(CrmLeadSource source) {
+		return sourceDao.deleteLeadSource(source);
 	}
 
 	@Override
-	public List<CrmLeadSource> getAllLeadSource() {
-		return sourceDao.getAllLeadSource();
+	public List<CrmLeadSource> getAllLeadSource(MeDataSource dataSource) {
+		return sourceDao.getAllLeadSource(dataSource);
 	}
 
 	@Override
-	public CrmLeadSource findLeadSourceById(int sourceID) {
-		return sourceDao.findLeadSourceById(sourceID);
+	public CrmLeadSource findLeadSourceById(int sourceID, MeDataSource dataSource) {
+		return sourceDao.findLeadSourceById(sourceID, dataSource);
 	}
 }

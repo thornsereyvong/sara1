@@ -182,6 +182,9 @@ public class QuoteDetails implements Serializable{
 	//@Column(name="SchTA")
 	@Transient
 	private Date schTA;
+	
+	@Transient
+	private MeDataSource dataSource;
 
 	public String getSaleId() {
 		return saleId;
@@ -549,5 +552,21 @@ public class QuoteDetails implements Serializable{
 
 	public void setSchTA(Date schTA) {
 		this.schTA = schTA;
+	}
+
+	public final int getQuoteDetailsId() {
+		return quoteDetailsId;
+	}
+
+	public final void setQuoteDetailsId(int quoteDetailsId) {
+		this.quoteDetailsId = quoteDetailsId;
+	}
+
+	public final MeDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public final void setDataSource(MeDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }

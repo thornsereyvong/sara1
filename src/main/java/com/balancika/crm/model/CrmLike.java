@@ -28,7 +28,7 @@ public class CrmLike implements Serializable{
 	private String username;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public int getLikeId() {
 		return likeId;
@@ -54,12 +54,11 @@ public class CrmLike implements Serializable{
 		this.username = username;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
-
 }

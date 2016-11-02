@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmOpportunityContactDao;
 import com.balancika.crm.model.CrmOpportunityContact;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityContactService;
 
 @Service
@@ -27,23 +28,23 @@ public class CrmOpportunityContactServiceImpl implements CrmOpportunityContactSe
 	}
 
 	@Override
-	public boolean deleteOpportunityContact(int opConId) {
-		return opportunityContactDao.deleteOpportunityContact(opConId);
+	public boolean deleteOpportunityContact(CrmOpportunityContact opCon) {
+		return opportunityContactDao.deleteOpportunityContact(opCon);
 	}
 
 	@Override
-	public CrmOpportunityContact findOpportunityContactById(int opConId) {
-		return opportunityContactDao.findOpportunityContactById(opConId);
+	public CrmOpportunityContact findOpportunityContactById(int opConId, MeDataSource dataSource) {
+		return opportunityContactDao.findOpportunityContactById(opConId, dataSource);
 	}
 
 	@Override
-	public Integer checkOpportunityContactIsExist(String opId, String conId) {
-		return opportunityContactDao.checkOpportunityContactIsExist(opId, conId);
+	public Integer checkOpportunityContactIsExist(String opId, String conId, MeDataSource dataSource) {
+		return opportunityContactDao.checkOpportunityContactIsExist(opId, conId, dataSource);
 	}
 
 	@Override
-	public Object viewOpportunityContactById(int opConId) {
-		return opportunityContactDao.viewOpportunityContactById(opConId);
+	public Object viewOpportunityContactById(int opConId, MeDataSource dataSource) {
+		return opportunityContactDao.viewOpportunityContactById(opConId, dataSource);
 	}
 
 }

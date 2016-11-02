@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmOpportunityStageDao;
 import com.balancika.crm.model.CrmOpportunityStage;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityStageService;
 
 @Service
@@ -29,17 +30,17 @@ public class CrmOpportunityStageServiceImpl implements CrmOpportunityStageServic
 	}
 
 	@Override
-	public String deleteOpportunityStage(int opStageId) {
-		return stageDao.deleteOpportunityStage(opStageId);
+	public String deleteOpportunityStage(CrmOpportunityStage opStage) {
+		return stageDao.deleteOpportunityStage(opStage);
 	}
 
 	@Override
-	public List<CrmOpportunityStage> listOpportunityStages() {
-		return stageDao.listOpportunityStages();
+	public List<CrmOpportunityStage> listOpportunityStages(MeDataSource dataSource) {
+		return stageDao.listOpportunityStages(dataSource);
 	}
 
 	@Override
-	public CrmOpportunityStage findOpportunityStage(int opStageId) {
-		return stageDao.findOpportunityStage(opStageId);
+	public CrmOpportunityStage findOpportunityStage(int opStageId, MeDataSource dataSource) {
+		return stageDao.findOpportunityStage(opStageId, dataSource);
 	}
 }

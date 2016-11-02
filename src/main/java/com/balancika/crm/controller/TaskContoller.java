@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmTask;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmTaskService;
 
 @RestController
@@ -24,11 +25,11 @@ public class TaskContoller {
 	private  CrmTaskService taskService;
 	
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listTasks(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTasks(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmTask> arrTask = taskService.listTasks();
+		List<CrmTask> arrTask = taskService.listTasks(dataSource);
 		if(arrTask != null){
 			map.put("MESSAGE", "SUCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -40,11 +41,11 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/list/{taskId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findTaskById(@PathVariable("taskId") String taskId){
+	@RequestMapping(value = "/list/{taskId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findTaskById(@PathVariable("taskId") String taskId, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		Object task = taskService.findTaskById(taskId);
+		Object task = taskService.findTaskById(taskId, dataSource);
 		if(task != null){
 			map.put("MESSAGE", "SUCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -57,10 +58,10 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listTaskRelatedToOpportunity(@PathVariable("leadId") String leadId){
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTaskRelatedToOpportunity(@PathVariable("leadId") String leadId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmTask> tasks = taskService.listTasksRelatedToLead(leadId);
+		List<CrmTask> tasks = taskService.listTasksRelatedToLead(leadId, dataSource);
 		if(tasks != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -73,10 +74,10 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listTaskRelatedToLead(@PathVariable("opId") String opId){
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTaskRelatedToLead(@PathVariable("opId") String opId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmTask> note = taskService.listTasksRelatedToOpportunity(opId);
+		List<CrmTask> note = taskService.listTasksRelatedToOpportunity(opId, dataSource);
 		if(note != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -89,10 +90,10 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listTaskRelatedToModule(@PathVariable("moduleId") String moduleId){
+	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listTaskRelatedToModule(@PathVariable("moduleId") String moduleId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmTask> note = taskService.listTasksRelatedToModule(moduleId);
+		List<CrmTask> note = taskService.listTasksRelatedToModule(moduleId, dataSource);
 		if(note != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -105,11 +106,11 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/details/{taskId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findTaskDetailsById(@PathVariable("taskId") String taskId){
+	@RequestMapping(value = "/list/details/{taskId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findTaskDetailsById(@PathVariable("taskId") String taskId, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmTask task = taskService.findTaskDetailsById(taskId);
+		CrmTask task = taskService.findTaskDetailsById(taskId, dataSource);
 		if(task != null){
 			map.put("MESSAGE", "SUCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -137,7 +138,7 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateTask(@RequestBody CrmTask task){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(taskService.updateTask(task) == true){
@@ -150,11 +151,11 @@ public class TaskContoller {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/remove/{taskId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteTask(@PathVariable("taskId") String taskId){
+	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteTask(@RequestBody CrmTask task){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(taskService.deleteTask(taskId) == true){
+		if(taskService.deleteTask(task) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

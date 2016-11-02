@@ -11,23 +11,20 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCaseDao;
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
 public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-	
 	@Override
 	public boolean insertCase(CrmCase cases) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(cases.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			cases.setCaseId(IdAutoGenerator("CS"));
@@ -41,13 +38,14 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 			session.getTransaction().rollback();
 		}finally{
 			session.close();
+			session.clear();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateCase(CrmCase cases) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(cases.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(cases);
@@ -58,18 +56,19 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		}catch (ConstraintViolationException e) {
 			session.getTransaction().rollback();
 		}finally{
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public boolean deleteCase(String caseId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public boolean deleteCase(CrmCase cases) {
+		Session session = HibernateSessionFactory.getSessionFactory(cases.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_case WHERE CS_ID = :caseId");
-			query.setParameter("caseId", caseId);
+			query.setParameter("caseId", cases.getCaseId());
 			if(query.executeUpdate() > 0){
 				session.getTransaction().commit();
 				return true;	
@@ -77,6 +76,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 		}finally{
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -84,28 +84,51 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCase> listCases() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		SQLQuery query = session.createSQLQuery("CALL listCrmCases()");
-		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return query.list();
+	public List<CrmCase> listCases(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listCrmCases()");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public Object findCaseById(String caseId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		SQLQuery query = session.createSQLQuery("CALL findCrmCaseById(:caseId)");
-		query.setParameter("caseId", caseId);
-		query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-		return query.uniqueResult();
+	public Object findCaseById(String caseId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL findCrmCaseById(:caseId)");
+			query.setParameter("caseId", caseId);
+			query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+			return query.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmCase findCaseDetailsById(String caseId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmCase.class);
-		criteria.add(Restrictions.eq("caseId", caseId));
-		return (CrmCase)criteria.uniqueResult();
+	public CrmCase findCaseDetailsById(String caseId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmCase.class);
+			criteria.add(Restrictions.eq("caseId", caseId));
+			return (CrmCase)criteria.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
-
 }

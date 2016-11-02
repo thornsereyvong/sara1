@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmMeetingStatus;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMeetingStatusService;
 
 @RestController
@@ -23,10 +24,10 @@ public class MeetingStatusController {
 	@Autowired
 	private CrmMeetingStatusService statusService;
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listMeetingStatus(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listMeetingStatus(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmMeetingStatus> arrStatus = statusService.listMeetingStatus();
+		List<CrmMeetingStatus> arrStatus = statusService.listMeetingStatus(dataSource);
 		if(arrStatus != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS",HttpStatus.OK.value());
@@ -39,10 +40,10 @@ public class MeetingStatusController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/list/{statusId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findMeetingStatusById(@PathVariable("statusId") int statusId){
+	@RequestMapping(value = "/list/{statusId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findMeetingStatusById(@PathVariable("statusId") int statusId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmMeetingStatus status = statusService.findMeetingStatusById(statusId);
+		CrmMeetingStatus status = statusService.findMeetingStatusById(statusId, dataSource);
 		if(status != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS",HttpStatus.OK.value());
@@ -83,16 +84,16 @@ public class MeetingStatusController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/remove/{statusId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteMeetingStatus(@PathVariable("statusId") int statusId){
+	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteMeetingStatus(@RequestBody CrmMeetingStatus status){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(statusService.deleteMeetingStatus(statusId).equalsIgnoreCase("OK")){
+		if(statusService.deleteMeetingStatus(status).equalsIgnoreCase("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS",HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		
-		if(statusService.deleteMeetingStatus(statusId).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(statusService.deleteMeetingStatus(status).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS",HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);

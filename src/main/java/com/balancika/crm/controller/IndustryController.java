@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmIndustry;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmIndustryService;
 
 @RestController
@@ -23,12 +24,12 @@ public class IndustryController {
 	@Autowired
 	private CrmIndustryService industService;
 
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listIndustries(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listIndustries(@RequestBody MeDataSource dataSource){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<CrmIndustry> arrIndust = industService.listIndustries();
+		List<CrmIndustry> arrIndust = industService.listIndustries(dataSource);
 		if( arrIndust == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -41,12 +42,12 @@ public class IndustryController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/{industID}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findIndustryById(@PathVariable("industID") int industID){
+	@RequestMapping(value="/list/{industID}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findIndustryById(@PathVariable("industID") int industID, @RequestBody MeDataSource dataSource){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		CrmIndustry industry = industService.finIndustryById(industID);
+		CrmIndustry industry = industService.finIndustryById(industID, dataSource);
 		if( industry == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -74,7 +75,7 @@ public class IndustryController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateIndustry(@RequestBody CrmIndustry industry){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -89,11 +90,11 @@ public class IndustryController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove/{industID}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> updateIndustry(@PathVariable("industID") int industID){
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteIndustry(@RequestBody CrmIndustry industry){
 	
 		Map<String, Object> map = new HashMap<String, Object>();
-		if( industService.deleteIndustry(industID) == false){
+		if( industService.deleteIndustry(industry) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 

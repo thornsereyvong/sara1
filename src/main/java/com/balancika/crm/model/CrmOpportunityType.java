@@ -30,7 +30,7 @@ public class CrmOpportunityType implements Serializable{
 	private String otDes;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public int getOtId() {
 		return otId;
@@ -56,12 +56,11 @@ public class CrmOpportunityType implements Serializable{
 		this.otDes = otDes;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
-	
 }

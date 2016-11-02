@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmAccountTypeDao;
 import com.balancika.crm.model.CrmAccountType;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
@@ -22,7 +24,7 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
 	@Override
 	public boolean insertAccountType(CrmAccountType accountType) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(accountType.getMeDataSource()).openSession();//transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(accountType);
@@ -41,7 +43,7 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
 	@Override
 	public boolean updateAccountType(CrmAccountType accountType) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(accountType.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(accountType);
@@ -56,12 +58,10 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 	}
 
 	@Override
-	public boolean deleteAccountType(int accountTypeID) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public boolean deleteAccountType(CrmAccountType accountType) {
+		Session session = HibernateSessionFactory.getSessionFactory(accountType.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmAccountType accountType = new CrmAccountType();
-			accountType.setAccountID(accountTypeID);
 			session.delete(accountType);
 			session.getTransaction().commit();
 			return true;
@@ -76,16 +76,33 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmAccountType> listAccountTypes() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmAccountType.class);
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	public List<CrmAccountType> listAccountTypes(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmAccountType.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmAccountType findAccountTypeById(int accountTypeId) {
-		return (CrmAccountType) transactionManager.getSessionFactory().getCurrentSession().get(CrmAccountType.class, accountTypeId);
+	public CrmAccountType findAccountTypeById(CrmAccountType accountType) {
+		Session session = HibernateSessionFactory.getSessionFactory(accountType.getMeDataSource()).openSession();
+		try {
+			return (CrmAccountType) session.get(CrmAccountType.class, accountType.getAccountID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 }

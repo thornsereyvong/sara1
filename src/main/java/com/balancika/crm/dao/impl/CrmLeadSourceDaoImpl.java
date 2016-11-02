@@ -7,22 +7,19 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmLeadSourceDao;
 import com.balancika.crm.model.CrmLeadSource;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean insertLeadSource(CrmLeadSource source) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(source.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(source);
@@ -31,6 +28,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -39,7 +37,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 	@Override
 	public boolean updateLeadSource(CrmLeadSource source) {
 
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(source.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(source);
@@ -48,19 +46,18 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public String deleteLeadSource(int sourceID) {
+	public String deleteLeadSource(CrmLeadSource source) {
 
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(source.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmLeadSource source = new CrmLeadSource();
-			source.setSourceID(sourceID);
 			session.delete(source);
 			session.getTransaction().commit();
 			return "OK";
@@ -72,6 +69,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return "FAILED";
@@ -79,21 +77,35 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmLeadSource> getAllLeadSource() {
-
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmLeadSource.class);
-		criteria.addOrder(Order.asc("sourceID"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		// criteria.setProjection(Projections.groupProperty(""));
-		return criteria.list();
+	public List<CrmLeadSource> getAllLeadSource(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmLeadSource.class);
+			criteria.addOrder(Order.asc("sourceID"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmLeadSource findLeadSourceById(int sourceID) {
+	public CrmLeadSource findLeadSourceById(int sourceID, MeDataSource dataSource) {
 
-		return (CrmLeadSource) transactionManager.getSessionFactory().getCurrentSession()
-				.get(CrmLeadSource.class, sourceID);
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmLeadSource) session.get(CrmLeadSource.class, sourceID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 }

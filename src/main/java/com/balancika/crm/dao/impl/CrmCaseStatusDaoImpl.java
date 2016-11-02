@@ -6,22 +6,19 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCaseStatusDao;
 import com.balancika.crm.model.CrmCaseStatus;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean insertCaseStatus(CrmCaseStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -30,6 +27,7 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -37,7 +35,7 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 
 	@Override
 	public boolean updateCaseStatus(CrmCaseStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -46,18 +44,17 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public String deleteCaseStatus(int statusId) {
-		Session session = transactionManager.getSessionFactory().openSession();
-		CrmCaseStatus status = new CrmCaseStatus();
+	public String deleteCaseStatus(CrmCaseStatus status) {
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			status.setStatusId(statusId);
 			session.delete(status);
 			session.getTransaction().commit();
 			return "OK";
@@ -69,6 +66,7 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 			session.getTransaction().rollback();
 			e.printStackTrace();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return "FAILED";
@@ -76,17 +74,32 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCaseStatus> listCaseStatus() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmCaseStatus.class);
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	public List<CrmCaseStatus> listCaseStatus(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmCaseStatus.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmCaseStatus findCaseStatusById(int statusId) {
-		return (CrmCaseStatus) transactionManager.getSessionFactory().getCurrentSession()
-				.get(CrmCaseStatus.class, statusId);
+	public CrmCaseStatus findCaseStatusById(int statusId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmCaseStatus)session.get(CrmCaseStatus.class, statusId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
-
 }

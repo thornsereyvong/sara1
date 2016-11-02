@@ -10,24 +10,21 @@ import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCallDao;
 import com.balancika.crm.model.CrmCall;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.DateTimeOperation;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
 public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean insertCall(CrmCall call) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(call.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
@@ -50,7 +47,7 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 
 	@Override
 	public boolean updateCall(CrmCall call) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(call.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
@@ -69,46 +66,71 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 	}
 
 	@Override
-	public boolean deleteCall(String callId) {
-		SQLQuery query = transactionManager.getSessionFactory().getCurrentSession()
-											.createSQLQuery("DELETE FROM crm_call WHERE CL_ID = :callId");
-		query.setParameter("callId", callId);
-		if (query.executeUpdate() > 0) {
-			return true;
+	public boolean deleteCall(CrmCall call) {
+		Session session = HibernateSessionFactory.getSessionFactory(call.getMeDataSource()).openSession();
+		try {
+			SQLQuery query 	= session.createSQLQuery("DELETE FROM crm_call WHERE CL_ID = :callId");
+			query.setParameter("callId", call.getCallId());
+			if (query.executeUpdate() > 0) {
+				return true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return false;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCall> listCalls() {
-		SQLQuery query = transactionManager.getSessionFactory().getCurrentSession()
-				.createSQLQuery("CALL listCrmCalls()");
-		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return query.list();
+	public List<CrmCall> listCalls(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL listCrmCalls()");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public Object findCallById(String callId) {
-		SQLQuery query = transactionManager.getSessionFactory().getCurrentSession()
-				.createSQLQuery("CALL findCrmCallById(:callId)");
-		query.setParameter("callId", callId);
-		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return query.uniqueResult();
+	public Object findCallById(CrmCall call) {
+		Session session = HibernateSessionFactory.getSessionFactory(call.getMeDataSource()).openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL findCrmCallById(:callId)");
+			query.setParameter("callId", call.getCallId());
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmCall listCallStructureDetailsById(String callId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public CrmCall listCallStructureDetailsById(CrmCall call) {
+		Session session = HibernateSessionFactory.getSessionFactory(call.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCall.class);
-			criteria.add(Restrictions.eq("callId", callId));
+			criteria.add(Restrictions.eq("callId", call.getCallId()));
 			session.getTransaction().commit();
 			return (CrmCall) criteria.uniqueResult();
 		} catch (HibernateException e) {
 			session.getTransaction();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return null;
@@ -116,8 +138,8 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCall> listCallsRelatedToLead(String leadId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<CrmCall> listCallsRelatedToLead(String leadId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToLead(:leadId)");
 			query.setParameter("leadId", leadId);
@@ -125,14 +147,17 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 			return query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally{
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCall> listCallsRelatedToOpportunity(String opId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<CrmCall> listCallsRelatedToOpportunity(String opId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -140,14 +165,17 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 			return query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCall> listCallsRelatedToModule(String moduleId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public List<CrmCall> listCallsRelatedToModule(String moduleId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToModule(:moduleId)");
 			query.setParameter("moduleId", moduleId);
@@ -155,6 +183,9 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 			return query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}

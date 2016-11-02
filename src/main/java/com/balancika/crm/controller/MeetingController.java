@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.balancika.crm.model.CrmMeeting;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMeetingService;
 
 @RestController
@@ -22,10 +24,10 @@ public class MeetingController {
 	@Autowired
 	private CrmMeetingService meetingService;
 	
-	@RequestMapping(value="/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listMeetings(){
+	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listMeetings(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmMeeting> arrMeeting = meetingService.listMeetings();
+		List<CrmMeeting> arrMeeting = meetingService.listMeetings(dataSource);
 		if(arrMeeting != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -37,10 +39,10 @@ public class MeetingController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/{meetingId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findMeetingById(@PathVariable("meetingId") String meetingId){
+	@RequestMapping(value="/list/{meetingId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findMeetingById(@PathVariable("meetingId") String meetingId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		Object meeting = meetingService.findMeetingById(meetingId);
+		Object meeting = meetingService.findMeetingById(meetingId, dataSource);
 		if(meeting != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -52,10 +54,10 @@ public class MeetingController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToLead(@PathVariable("leadId") String leadId){
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToLead(@PathVariable("leadId") String leadId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToLead(leadId);
+		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToLead(leadId, dataSource);
 		if(meetings != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -68,10 +70,10 @@ public class MeetingController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToOpportunity(@PathVariable("opId") String opId){
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToOpportunity(@PathVariable("opId") String opId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToOpportunity(opId);
+		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToOpportunity(opId, dataSource);
 		if(meetings != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -85,9 +87,9 @@ public class MeetingController {
 	}
 	
 	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToModule(@PathVariable("moduleId") String moduleId){
+	public ResponseEntity<Map<String, Object>> listMeetingsRelatedToModule(@PathVariable("moduleId") String moduleId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToModule(moduleId);
+		List<CrmMeeting> meetings = meetingService.listMeetingsRelatedToModule(moduleId, dataSource);
 		if(meetings != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -101,9 +103,9 @@ public class MeetingController {
 	}
 	
 	@RequestMapping(value="/list/details/{meetingId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findMeetingDetailsById(@PathVariable("meetingId") String meetingId){
+	public ResponseEntity<Map<String, Object>> findMeetingDetailsById(@PathVariable("meetingId") String meetingId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmMeeting meeting = meetingService.findMeetingDetailsById(meetingId);
+		CrmMeeting meeting = meetingService.findMeetingDetailsById(meetingId, dataSource);
 		if(meeting != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -142,10 +144,10 @@ public class MeetingController {
 	}
 	
 
-	@RequestMapping(value="/remove/{meetingId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteMeeting(@PathVariable("meetingId") String meetingId){
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteMeeting(@RequestBody CrmMeeting meeting){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(meetingService.deleteMeeting(meetingId) == true){
+		if(meetingService.deleteMeeting(meeting) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

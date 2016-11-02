@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmOpportunityDetailsDao;
 import com.balancika.crm.model.CrmOpportunityDetails;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityDetailsService;
 
 @Service
@@ -30,33 +31,33 @@ public class CrmOpportunityDetailsServiceImpl implements CrmOpportunityDetailsSe
 	}
 
 	@Override
-	public boolean deleteOpportunityDetails(int opDetailsId) {
-		return opportunityDetailsDao.deleteOpportunityDetails(opDetailsId);
+	public boolean deleteOpportunityDetails(CrmOpportunityDetails details) {
+		return opportunityDetailsDao.deleteOpportunityDetails(details);
 	}
 
 	@Override
-	public CrmOpportunityDetails findOpportunityDetailsById(int opDetailsId) {
-		return opportunityDetailsDao.findOpportunityDetailsById(opDetailsId);
+	public CrmOpportunityDetails findOpportunityDetailsById(int opDetailsId, MeDataSource dataSource) {
+		return opportunityDetailsDao.findOpportunityDetailsById(opDetailsId, dataSource);
 	}
 
 	@Override
-	public List<CrmOpportunityDetails> listOpportunityDetails() {
-		return opportunityDetailsDao.listOpportunityDetails();
+	public List<CrmOpportunityDetails> listOpportunityDetails(MeDataSource dataSource) {
+		return opportunityDetailsDao.listOpportunityDetails(dataSource);
 	}
 
 	@Override
-	public Map<String, Object> startUpPage() {
-		return opportunityDetailsDao.startUpPage();
+	public Map<String, Object> startUpPage(MeDataSource dataSource) {
+		return opportunityDetailsDao.startUpPage(dataSource);
 	}
 
 	@Override
-	public List<CrmOpportunityDetails> listOpportunityDetailsRelatedToOpportunity(String opId) {
-		return opportunityDetailsDao.listOpportunityDetailsRelatedToOpportunity(opId);
+	public List<CrmOpportunityDetails> listOpportunityDetailsRelatedToOpportunity(String opId, MeDataSource dataSource) {
+		return opportunityDetailsDao.listOpportunityDetailsRelatedToOpportunity(opId, dataSource);
 	}
 
 	@Override
-	public boolean deleteOpportunityDetails(String opId) {
-		return opportunityDetailsDao.deleteOpportunityDetails(opId);
+	public boolean deleteOpportunityDetails(String opId, MeDataSource dataSource) {
+		return opportunityDetailsDao.deleteOpportunityDetails(opId, dataSource);
 	}
 
 }

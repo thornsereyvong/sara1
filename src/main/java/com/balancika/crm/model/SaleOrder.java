@@ -130,6 +130,9 @@ public class SaleOrder implements Serializable{
 	
 	@Transient
 	private List<SaleOrderDetails> saleOrderDetails;
+	
+	@Transient
+	private MeDataSource meDataSource;
 
 	public String getSaleId() {
 		return saleId;
@@ -417,4 +420,13 @@ public class SaleOrder implements Serializable{
 	public void setSaleOrderDetails(List<SaleOrderDetails> saleOrderDetails) {
 		this.saleOrderDetails = saleOrderDetails;
 	}
+
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
+	}
+
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
+	}
+
 }

@@ -7,22 +7,19 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCampaignStatusDao;
 import com.balancika.crm.model.CrmCampaignStatus;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean addCampaignStatus(CrmCampaignStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try{
 			session.beginTransaction();
 			session.save(status);
@@ -31,6 +28,7 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 		}catch(HibernateException e){
 			session.getTransaction().rollback();
 		}finally{
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -38,7 +36,7 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 
 	@Override
 	public boolean updateCampaignStatus(CrmCampaignStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try{
 			session.beginTransaction();
 			session.update(status);
@@ -47,30 +45,32 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 		}catch(HibernateException e){
 			session.getTransaction().rollback();
 		}finally{
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public String deleteCampaignStatus(int statusID) {
-		Session session = transactionManager.getSessionFactory().openSession();
-		CrmCampaignStatus status = new CrmCampaignStatus();
+	public String deleteCampaignStatus(CrmCampaignStatus status) {
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try{
 			session.beginTransaction();
-			status.setStatusID(statusID);
 			session.delete(status);
 			session.getTransaction().commit();
+			session.clear();
 			session.close();
 			return "OK";
 		} catch (ConstraintViolationException e){
 			session.getTransaction().rollback();
 			e.printStackTrace();
+			session.clear();
 			session.close();
 			return "FOREIGN_KEY_CONSTRAIN";
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
+			session.clear();
 			session.close();
 			return "FAILED";
 		}
@@ -78,19 +78,34 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCampaignStatus> listAllCampaignStatus() {
+	public List<CrmCampaignStatus> listAllCampaignStatus(MeDataSource dataSource) {
 		
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmCampaignStatus.class);
-		criteria.addOrder(Order.asc("statusID"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		//criteria.setProjection(Projections.groupProperty(""));
-		return criteria.list();
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmCampaignStatus.class);
+			criteria.addOrder(Order.asc("statusID"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmCampaignStatus findCampaignStatusById(int statusID) {
-		return (CrmCampaignStatus)transactionManager.getSessionFactory().getCurrentSession().get(CrmCampaignStatus.class, statusID);
+	public CrmCampaignStatus findCampaignStatusById(int statusID, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmCampaignStatus)session.get(CrmCampaignStatus.class, statusID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return null;
 	}
 
 }

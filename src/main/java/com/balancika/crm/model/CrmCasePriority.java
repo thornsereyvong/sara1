@@ -31,7 +31,7 @@ public class CrmCasePriority implements Serializable{
 	private String priorityDes;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public int getPriorityId() {
 		return priorityId;
@@ -57,12 +57,12 @@ public class CrmCasePriority implements Serializable{
 		this.priorityDes = priorityDes;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
 
 }

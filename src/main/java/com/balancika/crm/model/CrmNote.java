@@ -69,7 +69,7 @@ public class CrmNote implements Serializable{
 	private Date noteModifiedDate;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public String getNoteId() {
 		return noteId;
@@ -143,16 +143,10 @@ public class CrmNote implements Serializable{
 		this.noteModifiedDate = noteModifiedDate;
 	}
 
-	/**
-	 * @return the createDate
-	 */
 	public String getCreateDate() {
 		return createDate;
 	}
 
-	/**
-	 * @param createDate the createDate to set
-	 */
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
@@ -181,11 +175,11 @@ public class CrmNote implements Serializable{
 		this.noteRelatedName = noteRelatedName;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
 }

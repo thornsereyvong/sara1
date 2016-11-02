@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmDashboardDao;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmDashboardService;
 
 @Service
@@ -16,8 +17,8 @@ public class CrmDashboardServiceImpl implements CrmDashboardService{
 	private CrmDashboardDao dashboardDao;
 	
 	@Override
-	public Object viewDashboard(String username) {
-		return dashboardDao.viewDashboard(username);
+	public Object viewDashboard(String username, MeDataSource dataSource) {
+		return dashboardDao.viewDashboard(username, dataSource);
 	}
 
 }

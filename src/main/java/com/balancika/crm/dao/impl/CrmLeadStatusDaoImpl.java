@@ -7,22 +7,19 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmLeadStatusDao;
 import com.balancika.crm.model.CrmLeadStatus;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean insertLeadStatus(CrmLeadStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -31,6 +28,7 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -38,7 +36,7 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 
 	@Override
 	public boolean updateLeadStatus(CrmLeadStatus status) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -47,19 +45,18 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public String deleteLeadStatus(int statusID) {
+	public String deleteLeadStatus(CrmLeadStatus status) {
 
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmLeadStatus status = new CrmLeadStatus();
-			status.setStatusID(statusID);
 			session.delete(status);
 			session.getTransaction().commit();
 			return "OK";
@@ -71,6 +68,7 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return "FAILED";
@@ -78,19 +76,34 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmLeadStatus> getAllLeadStatus() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmLeadStatus.class);
-		criteria.addOrder(Order.asc("statusID"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	public List<CrmLeadStatus> getAllLeadStatus(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmLeadStatus.class);
+			criteria.addOrder(Order.asc("statusID"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmLeadStatus findLeadStatusById(int statusID) {
-
-		return (CrmLeadStatus) transactionManager.getSessionFactory().getCurrentSession()
-				.get(CrmLeadStatus.class, statusID);
+	public CrmLeadStatus findLeadStatusById(int statusID, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmLeadStatus) session.get(CrmLeadStatus.class, statusID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 }

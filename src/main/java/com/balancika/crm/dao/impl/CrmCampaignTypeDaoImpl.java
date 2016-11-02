@@ -7,23 +7,20 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCampaignTypeDao;
 import com.balancika.crm.model.CrmCampaignType;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
-
 	@Override
 	public boolean addCampaignType(CrmCampaignType type) {
 
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(type);
@@ -32,6 +29,7 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -40,7 +38,7 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 	@Override
 	public boolean updateCampaignType(CrmCampaignType type) {
 
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(type);
@@ -55,12 +53,10 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 	}
 
 	@Override
-	public String deleteCampaignType(int typeID) {
-		Session session = transactionManager.getSessionFactory().openSession();
-		CrmCampaignType type = new CrmCampaignType();
+	public String deleteCampaignType(CrmCampaignType type) {
+		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			type.setTypeID(typeID);
 			session.delete(type);
 			session.getTransaction().commit();
 			return "OK";
@@ -74,24 +70,42 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 			return "FAILED";
 		}
 		finally {
+			session.clear();
 			session.close();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmCampaignType> listAllCampaignType() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmCampaignType.class);
-		criteria.addOrder(Order.asc("typeID"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		// criteria.setProjection(Projections.groupProperty(""));
-		return criteria.list();
+	public List<CrmCampaignType> listAllCampaignType(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmCampaignType.class);
+			criteria.addOrder(Order.asc("typeID"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		
+		return null;
 	}
 
 	@Override
-	public CrmCampaignType findCampaignTypeById(int typeID) {
-		return (CrmCampaignType) transactionManager.getSessionFactory().getCurrentSession().get(CrmCampaignType.class, typeID);
+	public CrmCampaignType findCampaignTypeById(int typeID, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmCampaignType) session.get(CrmCampaignType.class, typeID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.balancika.crm.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCollaboration;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmUserService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/collaboration")
@@ -31,23 +29,15 @@ public class CollaborationController {
 	private CrmUserService userService;
 	
 	
-	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCollaborations(@RequestBody String json){
-		Map<String, String> jsonMap = new HashMap<String, String>();
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			jsonMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+	@RequestMapping(value = "/list/{moduleId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCollaborations(@RequestBody MeDataSource dataSource, @PathVariable("moduleId") String moduleId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCollaboration> collaborations = collaborationService.listCollaborations(jsonMap.get("moduleId").toString());
+		List<CrmCollaboration> collaborations = collaborationService.listCollaborations(moduleId, dataSource);
 		if(collaborations != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("DATA", collaborations);
-			map.put("TAG_TO", userService.listAllUsernameAndId());
+			map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
@@ -63,7 +53,7 @@ public class CollaborationController {
 		if(collaborationService.insertCollaboration(collaboration) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
-			map.put("COLLABORATION", collaborationService.findCollaborationById(collaboration.getColId()));
+			map.put("COLLABORATION", collaborationService.findCollaborationById(collaboration.getColId(), collaboration.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
@@ -72,7 +62,7 @@ public class CollaborationController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> editCollaboration(@RequestBody CrmCollaboration collaboration){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(collaborationService.updateCollaboration(collaboration) == true){
@@ -86,10 +76,10 @@ public class CollaborationController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/remove/{collapId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteCollaboration(@PathVariable("collapId") int collapId){
+	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteCollaboration(@RequestBody CrmCollaboration collaboration){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(collaborationService.deleteCollaboration(collapId) == true){
+		if(collaborationService.deleteCollaboration(collaboration) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

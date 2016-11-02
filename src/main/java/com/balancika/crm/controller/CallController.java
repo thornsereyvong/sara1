@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCall;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
 
 @RestController
@@ -23,10 +24,10 @@ public class CallController {
 	@Autowired
 	private CrmCallService callService;
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCalls(){
+	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCalls(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCall> arrCall = callService.listCalls();
+		List<CrmCall> arrCall = callService.listCalls(dataSource);
 		if(arrCall != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -40,10 +41,10 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/list/{callId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCallById(@PathVariable("callId") String callId){
+	@RequestMapping(value = "/view", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findCallById(@RequestBody CrmCall cal){
 		Map<String, Object> map = new HashMap<String, Object>();
-		Object call = callService.findCallById(callId);
+		Object call = callService.findCallById(cal);
 		if(call != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -57,10 +58,10 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCallsRelatedToLead(@PathVariable("leadId") String leadId){
+	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCallsRelatedToLead(@PathVariable("leadId") String leadId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCall> calls = callService.listCallsRelatedToLead(leadId);
+		List<CrmCall> calls = callService.listCallsRelatedToLead(leadId, dataSource);
 		if(calls != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -73,10 +74,10 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCallsRelatedToOpportunity(@PathVariable("opId") String opId){
+	@RequestMapping(value="/list/opp/{opId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCallsRelatedToOpportunity(@PathVariable("opId") String opId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCall> calls = callService.listCallsRelatedToOpportunity(opId);
+		List<CrmCall> calls = callService.listCallsRelatedToOpportunity(opId, dataSource);
 		if(calls != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -89,10 +90,10 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listCallsRelatedToCampaign(@PathVariable("moduleId") String moduleId){
+	@RequestMapping(value="/list/module/{moduleId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listCallsRelatedToCampaign(@PathVariable("moduleId") String moduleId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCall> calls = callService.listCallsRelatedToModule(moduleId);
+		List<CrmCall> calls = callService.listCallsRelatedToModule(moduleId, dataSource);
 		if(calls != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -105,10 +106,10 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/details/{callId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCallDetailsById(@PathVariable("callId") String callId){
+	@RequestMapping(value = "/list/details", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findCallDetailsById(@RequestBody CrmCall cal){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCall call = callService.listCallStructureDetailsById(callId);
+		CrmCall call = callService.listCallStructureDetailsById(cal);
 		if(call != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -150,10 +151,10 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/remove/{callId}", method = RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteCall(@PathVariable("callId") String callId){
+	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteCall(@RequestBody CrmCall call){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(callService.deleteCall(callId) == true){
+		if(callService.deleteCall(call) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

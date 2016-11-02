@@ -8,22 +8,19 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmDashboardDao;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmDashboardDaoImpl implements CrmDashboardDao{
 
-	@Autowired
-	private SessionFactory sessionFactory;
-	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object viewDashboard(String username) {
-		Session session = sessionFactory.getCurrentSession();
+	public Object viewDashboard(String username, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		SQLQuery query = session.createSQLQuery("CALL loadCrmDashboardForSpecificUser(:username)");
 		query.setParameter("username", username);
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);

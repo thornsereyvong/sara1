@@ -6,59 +6,60 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmLikeDao;
 import com.balancika.crm.model.CrmLike;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmLikeDaoImpl implements CrmLikeDao{
-
-	@Autowired
-	private HibernateTransactionManager transactionManager; 
 	
 	@Override
 	public boolean insertLike(CrmLike like) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(like.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(like);
 			session.getTransaction().commit();
+			session.clear();
 			session.close();
 			return true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public boolean deleteLike(int collapId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public boolean deleteLike(int collapId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_user_like_collaboration WHERE LK_CBID = :collapId");
 			query.setParameter("collapId", collapId);
 			session.getTransaction().commit();
 			if(query.executeUpdate() > 0){
+				session.clear();
 				session.close();
 				return true;
 			}
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public Integer countLike(int collapId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public Integer countLike(int collapId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLike.class);
 			criteria.setProjection(Projections.property("likeId"));
@@ -67,13 +68,16 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 			return ((Number)criteria.uniqueResult()).intValue();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return null;
 	}
 
 	@Override
-	public boolean checkUserLike(String username, int postId) {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
+	public boolean checkUserLike(String username, int postId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLike.class);
 			criteria.add(Restrictions.eq("username", username));
@@ -84,6 +88,9 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 			}
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 		}
 		return false;
 	}

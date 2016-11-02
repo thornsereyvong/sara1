@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.balancika.crm.configuration.securities.UserCustomDetailService;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CompanyService;
 
@@ -22,8 +21,6 @@ public class CompanyController {
 	@Autowired
 	private CompanyService companyService;
 
-	@Autowired
-	private UserCustomDetailService customDetailService;
 	
 	@RequestMapping(value = "/database", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> getDatabaseName(@RequestBody MeDataSource dataSource){

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.balancika.crm.dao.CrmCampaignDao;
 import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.model.CrmOpportunity;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCampaignService;
 
 @Service
@@ -24,8 +25,8 @@ public class CrmCampaignServiceImpl implements CrmCampaignService{
 	}
 
 	@Override
-	public List<CrmCampaign> listCampaigns() {
-		return dao.listCampaigns();
+	public List<CrmCampaign> listCampaigns(MeDataSource dataSource) {
+		return dao.listCampaigns(dataSource);
 	}
 
 	@Override
@@ -34,42 +35,42 @@ public class CrmCampaignServiceImpl implements CrmCampaignService{
 	}
 
 	@Override
-	public String deleteCampaign(String campID) {
-		return dao.deleteCampaign(campID);	
+	public String deleteCampaign(String campID, MeDataSource dataSource) {
+		return dao.deleteCampaign(campID, dataSource);	
 	}
 
 	@Override
-	public Object findCampaignById(String campID) {
-		return dao.findCampaignById(campID);
+	public Object findCampaignById(String campID, MeDataSource dataSource) {
+		return dao.findCampaignById(campID, dataSource);
 	}
 
 	@Override
-	public boolean isCampaignNameExist(String campName) {
-		return dao.isCampaignNameExist(campName);
+	public boolean isCampaignNameExist(String campName, MeDataSource dataSource) {
+		return dao.isCampaignNameExist(campName, dataSource);
 	}
 
 	@Override
-	public List<Object> listCampaignIsNotEqual(String campID) {
-		return dao.listCampaignIsNotEqual(campID);
+	public List<Object> listCampaignIsNotEqual(String campID, MeDataSource dataSource) {
+		return dao.listCampaignIsNotEqual(campID, dataSource);
 	}
 
 	@Override
-	public CrmCampaign findCampaignDetailsById(String campID) {
-		return dao.findCampaignDetailsById(campID);
+	public CrmCampaign findCampaignDetailsById(String campID, MeDataSource dataSource) {
+		return dao.findCampaignDetailsById(campID, dataSource);
 	}
 
 	@Override
-	public List<Object> listCampaignParents() {
-		return dao.listCampaignParents();
+	public List<Object> listCampaignParents(MeDataSource dataSource) {
+		return dao.listCampaignParents(dataSource);
 	}
 
 	@Override
-	public List<Object> listIdAndNameOfCompaign() {
-		return dao.listIdAndNameOfCompaign();
+	public List<Object> listIdAndNameOfCompaign(MeDataSource dataSource) {
+		return dao.listIdAndNameOfCompaign(dataSource);
 	}
 
 	@Override
-	public List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID) {
-		return dao.getOpportunitiesRelatedToCampaign(campID);
+	public List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource) {
+		return dao.getOpportunitiesRelatedToCampaign(campID, dataSource);
 	}
 }

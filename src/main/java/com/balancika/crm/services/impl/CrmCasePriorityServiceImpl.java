@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCasePriorityDao;
 import com.balancika.crm.model.CrmCasePriority;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCasePriorityService;
 
 @Service
@@ -29,17 +30,17 @@ public class CrmCasePriorityServiceImpl implements CrmCasePriorityService{
 	}
 
 	@Override
-	public String deleteCasePriority(int priorityId) {
-		return priorityDao.deleteCasePriority(priorityId);
+	public String deleteCasePriority(CrmCasePriority casePriority) {
+		return priorityDao.deleteCasePriority(casePriority);
 	}
 
 	@Override
-	public List<CrmCasePriority> listCasePriorities() {
-		return priorityDao.listCasePriorities();
+	public List<CrmCasePriority> listCasePriorities(MeDataSource dataSource) {
+		return priorityDao.listCasePriorities(dataSource);
 	}
 
 	@Override
-	public CrmCasePriority findCasePriorityById(int priorityId) {
-		return priorityDao.findCasePriorityById(priorityId);
+	public CrmCasePriority findCasePriorityById(int priorityId, MeDataSource dataSource) {
+		return priorityDao.findCasePriorityById(priorityId, dataSource);
 	}
 }

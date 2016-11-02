@@ -1,6 +1,5 @@
 package com.balancika.crm.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,12 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.Quote;
 import com.balancika.crm.services.QuoteService;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/quote")
@@ -28,11 +24,11 @@ public class QuoteController {
 	@Autowired
 	private QuoteService quoteService;
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> listQuoteStartupPage() {
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listQuoteStartupPage(@RequestBody MeDataSource dataSource) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Object> arrList = quoteService.listQuoteStartupPage();
+		List<Object> arrList = quoteService.listQuoteStartupPage(dataSource);
 		if (arrList != null) {
 			map.put("MESSAGE", "SUCCESS");
 			map.put("DATA", arrList);
@@ -45,11 +41,11 @@ public class QuoteController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/list_all", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> listQuotes() {
+	@RequestMapping(value = "/list_all", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listQuotes(@RequestBody MeDataSource dataSource) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Quote> arrList = quoteService.listQuotes();
+		List<Quote> arrList = quoteService.listQuotes(dataSource);
 		if (arrList != null) {
 			map.put("MESSAGE", "SUCCESS");
 			map.put("DATA", arrList);
@@ -63,11 +59,11 @@ public class QuoteController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/{quoteId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> findQuoteById(@PathVariable("quoteId") String quoteId) {
+	@RequestMapping(value = "/list/{quoteId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> findQuoteById(@PathVariable("quoteId") String quoteId, @RequestBody MeDataSource dataSource) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		Quote quote = quoteService.findQuoteById(quoteId);
+		Quote quote = quoteService.findQuoteById(quoteId, dataSource);
 		if (quote != null) {
 			map.put("MESSAGE", "SUCCESS");
 			map.put("DATA", quote);
@@ -81,15 +77,15 @@ public class QuoteController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/edit/{quoteId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> findEditQuoteById(@PathVariable("quoteId") String quoteId) {
+	@RequestMapping(value = "/list/edit/{quoteId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> findEditQuoteById(@PathVariable("quoteId") String quoteId, @RequestBody MeDataSource dataSource) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		Quote quote = quoteService.findQuoteById(quoteId);
+		Quote quote = quoteService.findQuoteById(quoteId, dataSource);
 		if (quote != null) {
 			map.put("MESSAGE", "SUCCESS");
 			map.put("DATA", quote);
-			map.put("QUOTE_STARTUP", quoteService.listQuoteStartupPage());
+			map.put("QUOTE_STARTUP", quoteService.listQuoteStartupPage(dataSource));
 			map.put("STATUS", HttpStatus.OK);
 			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 		}
@@ -101,22 +97,9 @@ public class QuoteController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/item_change", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> findItemChange(@RequestBody String json) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> dataMap = new HashMap<String, String>();
-		try {
-			dataMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		Map<String, String> itemChange = quoteService.findItemChange(dataMap.get("priceCode").toString(), dataMap.get("itemId").toString());	
+	@RequestMapping(value = "/item_change/{priceCode}/{itemId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> findItemChange(@RequestBody MeDataSource dataSource, @PathVariable("priceCode") String priceCode, @PathVariable("itemId") String itemId) {
+		Map<String, String> itemChange = quoteService.findItemChange(priceCode, itemId , dataSource);	
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (itemChange != null) {
 			map.put("MESSAGE", "SUCCESS");
@@ -131,41 +114,16 @@ public class QuoteController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/check_entry_no", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> checkQuoteIdExist(@RequestBody String json) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> dataMap = new HashMap<String, String>();
-		try {
-			dataMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
+	@RequestMapping(value = "/check_entry_no/{quoteId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> checkQuoteIdExist(@RequestBody MeDataSource dataSource, @PathVariable("quoteId") String quoteId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("MESSAGE", quoteService.checkQuoteIdExist(dataMap.get("quoteId")));
+		map.put("MESSAGE", quoteService.checkQuoteIdExist(quoteId, dataSource));
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/qty_available", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> findQuantityAvailable(@RequestBody String json) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> dataMap = new HashMap<String, String>();
-		try {
-			dataMap = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		Map<String, String> qtyAvailable = quoteService.findQuantityAvailable(dataMap.get("itemId").toString(), dataMap.get("locationId").toString());	
+	@RequestMapping(value = "/qty_available/{itemId}/{locationId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> findQuantityAvailable(@RequestBody MeDataSource dataSource, @PathVariable("itemId") String itemId, @PathVariable("locationId") String locationId) {
+		Map<String, String> qtyAvailable = quoteService.findQuantityAvailable(itemId , locationId, dataSource);	
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (qtyAvailable != null) {
 			map.put("MESSAGE", "SUCCESS");
@@ -197,7 +155,7 @@ public class QuoteController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> updateQuote(@RequestBody Quote quote) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -212,11 +170,11 @@ public class QuoteController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/remove/{quoteId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Map<String, Object>> deleteQuote(@PathVariable("quoteId") String quoteId) {
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> deleteQuote(@RequestBody Quote quote) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		if (quoteService.deleteQuote(quoteId)== true) {
+		if (quoteService.deleteQuote(quote)== true) {
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK);
 			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmTaskDao;
 import com.balancika.crm.model.CrmTask;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmTaskService;
 
 @Service
@@ -29,38 +30,38 @@ public class CrmTaskServiceImpl implements CrmTaskService{
 	}
 
 	@Override
-	public boolean deleteTask(String taskId) {
-		return taskDao.deleteTask(taskId);
+	public boolean deleteTask(CrmTask task) {
+		return taskDao.deleteTask(task);
 	}
 
 	@Override
-	public List<CrmTask> listTasks() {
-		return taskDao.listTasks();
+	public List<CrmTask> listTasks(MeDataSource dataSource) {
+		return taskDao.listTasks(dataSource);
 	}
 
 	@Override
-	public Object findTaskById(String taskId) {
-		return taskDao.findTaskById(taskId);
+	public Object findTaskById(String taskId, MeDataSource dataSource) {
+		return taskDao.findTaskById(taskId, dataSource);
 	}
 
 	@Override
-	public CrmTask findTaskDetailsById(String taskId) {
-		return taskDao.findTaskDetailsById(taskId);
+	public CrmTask findTaskDetailsById(String taskId, MeDataSource dataSource) {
+		return taskDao.findTaskDetailsById(taskId, dataSource);
 	}
 
 	@Override
-	public List<CrmTask> listTasksRelatedToLead(String leadId) {
-		return taskDao.listTasksRelatedToLead(leadId);
+	public List<CrmTask> listTasksRelatedToLead(String leadId, MeDataSource dataSource) {
+		return taskDao.listTasksRelatedToLead(leadId, dataSource);
 	}
 
 	@Override
-	public List<CrmTask> listTasksRelatedToOpportunity(String opId) {
-		return taskDao.listTasksRelatedToOpportunity(opId);
+	public List<CrmTask> listTasksRelatedToOpportunity(String opId, MeDataSource dataSource) {
+		return taskDao.listTasksRelatedToOpportunity(opId, dataSource);
 	}
 
 	@Override
-	public List<CrmTask> listTasksRelatedToModule(String moduleId) {
-		return taskDao.listTasksRelatedToModule(moduleId);
+	public List<CrmTask> listTasksRelatedToModule(String moduleId, MeDataSource dataSource) {
+		return taskDao.listTasksRelatedToModule(moduleId, dataSource);
 	}
 
 }

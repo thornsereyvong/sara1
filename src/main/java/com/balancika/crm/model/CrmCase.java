@@ -90,7 +90,7 @@ public class CrmCase implements Serializable{
 	private Date modifyDate;
 	
 	@Transient
-	private MeDataSource dataSource;
+	private MeDataSource meDataSource;
 
 	public String getCaseId() {
 		return caseId;
@@ -216,11 +216,11 @@ public class CrmCase implements Serializable{
 		this.convertCreateDate = convertCreateDate;
 	}
 
-	public final MeDataSource getDataSource() {
-		return dataSource;
+	public final MeDataSource getMeDataSource() {
+		return meDataSource;
 	}
 
-	public final void setDataSource(MeDataSource dataSource) {
-		this.dataSource = dataSource;
+	public final void setMeDataSource(MeDataSource meDataSource) {
+		this.meDataSource = meDataSource;
 	}
 }

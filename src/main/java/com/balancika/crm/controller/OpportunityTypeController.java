@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunityType;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityTypeService;
 
 @RestController
@@ -25,11 +26,11 @@ public class OpportunityTypeController {
 	private CrmOpportunityTypeService typeService;
 	
 	
-	@RequestMapping(value="/list", method=RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listOpportunityTypes(){
+	@RequestMapping(value="/list", method=RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listOpportunityTypes(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmOpportunityType> arrType = typeService.listOpportunityTypes();
+		List<CrmOpportunityType> arrType = typeService.listOpportunityTypes(dataSource);
 		
 		if(arrType != null){
 			map.put("MESSAGE", "SUCCESS");
@@ -45,10 +46,10 @@ public class OpportunityTypeController {
 	}
 	
 	@RequestMapping(value="/list/{typeID}", method=RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findOpportunityTypeById(@PathVariable("typeID") int typeID){
+	public ResponseEntity<Map<String, Object>> findOpportunityTypeById(@PathVariable("typeID") int typeID, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmOpportunityType type = typeService.findOpportunityTypeById(typeID);
+		CrmOpportunityType type = typeService.findOpportunityTypeById(typeID, dataSource);
 		
 		if(type != null){
 			map.put("MESSAGE", "SUCCESS");
@@ -95,18 +96,18 @@ public class OpportunityTypeController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/remove/{typeID}", method=RequestMethod.DELETE, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> deleteOpportunityTypeById(@PathVariable("typeID") int typeID){
+	@RequestMapping(value="/remove", method=RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteOpportunityTypeById(@RequestBody CrmOpportunityType type){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(typeService.deleteOpportunityType(typeID).equalsIgnoreCase("OK")){
+		if(typeService.deleteOpportunityType(type).equalsIgnoreCase("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(typeService.deleteOpportunityType(typeID).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(typeService.deleteOpportunityType(type).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

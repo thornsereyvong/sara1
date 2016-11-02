@@ -6,22 +6,19 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 
+import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmOpportunityStageDao;
 import com.balancika.crm.model.CrmOpportunityStage;
+import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
-	
-	@Autowired
-	private HibernateTransactionManager transactionManager;
 
 	@Override
 	public boolean insertOpportunityStage(CrmOpportunityStage opStage) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(opStage.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(opStage);
@@ -30,6 +27,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
@@ -37,7 +35,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 
 	@Override
 	public boolean updateOpportunityStage(CrmOpportunityStage opStage) {
-		Session session = transactionManager.getSessionFactory().openSession();
+		Session session = HibernateSessionFactory.getSessionFactory(opStage.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(opStage);
@@ -46,19 +44,18 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return false;
 	}
 
 	@Override
-	public String deleteOpportunityStage(int opStageId) {
-		Session session = transactionManager.getSessionFactory().openSession();
+	public String deleteOpportunityStage(CrmOpportunityStage opStage) {
+		Session session = HibernateSessionFactory.getSessionFactory(opStage.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
-			CrmOpportunityStage stage = new CrmOpportunityStage();
-			stage.setOsId(opStageId);
-			session.delete(stage);
+			session.delete(opStage);
 			session.getTransaction().commit();
 			return "OK";
 		} catch(ConstraintViolationException ex){
@@ -69,6 +66,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 			session.getTransaction().rollback();
 			e.printStackTrace();
 		} finally {
+			session.clear();
 			session.close();
 		}
 		return "FAILED";
@@ -76,17 +74,33 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmOpportunityStage> listOpportunityStages() {
-		Session session = transactionManager.getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(CrmOpportunityStage.class);
-		criteria.addOrder(Order.asc("osId"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+	public List<CrmOpportunityStage> listOpportunityStages(MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmOpportunityStage.class);
+			criteria.addOrder(Order.asc("osId"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
-	public CrmOpportunityStage findOpportunityStage(int opStageId) {
-		return (CrmOpportunityStage)transactionManager.getSessionFactory().getCurrentSession().get(CrmOpportunityStage.class, opStageId);
+	public CrmOpportunityStage findOpportunityStage(int opStageId, MeDataSource dataSource) {
+		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		try {
+			return (CrmOpportunityStage)session.get(CrmOpportunityStage.class, opStageId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+		}
+		return null;
 	}
-
 }

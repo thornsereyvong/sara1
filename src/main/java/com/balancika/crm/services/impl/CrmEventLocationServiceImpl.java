@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmEventLocationDao;
 import com.balancika.crm.model.CrmEventLocation;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmEventLocationService;
 
 @Service
@@ -20,42 +21,26 @@ public class CrmEventLocationServiceImpl implements CrmEventLocationService{
 		
 	@Override
 	public boolean insertEventLocation(CrmEventLocation location) {
-		try{
-			return locationDao.insertEventLocation(location);
-		}catch(Exception e){
-			return false;
-		}
+		return locationDao.insertEventLocation(location);
 	}
 
 	@Override
 	public boolean updateEventLocation(CrmEventLocation location) {
-		try{
-			return locationDao.updateEventLocation(location);
-		}catch(Exception e){
-			return false;
-		}
+		return locationDao.updateEventLocation(location);
 	}
 
 	@Override
-	public String deleteEventLocation(String id) {
-		return locationDao.deleteEventLocation(id);
+	public String deleteEventLocation(CrmEventLocation location) {
+		return locationDao.deleteEventLocation(location);
 	}
 
 	@Override
-	public List<CrmEventLocation> listEventLocations() {
-		try{
-			return locationDao.listEventLocations();
-		}catch(Exception e){
-			return null;
-		}
+	public List<CrmEventLocation> listEventLocations(MeDataSource dataSource) {
+		return locationDao.listEventLocations(dataSource);
 	}
 
 	@Override
-	public CrmEventLocation findEventLocationById(String id) {
-		try{
-			return locationDao.findEventLocationById(id);
-		}catch(Exception e){
-			return null;
-		}
+	public CrmEventLocation findEventLocationById(String id, MeDataSource dataSource) {
+		return locationDao.findEventLocationById(id, dataSource);
 	}
 }

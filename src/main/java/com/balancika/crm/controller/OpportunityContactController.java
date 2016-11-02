@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunityContact;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmOpportunityContactService;
 
 @RestController
@@ -25,14 +26,14 @@ public class OpportunityContactController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addOpportunityContact(@RequestBody CrmOpportunityContact opCon){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityContactService.checkOpportunityContactIsExist(opCon.getOpId(), opCon.getConId()) > 0){
+		if(opportunityContactService.checkOpportunityContactIsExist(opCon.getOpId(), opCon.getConId(), opCon.getMeDataSource()) > 0){
 			map.put("MESSAGE", "EXIST");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}else{
 			if(opportunityContactService.insterOpportunityContact(opCon) == true){
 				map.put("MESSAGE", "INSERTED");
-				map.put("DATA", opportunityContactService.viewOpportunityContactById(opCon.getOpConId()));
+				map.put("DATA", opportunityContactService.viewOpportunityContactById(opCon.getOpConId(), opCon.getMeDataSource()));
 				map.put("STATUS", HttpStatus.CREATED.value());
 				return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 			}
@@ -57,10 +58,10 @@ public class OpportunityContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove/{opConId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Map<String, Object>> deleteOpportunityContact(@PathVariable("opConId") int opConId){
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> deleteOpportunityContact(@RequestBody CrmOpportunityContact opCon){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(opportunityContactService.deleteOpportunityContact(opConId) == true){
+		if(opportunityContactService.deleteOpportunityContact(opCon) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -72,9 +73,9 @@ public class OpportunityContactController {
 	}
 	
 	@RequestMapping(value = "/view/{opConId}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> viewOpportunityContact(@PathVariable("opConId") int opConId){
+	public ResponseEntity<Map<String, Object>> viewOpportunityContact(@PathVariable("opConId") int opConId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmOpportunityContact opportunityContact = opportunityContactService.findOpportunityContactById(opConId);
+		CrmOpportunityContact opportunityContact = opportunityContactService.findOpportunityContactById(opConId, dataSource);
 		if(opportunityContact != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());

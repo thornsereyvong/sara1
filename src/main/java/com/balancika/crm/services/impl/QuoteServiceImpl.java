@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.QuoteDao;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.Quote;
 import com.balancika.crm.services.QuoteService;
 
@@ -20,18 +21,18 @@ public class QuoteServiceImpl implements QuoteService{
 	private QuoteDao quoteDao;
 	
 	@Override
-	public List<Object> listQuoteStartupPage() {
-		return quoteDao.listQuoteStartupPage();
+	public List<Object> listQuoteStartupPage(MeDataSource dataSource) {
+		return quoteDao.listQuoteStartupPage(dataSource);
 	}
 
 	@Override
-	public Map<String, String> findItemChange(String priceCode, String itemId) {
-		return quoteDao.findItemChange(priceCode, itemId);
+	public Map<String, String> findItemChange(String priceCode, String itemId, MeDataSource dataSource) {
+		return quoteDao.findItemChange(priceCode, itemId, dataSource);
 	}
 
 	@Override
-	public Map<String, String> findQuantityAvailable(String itemId, String locationId) {
-		return quoteDao.findQuantityAvailable(itemId, locationId);
+	public Map<String, String> findQuantityAvailable(String itemId, String locationId, MeDataSource dataSource) {
+		return quoteDao.findQuantityAvailable(itemId, locationId, dataSource);
 	}
 
 	@Override
@@ -45,23 +46,23 @@ public class QuoteServiceImpl implements QuoteService{
 	}
 
 	@Override
-	public boolean deleteQuote(String quoteId) {
-		return quoteDao.deleteQuote(quoteId);
+	public boolean deleteQuote(Quote quote) {
+		return quoteDao.deleteQuote(quote);
 	}
 
 	@Override
-	public Quote findQuoteById(String quoteId) {
-		return quoteDao.findQuoteById(quoteId);
+	public Quote findQuoteById(String quoteId, MeDataSource dataSource) {
+		return quoteDao.findQuoteById(quoteId, dataSource);
 	}
 
 	@Override
-	public String checkQuoteIdExist(String quoteId) {
-		return quoteDao.checkQuoteIdExist(quoteId);
+	public String checkQuoteIdExist(String quoteId, MeDataSource dataSource) {
+		return quoteDao.checkQuoteIdExist(quoteId, dataSource);
 	}
 
 	@Override
-	public List<Quote> listQuotes() {
-		return quoteDao.listQuotes();
+	public List<Quote> listQuotes(MeDataSource dataSource) {
+		return quoteDao.listQuotes(dataSource);
 	}
 
 }
