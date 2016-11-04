@@ -9,27 +9,34 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Repository
 public class UploadFile {
+	
+	private MultipartFile files;
 
-	public String fileUpload(MultipartFile file, String savePath, String fileName){
+	public MultipartFile getFiles() {
+		return files;
+	}
+
+	public void setFiles(MultipartFile files) {
+		this.files = files;
+	}
+
+public String UploadFiles(MultipartFile file, String savePath,String fileName) {
+		
 		String filename = file.getOriginalFilename();
-		String pathAndFileName="/resources/upload/file/";
+		String pathAndFileName="/resources/upload/img/";
 		if (!file.isEmpty()) {
 			try {				
-
 				byte[] bytes = file.getBytes();
-
 				File path = new File(savePath);				
 				if (!path.exists()) {
 					path.mkdirs();
 				}
-				// creating the file on server
 				File serverFile = new File(savePath + File.separator + fileName);
 				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 				stream.write(bytes);
 				stream.close();
 
 				System.out.println(serverFile.getAbsolutePath());
-				//System.out.println("You are successfully uploaded file " + fileName);
 				pathAndFileName+="/"+fileName;
 				
 			} catch (Exception e) {
@@ -41,6 +48,5 @@ public class UploadFile {
 		}
 
 		return pathAndFileName;
-	
 	}
 }
