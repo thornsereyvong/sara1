@@ -18,7 +18,7 @@ public class CustomerGroupDaoImpl implements CustomerGroupDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CustomerGroup> listCustomerGroups(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CustomerGroup.class);
 			criteria.addOrder(Order.asc("custGroupId"));

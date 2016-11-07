@@ -16,7 +16,7 @@ public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 	
 	@Override
 	public boolean insertCollaborationTags(List<CrmCollaborationTags> tags) {
-		Session session = HibernateSessionFactory.getSessionFactory(tags.get(0).getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(tags.get(0).getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			for(int i = 0; i < tags.size(); i++){
@@ -41,7 +41,7 @@ public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 
 	@Override
 	public boolean deleteCollaborationTagsByCollaborationId(int collapId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			CrmCollaborationTags tag = new CrmCollaborationTags();
@@ -63,7 +63,7 @@ public class CrmCollaborationTagsDaoImpl implements CrmCollaborationTagsDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCollaborationTags> listCollaborationTags(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCollaborationTags.class);

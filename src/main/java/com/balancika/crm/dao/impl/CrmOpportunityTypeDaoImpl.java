@@ -19,7 +19,7 @@ public class CrmOpportunityTypeDaoImpl implements CrmOpportunityTypeDao {
 
 	@Override
 	public boolean insertOpportunityType(CrmOpportunityType type) {
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(type);
@@ -36,7 +36,7 @@ public class CrmOpportunityTypeDaoImpl implements CrmOpportunityTypeDao {
 
 	@Override
 	public boolean updateOpportunityType(CrmOpportunityType type) {
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(type);
@@ -53,7 +53,7 @@ public class CrmOpportunityTypeDaoImpl implements CrmOpportunityTypeDao {
 
 	@Override
 	public String deleteOpportunityType(CrmOpportunityType type) {
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(type);
@@ -76,7 +76,7 @@ public class CrmOpportunityTypeDaoImpl implements CrmOpportunityTypeDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunityType> listOpportunityTypes(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityType.class);
 			criteria.addOrder(Order.asc("otId"));
@@ -93,7 +93,7 @@ public class CrmOpportunityTypeDaoImpl implements CrmOpportunityTypeDao {
 
 	@Override
 	public CrmOpportunityType findOpportunityTypeById(int typeID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmOpportunityType) session.get(CrmOpportunityType.class, typeID);
 		} catch (Exception e) {

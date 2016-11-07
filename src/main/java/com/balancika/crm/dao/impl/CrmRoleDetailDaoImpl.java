@@ -18,7 +18,7 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 	
 	@Override
 	public boolean insertRoleDetail(CrmRoleDetail roleDetail) {
-		Session session = HibernateSessionFactory.getSessionFactory(roleDetail.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(roleDetail.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(roleDetail);
@@ -35,7 +35,7 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 
 	@Override
 	public boolean updateRoleDetail(CrmRoleDetail roleDetail) {
-		Session session = HibernateSessionFactory.getSessionFactory(roleDetail.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(roleDetail.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(roleDetail);
@@ -52,7 +52,7 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 
 	@Override
 	public boolean deleteRoleDetail(CrmRoleDetail roleDetail) {
-		Session session = HibernateSessionFactory.getSessionFactory(roleDetail.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(roleDetail.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(roleDetail);
@@ -69,7 +69,7 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmRoleDetail.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -85,7 +85,7 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 
 	@Override
 	public CrmRoleDetail findRoleDetailById(int roleDetailId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmRoleDetail.class);
 			criteria.add(Restrictions.eq("roleDetailId", roleDetailId));
@@ -101,7 +101,7 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 
 	@Override
 	public Object findRoleDetailsByUsername(String username,String moduleId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findRoleDetailsByUsername(:username, :moduleId)");
 			query.setParameter("username", username);

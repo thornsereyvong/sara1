@@ -18,7 +18,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 
 	@Override
 	public boolean insertOpportunityStage(CrmOpportunityStage opStage) {
-		Session session = HibernateSessionFactory.getSessionFactory(opStage.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(opStage);
@@ -35,7 +35,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 
 	@Override
 	public boolean updateOpportunityStage(CrmOpportunityStage opStage) {
-		Session session = HibernateSessionFactory.getSessionFactory(opStage.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(opStage);
@@ -52,7 +52,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 
 	@Override
 	public String deleteOpportunityStage(CrmOpportunityStage opStage) {
-		Session session = HibernateSessionFactory.getSessionFactory(opStage.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(opStage);
@@ -75,7 +75,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunityStage> listOpportunityStages(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityStage.class);
 			criteria.addOrder(Order.asc("osId"));
@@ -92,7 +92,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 
 	@Override
 	public CrmOpportunityStage findOpportunityStage(int opStageId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmOpportunityStage)session.get(CrmOpportunityStage.class, opStageId);
 		} catch (Exception e) {

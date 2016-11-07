@@ -18,7 +18,7 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 
 	@Override
 	public boolean insertOpportunitySaleOrder(CrmOpportunitySaleOrder opSaleOrder) {
-		Session session = HibernateSessionFactory.getSessionFactory(opSaleOrder.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opSaleOrder.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(opSaleOrder);
@@ -36,7 +36,7 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 
 	@Override
 	public boolean updateOpportunitySaleOrder(CrmOpportunitySaleOrder opSaleOrder) {
-		Session session = HibernateSessionFactory.getSessionFactory(opSaleOrder.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opSaleOrder.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(opSaleOrder);
@@ -54,7 +54,7 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 
 	@Override
 	public boolean deleteOpportunitySaleOrder(CrmOpportunitySaleOrder opSaleOrder) {
-		Session session = HibernateSessionFactory.getSessionFactory(opSaleOrder.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opSaleOrder.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(opSaleOrder);
@@ -72,7 +72,7 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 
 	@Override
 	public CrmOpportunitySaleOrder findOpportunitySaleOrder(int opSaleOrderId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmOpportunitySaleOrder)session.get(CrmOpportunitySaleOrder.class, opSaleOrderId);
 		} catch (Exception e) {
@@ -86,7 +86,7 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 
 	@Override
 	public Integer checkOpportunitySaleOrderIsExist(String opId, String saleOrderId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunitySaleOrder.class);
 			criteria.add(Restrictions.and(Restrictions.eq("opId", opId), Restrictions.eq("saleId", saleOrderId)))
@@ -104,7 +104,7 @@ public class CrmOpportunitySaleOrderDaoImpl implements CrmOpportunitySaleOrderDa
 
 	@Override
 	public Object viewOpportunitySaleOrder(int opSaleOrderId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL viewOpportunitySaleOrderById(:opSaleOrderId)");
 			query.setParameter("opSaleOrderId", opSaleOrderId)

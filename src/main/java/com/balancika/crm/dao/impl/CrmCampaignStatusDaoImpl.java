@@ -19,7 +19,7 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 
 	@Override
 	public boolean addCampaignStatus(CrmCampaignStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try{
 			session.beginTransaction();
 			session.save(status);
@@ -36,7 +36,7 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 
 	@Override
 	public boolean updateCampaignStatus(CrmCampaignStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try{
 			session.beginTransaction();
 			session.update(status);
@@ -53,7 +53,7 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 
 	@Override
 	public String deleteCampaignStatus(CrmCampaignStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try{
 			session.beginTransaction();
 			session.delete(status);
@@ -80,7 +80,7 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 	@Override
 	public List<CrmCampaignStatus> listAllCampaignStatus(MeDataSource dataSource) {
 		
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCampaignStatus.class);
 			criteria.addOrder(Order.asc("statusID"));
@@ -97,7 +97,7 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 
 	@Override
 	public CrmCampaignStatus findCampaignStatusById(int statusID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmCampaignStatus)session.get(CrmCampaignStatus.class, statusID);
 		} catch (Exception e) {

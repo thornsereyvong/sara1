@@ -20,7 +20,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 
 	@Override
 	public boolean insertCaseType(CrmCaseType type) {
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(type);
@@ -37,7 +37,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 
 	@Override
 	public boolean updateCaseType(CrmCaseType type) {
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(type);
@@ -54,7 +54,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 
 	@Override
 	public String deleteCaseType(CrmCaseType type) {
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(type);
@@ -78,7 +78,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCaseType> listCaseTypes(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCaseType.class);
 			criteria.addOrder(Order.asc("caseTypeId"));
@@ -95,7 +95,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 
 	@Override
 	public CrmCaseType findCaseTypeById(int typeId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmCaseType) session.get(CrmCaseType.class, typeId);
 		} catch (Exception e) {

@@ -19,7 +19,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 
 	@Override
 	public boolean insertLeadSource(CrmLeadSource source) {
-		Session session = HibernateSessionFactory.getSessionFactory(source.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(source);
@@ -37,7 +37,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 	@Override
 	public boolean updateLeadSource(CrmLeadSource source) {
 
-		Session session = HibernateSessionFactory.getSessionFactory(source.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(source);
@@ -55,7 +55,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 	@Override
 	public String deleteLeadSource(CrmLeadSource source) {
 
-		Session session = HibernateSessionFactory.getSessionFactory(source.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(source);
@@ -78,7 +78,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLeadSource> getAllLeadSource(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLeadSource.class);
 			criteria.addOrder(Order.asc("sourceID"));
@@ -96,7 +96,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 	@Override
 	public CrmLeadSource findLeadSourceById(int sourceID, MeDataSource dataSource) {
 
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmLeadSource) session.get(CrmLeadSource.class, sourceID);
 		} catch (Exception e) {

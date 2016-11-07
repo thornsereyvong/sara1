@@ -19,7 +19,7 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 
 	@Override
 	public boolean insertCollaborationDetails(CrmCollaborationDetails details) {
-		Session session = HibernateSessionFactory.getSessionFactory(details.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(details.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			details.setCreateDate(LocalDateTime.now());
@@ -39,7 +39,7 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 
 	@Override
 	public boolean updateCollaborationDetails(CrmCollaborationDetails details) {
-		Session session = HibernateSessionFactory.getSessionFactory(details.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(details.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(details);
@@ -58,7 +58,7 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 
 	@Override
 	public boolean deleteCollaborationDetails(CrmCollaborationDetails details) {
-		Session session = HibernateSessionFactory.getSessionFactory(details.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(details.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(details);
@@ -78,7 +78,7 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCollaborationDetails> listCollaborationDetails(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCollaborationDetails.class);
 			return criteria.list();
@@ -93,7 +93,7 @@ public class CrmCollaborationDetailsDaoImpl implements CrmCollaborationDetailsDa
 
 	@Override
 	public CrmCollaborationDetails findCollaborationDetailsById(int detailsId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			CrmCollaborationDetails details = (CrmCollaborationDetails) session.get(CrmCollaborationDetails.class, detailsId);
 			details.setFormatCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(details.getCreateDate()));

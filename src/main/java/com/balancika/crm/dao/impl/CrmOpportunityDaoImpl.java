@@ -40,7 +40,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	
 	@Override
 	public boolean isInsertOpportunity(CrmOpportunity opportunity) {
-		Session session = HibernateSessionFactory.getSessionFactory(opportunity.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opportunity.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			opportunity.setOpId(IdAutoGenerator("OP"));
@@ -59,7 +59,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 
 	@Override
 	public boolean isUpdateOpportunity(CrmOpportunity opportunity) {
-		Session session = HibernateSessionFactory.getSessionFactory(opportunity.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opportunity.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(opportunity);
@@ -77,7 +77,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 
 	@Override
 	public boolean isDeleteOpportunity(CrmOpportunity opportunity) {
-		Session session = HibernateSessionFactory.getSessionFactory(opportunity.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opportunity.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(opportunity);
@@ -96,7 +96,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 
 	@Override
 	public Object findOpportunityById(String opId, MeDataSource  dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmOpportunityById(:opId)");
 			query.setParameter("opId", opId);
@@ -114,7 +114,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunity> listOpportunities(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmOpportunities()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -130,7 +130,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 
 	@Override
 	public CrmOpportunity findOpportunityDetailsById(String opId,MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmOpportunity)session.get(CrmOpportunity.class, opId);
 		} catch (HibernateException e) {
@@ -146,7 +146,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listOpportunitiesWithSpecificUser(String username, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listOpportunityWithSpecificUser(:username)");
 			query.setParameter("username", username);
@@ -164,7 +164,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object> listContactsRelatedToOpportuntiy(String opId, MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listContactsRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -182,7 +182,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object> listQuotationsRelatedToOpportuntiy(String opId, MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listQuotationRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -200,7 +200,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object> listSaleOrdersRelatedToOpportuntiy(String opId, MeDataSource dataSource){
-		Session  session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session  session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listSaleOrdersRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -228,7 +228,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	}
 	
 	private void deleteOpportunityQuote(String opId, MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_quote WHERE OP_ID = :opId ;");
@@ -246,7 +246,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 	}
 	
 	private void deleteOpportunitySaleOrder(String opId, MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_saleorder WHERE OP_ID = :opId ;");
@@ -272,7 +272,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 
 	@Override
 	public boolean updateCustomFieldsOfOpprotunity(CrmOpportunity opp) {
-		Session session = HibernateSessionFactory.getSessionFactory(opp.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opp.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			CrmOpportunity opportunity = (CrmOpportunity) session.load(CrmOpportunity.class, opp.getOpId());

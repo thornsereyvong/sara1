@@ -18,7 +18,7 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 
 	@Override
 	public boolean insertCaseStatus(CrmCaseStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -35,7 +35,7 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 
 	@Override
 	public boolean updateCaseStatus(CrmCaseStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -52,7 +52,7 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 
 	@Override
 	public String deleteCaseStatus(CrmCaseStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(status);
@@ -75,7 +75,7 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCaseStatus> listCaseStatus(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCaseStatus.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -91,7 +91,7 @@ public class CrmCaseStatusDaoImpl implements CrmCaseStatusDao {
 
 	@Override
 	public CrmCaseStatus findCaseStatusById(int statusId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmCaseStatus)session.get(CrmCaseStatus.class, statusId);
 		} catch (Exception e) {

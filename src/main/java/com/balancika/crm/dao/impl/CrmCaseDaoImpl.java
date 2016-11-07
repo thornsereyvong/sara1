@@ -24,7 +24,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 
 	@Override
 	public boolean insertCase(CrmCase cases) {
-		Session session = HibernateSessionFactory.getSessionFactory(cases.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(cases.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			cases.setCaseId(IdAutoGenerator("CS"));
@@ -45,7 +45,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 
 	@Override
 	public boolean updateCase(CrmCase cases) {
-		Session session = HibernateSessionFactory.getSessionFactory(cases.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(cases.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(cases);
@@ -64,7 +64,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 
 	@Override
 	public boolean deleteCase(CrmCase cases) {
-		Session session = HibernateSessionFactory.getSessionFactory(cases.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(cases.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_case WHERE CS_ID = :caseId");
@@ -85,7 +85,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCase> listCases(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmCases()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -101,7 +101,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 
 	@Override
 	public Object findCaseById(String caseId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmCaseById(:caseId)");
 			query.setParameter("caseId", caseId);
@@ -118,7 +118,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 
 	@Override
 	public CrmCase findCaseDetailsById(String caseId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCase.class);
 			criteria.add(Restrictions.eq("caseId", caseId));

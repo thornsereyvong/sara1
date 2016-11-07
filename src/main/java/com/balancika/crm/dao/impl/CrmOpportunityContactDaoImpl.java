@@ -18,7 +18,7 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 
 	@Override
 	public boolean insterOpportunityContact(CrmOpportunityContact opCon) {
-		Session session = HibernateSessionFactory.getSessionFactory(opCon.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(opCon);
@@ -36,7 +36,7 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 
 	@Override
 	public boolean updateOpportunityContact(CrmOpportunityContact opCon) {
-		Session session = HibernateSessionFactory.getSessionFactory(opCon.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(opCon);
@@ -54,7 +54,7 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 
 	@Override
 	public boolean deleteOpportunityContact(CrmOpportunityContact opCon) {
-		Session session = HibernateSessionFactory.getSessionFactory(opCon.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(opCon);
@@ -72,7 +72,7 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 
 	@Override
 	public CrmOpportunityContact findOpportunityContactById(int opConId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmOpportunityContact)session.get(CrmOpportunityContact.class, opConId);
 		} catch (HibernateException e) {
@@ -87,7 +87,7 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 
 	@Override
 	public Integer checkOpportunityContactIsExist(String opId, String conId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityContact.class);
 			criteria.add(Restrictions.and(Restrictions.eq("opId", opId),Restrictions.eq("conId", conId)));
@@ -107,7 +107,7 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 
 	@Override
 	public Object viewOpportunityContactById(int opConId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL viewOpportunityById(:opConId)");
 			query.setParameter("opConId", opConId);

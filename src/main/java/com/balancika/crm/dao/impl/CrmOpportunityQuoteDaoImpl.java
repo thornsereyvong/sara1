@@ -18,7 +18,7 @@ public class CrmOpportunityQuoteDaoImpl implements CrmOpportunityQuoteDao{
 
 	@Override
 	public boolean insertOpportunityQuote(CrmOpportunityQuotation opQuote) {
-		Session session = HibernateSessionFactory.getSessionFactory(opQuote.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opQuote.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(opQuote);
@@ -36,7 +36,7 @@ public class CrmOpportunityQuoteDaoImpl implements CrmOpportunityQuoteDao{
 
 	@Override
 	public boolean updateOpportunityQuote(CrmOpportunityQuotation opQuote) {
-		Session session = HibernateSessionFactory.getSessionFactory(opQuote.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opQuote.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(opQuote);
@@ -54,7 +54,7 @@ public class CrmOpportunityQuoteDaoImpl implements CrmOpportunityQuoteDao{
 
 	@Override
 	public boolean deleteOpportunityQuote(CrmOpportunityQuotation opQuote) {
-		Session session = HibernateSessionFactory.getSessionFactory(opQuote.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(opQuote.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(opQuote);
@@ -72,7 +72,7 @@ public class CrmOpportunityQuoteDaoImpl implements CrmOpportunityQuoteDao{
 
 	@Override
 	public CrmOpportunityQuotation findOpportunityQuotationById(int opQuoteId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmOpportunityQuotation)session.get(CrmOpportunityQuotation.class, opQuoteId);
 		} catch (Exception e) {
@@ -87,7 +87,7 @@ public class CrmOpportunityQuoteDaoImpl implements CrmOpportunityQuoteDao{
 
 	@Override
 	public Integer checkOpportunityQuotationIsExist(String opId, String quoteId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityQuotation.class);
 			criteria.add(Restrictions.and(Restrictions.eq("opId", opId), Restrictions.eq("quoteId", quoteId)))
@@ -104,7 +104,7 @@ public class CrmOpportunityQuoteDaoImpl implements CrmOpportunityQuoteDao{
 
 	@Override
 	public Object viewOpportunityQuotationById(int opQuoteId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL viewOpportunityQuotationById(:opQuoteId)");
 			query.setParameter("opQuoteId", opQuoteId);

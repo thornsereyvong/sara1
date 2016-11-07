@@ -20,7 +20,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 	
 	@Override
 	public boolean isInsertedRole(CrmRole role) {
-		session = HibernateSessionFactory.getSessionFactory(role.getMeDataSource()).openSession();
+		session = new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			role.setRoleId(IdAutoGenerator("RM"));
@@ -39,7 +39,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 
 	@Override
 	public boolean isUpdatedRole(CrmRole role) {
-		session = HibernateSessionFactory.getSessionFactory(role.getMeDataSource()).openSession();
+		session = new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(role);
@@ -56,7 +56,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 
 	@Override
 	public boolean isDeletedRole(CrmRole role) {
-		session = HibernateSessionFactory.getSessionFactory(role.getMeDataSource()).openSession();
+		session = new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(role);
@@ -72,7 +72,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 
 	@Override
 	public CrmRole findRoleById(String roleId, MeDataSource dataSource) {
-		session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmRole) session.get(CrmRole.class, roleId);
 		} catch (Exception e) {
@@ -88,7 +88,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmRole> listAllRoles(MeDataSource dataSource) {
-		session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmRole.class);
 			criteria.add(Restrictions.eq("roleStatus", 1));

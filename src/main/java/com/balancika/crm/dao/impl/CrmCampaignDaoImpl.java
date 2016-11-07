@@ -24,7 +24,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 
 	@Override
 	public boolean insertCampaign(CrmCampaign cmp) {
-		Session session = HibernateSessionFactory.getSessionFactory(cmp.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(cmp.getMeDataSource()).openSession();
 		try{
 			session.beginTransaction();
 			System.err.println(cmp.getCampName());
@@ -46,7 +46,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCampaign> listCampaigns(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmCampaigns()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -62,7 +62,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 
 	@Override
 	public boolean updateCampaign(CrmCampaign cmp) {
-		Session session = HibernateSessionFactory.getSessionFactory(cmp.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(cmp.getMeDataSource()).openSession();
 		try{
 			session.beginTransaction();
 			session.update(cmp);
@@ -78,7 +78,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 
 	@Override
 	public String deleteCampaign(String campID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_camp WHERE CA_ID = :campID");  
@@ -101,7 +101,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 
 	@Override
 	public Object findCampaignById(String campID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmCampaignById(:campID)");
 			query.setParameter("campID", campID);
@@ -119,7 +119,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@Override
 	public boolean isCampaignNameExist(String campName, MeDataSource dataSource) {
 		Integer countRow = 0;
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCampaign.class);
 			criteria.add(Restrictions.eq("campName", campName));
@@ -139,7 +139,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listCampaignIsNotEqual(String campID, MeDataSource dataSource) {
-		Session session =  HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session =  new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmParentCampaigns(:campID)");
 			query.setParameter("campID", campID);
@@ -156,7 +156,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 
 	@Override
 	public CrmCampaign findCampaignDetailsById(String campID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmCampaign) session.get(CrmCampaign.class, campID);
 		} catch (Exception e) {
@@ -171,7 +171,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listCampaignParents(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCampaign.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("campID"), "campID")
@@ -191,7 +191,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listIdAndNameOfCompaign(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCampaign.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("campID"), "campID")
@@ -210,7 +210,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op")
 					.createAlias("op.opCampaign", "camp")

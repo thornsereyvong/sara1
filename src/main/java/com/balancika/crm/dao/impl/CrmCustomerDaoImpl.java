@@ -29,7 +29,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 
 	@Override
 	public boolean insertCustomer(CrmCustomer customer) {
-		Session session = HibernateSessionFactory.getSessionFactory(customer.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(customer.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			String custId = ameIdAutoGenerator("CUST");
@@ -62,7 +62,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 
 	@Override
 	public boolean updateCustomer(CrmCustomer customer) {
-		Session session = HibernateSessionFactory.getSessionFactory(customer.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(customer.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(customer);
@@ -91,7 +91,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 
 	@Override
 	public boolean deleteCustomer(CrmCustomer customer) {
-		Session session = HibernateSessionFactory.getSessionFactory(customer.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(customer.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM tblcustomer WHERE CustID = :custID");
@@ -115,7 +115,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCustomer> listCustomers(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -131,7 +131,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmShipAddress> listShipAdressesByCustId(String custId, MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmShipAddress.class);
 			criteria.add(Restrictions.eq("docId", custId));
@@ -149,7 +149,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 
 	@Override
 	public CrmCustomer findCustomerById(String custID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			CrmCustomer customer =(CrmCustomer)session.get(CrmCustomer.class, custID);
 			customer.setShipAddresses(listShipAdressesByCustId(custID, dataSource));
@@ -166,7 +166,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listCustomerIdAndName(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
 			criteria.setProjection(Projections.projectionList()
@@ -188,7 +188,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PriceCode> listPriceCode(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(PriceCode.class);
 			criteria.addOrder(Order.asc("priceCode"));
@@ -205,7 +205,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AmeClass> listAmeClasses(MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(AmeClass.class);
 			return criteria.list();
@@ -220,7 +220,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	
 	@Override
 	public CrmCustomer viewCustomerDetails(String custId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
 			criteria.add(Restrictions.eq("custID", custId));
@@ -252,7 +252,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmContact> getContactRelatedToCustomer(String custId, MeDataSource dataSource){
-		Session session =  HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session =  new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmContact.class, "con").createAlias("con.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));
@@ -279,7 +279,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmCase> getCasesRelatedToCustomer(String custId, MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));
@@ -307,7 +307,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmOpportunity> getOpportunityRelatedToCustomer(String custId, MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunity.class, "op").createAlias("op.customer", "cust");
 			criteria.add(Restrictions.eq("cust.custID", custId));

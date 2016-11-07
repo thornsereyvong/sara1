@@ -18,7 +18,7 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 	
 	@Override
 	public boolean insertLike(CrmLike like) {
-		Session session = HibernateSessionFactory.getSessionFactory(like.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(like.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(like);
@@ -37,7 +37,7 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 
 	@Override
 	public boolean deleteLike(int collapId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_user_like_collaboration WHERE LK_CBID = :collapId");
@@ -59,7 +59,7 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 
 	@Override
 	public Integer countLike(int collapId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLike.class);
 			criteria.setProjection(Projections.property("likeId"));
@@ -77,7 +77,7 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 
 	@Override
 	public boolean checkUserLike(String username, int postId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLike.class);
 			criteria.add(Restrictions.eq("username", username));

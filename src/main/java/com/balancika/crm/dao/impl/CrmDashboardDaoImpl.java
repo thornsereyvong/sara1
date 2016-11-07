@@ -20,7 +20,7 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object viewDashboard(String username, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		SQLQuery query = session.createSQLQuery("CALL loadCrmDashboardForSpecificUser(:username)");
 		query.setParameter("username", username);
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);

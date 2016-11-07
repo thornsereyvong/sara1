@@ -18,7 +18,7 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 
 	@Override
 	public boolean insertCasePriority(CrmCasePriority casePriority) {
-		Session session = HibernateSessionFactory.getSessionFactory(casePriority.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(casePriority);
@@ -35,7 +35,7 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 
 	@Override
 	public boolean updateCasePriority(CrmCasePriority casePriority) {
-		Session session = HibernateSessionFactory.getSessionFactory(casePriority.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(casePriority);
@@ -52,7 +52,7 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 
 	@Override
 	public String deleteCasePriority(CrmCasePriority casePriority) {
-		Session session = HibernateSessionFactory.getSessionFactory(casePriority.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(casePriority);
@@ -75,7 +75,7 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCasePriority> listCasePriorities(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCasePriority.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -91,7 +91,7 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 
 	@Override
 	public CrmCasePriority findCasePriorityById(int priorityId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmCasePriority) session.get(CrmCasePriority.class, priorityId);
 		} catch (Exception e) {

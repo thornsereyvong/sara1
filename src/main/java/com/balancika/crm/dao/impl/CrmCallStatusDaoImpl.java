@@ -20,7 +20,7 @@ public class CrmCallStatusDaoImpl implements CrmCallStatusDao {
 
 	@Override
 	public boolean insertCallStatus(CrmCallStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -37,7 +37,7 @@ public class CrmCallStatusDaoImpl implements CrmCallStatusDao {
 
 	@Override
 	public boolean updateCallStatus(CrmCallStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -54,7 +54,7 @@ public class CrmCallStatusDaoImpl implements CrmCallStatusDao {
 
 	@Override
 	public String deleteCallStatus(CrmCallStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(status);
@@ -75,7 +75,7 @@ public class CrmCallStatusDaoImpl implements CrmCallStatusDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCallStatus> listCallStatus(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCallStatus.class);
 			criteria.addOrder(Order.asc("callStatusId"));
@@ -92,7 +92,7 @@ public class CrmCallStatusDaoImpl implements CrmCallStatusDao {
 
 	@Override
 	public CrmCallStatus findCallStatusById(CrmCallStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCallStatus.class);
 			criteria.add(Restrictions.eq("callStatusId", status.getCallStatusId()));

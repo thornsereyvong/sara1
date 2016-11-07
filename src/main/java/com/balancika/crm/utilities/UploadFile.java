@@ -36,7 +36,7 @@ public String UploadFiles(MultipartFile file, String savePath,String fileName) {
 				stream.write(bytes);
 				stream.close();
 
-				System.out.println(serverFile.getAbsolutePath());
+				//System.out.println(serverFile.getAbsolutePath());
 				pathAndFileName+="/"+fileName;
 				
 			} catch (Exception e) {

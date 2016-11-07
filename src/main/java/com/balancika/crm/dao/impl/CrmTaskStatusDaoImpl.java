@@ -20,7 +20,7 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 
 	@Override
 	public boolean insertTaskStatus(CrmTaskStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -37,7 +37,7 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 
 	@Override
 	public boolean updateTaskStatus(CrmTaskStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -54,7 +54,7 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 
 	@Override
 	public String deleteTaskStatus(CrmTaskStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(status);
@@ -77,7 +77,7 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmTaskStatus> lisTaskStatus(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmTaskStatus.class);
 			criteria.addOrder(Order.asc("taskStatusId"));
@@ -94,7 +94,7 @@ public class CrmTaskStatusDaoImpl implements CrmTaskStatusDao{
 
 	@Override
 	public CrmTaskStatus findTaskStatusById(int statusId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmTaskStatus.class);
 			criteria.add(Restrictions.eq("taskStatusId", statusId));

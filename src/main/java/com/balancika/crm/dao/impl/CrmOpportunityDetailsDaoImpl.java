@@ -26,7 +26,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 	
 	@Override
 	public boolean insertOpportunityDetails(CrmOpportunityDetails details) {
-		Session session = HibernateSessionFactory.getSessionFactory(details.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(details.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(details);
@@ -46,7 +46,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 
 	@Override
 	public boolean updateOpportunityDetails(CrmOpportunityDetails details) {
-		Session session = HibernateSessionFactory.getSessionFactory(details.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(details.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(details);
@@ -65,7 +65,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 
 	@Override
 	public boolean deleteOpportunityDetails(CrmOpportunityDetails details) {
-		Session session = HibernateSessionFactory.getSessionFactory(details.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(details.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(details);
@@ -84,7 +84,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 
 	@Override
 	public CrmOpportunityDetails findOpportunityDetailsById(int opDetailsId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityDetails.class);
 			criteria.add(Restrictions.eq("opDetailsId", opDetailsId));
@@ -102,7 +102,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunityDetails> listOpportunityDetails(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityDetails.class);
 			return criteria.list();
@@ -127,7 +127,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 	
 	@SuppressWarnings("unchecked")
 	private List<AmeLocation> listAllLocations(MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(AmeLocation.class);
 			return criteria.list();
@@ -142,7 +142,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 	
 	@SuppressWarnings("unchecked")
 	private List<AmeUom> listAllUoms(MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(AmeUom.class);
 			return criteria.list();
@@ -158,7 +158,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 	
 	@SuppressWarnings("unchecked")
 	private List<AmeItem> listAllItems(MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(AmeItem.class);
 			return criteria.list();
@@ -173,7 +173,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 	
 	@SuppressWarnings("unchecked")
 	private List<AmeClass> listAllClasses(MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(AmeClass.class);
 			return criteria.list();
@@ -189,7 +189,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunityDetails> listOpportunityDetailsRelatedToOpportunity(String opId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityDetails.class);
@@ -207,7 +207,7 @@ public class CrmOpportunityDetailsDaoImpl implements CrmOpportunityDetailsDao{
 
 	@Override
 	public boolean deleteOpportunityDetails(String opId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_detail WHERE OP_ID = :opId");

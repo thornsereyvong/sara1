@@ -17,7 +17,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 
 	@Override
 	public boolean insertIndustry(CrmIndustry industry) {
-		Session session = HibernateSessionFactory.getSessionFactory(industry.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(industry);
@@ -34,7 +34,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 
 	@Override
 	public boolean updateIndustry(CrmIndustry industry) {
-		Session session = HibernateSessionFactory.getSessionFactory(industry.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(industry);
@@ -51,7 +51,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 
 	@Override
 	public boolean deleteIndustry(CrmIndustry industry) {
-		Session session = HibernateSessionFactory.getSessionFactory(industry.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(industry);
@@ -69,7 +69,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmIndustry> listIndustries(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmIndustry.class);
 			criteria.addOrder(Order.asc("industID"));
@@ -86,7 +86,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 
 	@Override
 	public CrmIndustry finIndustryById(int industID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmIndustry) session.get(CrmIndustry.class, industID);
 		} catch (Exception e) {

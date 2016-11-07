@@ -24,7 +24,7 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
 	@Override
 	public boolean insertAccountType(CrmAccountType accountType) {
-		Session session = HibernateSessionFactory.getSessionFactory(accountType.getMeDataSource()).openSession();//transactionManager.getSessionFactory().openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()).openSession();//transactionManager.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(accountType);
@@ -43,7 +43,7 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
 	@Override
 	public boolean updateAccountType(CrmAccountType accountType) {
-		Session session = HibernateSessionFactory.getSessionFactory(accountType.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(accountType);
@@ -59,7 +59,7 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
 	@Override
 	public boolean deleteAccountType(CrmAccountType accountType) {
-		Session session = HibernateSessionFactory.getSessionFactory(accountType.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(accountType);
@@ -77,10 +77,12 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmAccountType> listAccountTypes(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
+			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmAccountType.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			session.getTransaction().commit();
 			return criteria.list();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,7 +95,7 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
 	@Override
 	public CrmAccountType findAccountTypeById(CrmAccountType accountType) {
-		Session session = HibernateSessionFactory.getSessionFactory(accountType.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()).openSession();
 		try {
 			return (CrmAccountType) session.get(CrmAccountType.class, accountType.getAccountID());
 		} catch (Exception e) {

@@ -23,7 +23,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 
 	@Override
 	public boolean insertNote(CrmNote note) {
-		Session session = HibernateSessionFactory.getSessionFactory(note.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(note.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			note.setNoteId(IdAutoGenerator("AC_NO"));
@@ -43,7 +43,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 
 	@Override
 	public boolean updateNote(CrmNote note) {
-		Session session = HibernateSessionFactory.getSessionFactory(note.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(note.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(note);
@@ -59,7 +59,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 
 	@Override
 	public boolean deleteNote(CrmNote note) {
-		Session session = HibernateSessionFactory.getSessionFactory(note.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(note.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(note);
@@ -77,7 +77,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmNote> listNotes(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmNote.class);
 			criteria.addOrder(Order.asc("noteId"));
@@ -94,7 +94,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 
 	@Override
 	public CrmNote findNoteById(String noteId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmNote.class);
 			criteria.add(Restrictions.eq("noteId", noteId));
@@ -119,7 +119,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmNote> listNoteRelatedToLead(String leadId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listNotesRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -137,7 +137,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmNote> listNotesRelatedToOpportunity(String opId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listNotesRelatedToOpportunity(:opId)");
 				query.setParameter("opId", opId);
@@ -155,7 +155,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmNote> listNoteRelatedToEachModule(String moduleId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmNote.class);
 			criteria.add(Restrictions.eq("noteRelatedToModuleId", moduleId));

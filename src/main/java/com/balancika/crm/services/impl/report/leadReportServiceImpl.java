@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.report.LeadReportDao;
 import com.balancika.crm.model.CrmLead;
+import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.report.LeadReportService;
 
 @Service
@@ -20,54 +21,54 @@ public class leadReportServiceImpl implements LeadReportService{
 	private LeadReportDao reportDao;
 
 	@Override
-	public List<CrmLead> reportLeadsConvertedAllTime() {
+	public List<CrmLead> reportLeadsConvertedAllTime(MeDataSource dataSource) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<CrmLead> reportLeadConvertedByFQ(String startDate, String endDate) {
-		return reportDao.reportLeadConvertedByFQ(startDate, endDate);
+	public List<CrmLead> reportLeadConvertedByFQ(String startDate, String endDate, MeDataSource dataSource) {
+		return reportDao.reportLeadConvertedByFQ(startDate, endDate, dataSource);
 	}
 
 	@Override
-	public List<CrmLead> reportLeadCreatedCurrentFQ(String startDate, String endDate) {
-		return reportDao.reportLeadCreatedCurrentFQ(startDate, endDate);
+	public List<CrmLead> reportLeadCreatedCurrentFQ(String startDate, String endDate, MeDataSource dataSource) {
+		return reportDao.reportLeadCreatedCurrentFQ(startDate, endDate, dataSource);
 	}
 
 	@Override
-	public List<CrmLead> reportMarketingOfLead() {
-		return reportDao.reportMarketingOfLead();
+	public List<CrmLead> reportMarketingOfLead(MeDataSource dataSource) {
+		return reportDao.reportMarketingOfLead(dataSource);
 	}
 
 	@Override
-	public List<CrmLead> reportLeadByMonth(String date) {
-		return reportDao.reportLeadByMonth(date);
+	public List<CrmLead> reportLeadByMonth(String date, MeDataSource dataSource) {
+		return reportDao.reportLeadByMonth(date, dataSource);
 	}
 
 	@Override
-	public List<Map<String, Object>> reportMarketingLeadTrendsByStatus() {
-		return reportDao.reportMarketingLeadTrendsByStatus();
+	public List<Map<String, Object>> reportMarketingLeadTrendsByStatus(MeDataSource dataSource) {
+		return reportDao.reportMarketingLeadTrendsByStatus(dataSource);
 	}
 
 	@Override
-	public List<CrmLead> reportMarketingLeadByCampaigns() {
-		return reportDao.reportMarketingLeadByCampaigns();
+	public List<CrmLead> reportMarketingLeadByCampaigns(MeDataSource dataSource) {
+		return reportDao.reportMarketingLeadByCampaigns(dataSource);
 	}
 
 	@Override
-	public List<CrmLead> reportMarketingLeadByIndustry() {
-		return reportDao.reportMarketingLeadByIndustry();
+	public List<CrmLead> reportMarketingLeadByIndustry(MeDataSource dataSource) {
+		return reportDao.reportMarketingLeadByIndustry(dataSource);
 	}
 
 	@Override
-	public List<CrmLead> reportMarketingLeadBySource() {
-		return reportDao.reportMarketingLeadBySource();
+	public List<CrmLead> reportMarketingLeadBySource(MeDataSource dataSource) {
+		return reportDao.reportMarketingLeadBySource(dataSource);
 	}
 
 	@Override
-	public List<CrmLead> reportMarketingLeadByConverted() {
-		return reportDao.reportMarketingLeadByConverted();
+	public List<CrmLead> reportMarketingLeadByConverted(MeDataSource dataSource) {
+		return reportDao.reportMarketingLeadByConverted(dataSource);
 	}
 
 }

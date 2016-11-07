@@ -20,7 +20,7 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 	@Override
 	public boolean addCampaignType(CrmCampaignType type) {
 
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(type);
@@ -38,7 +38,7 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 	@Override
 	public boolean updateCampaignType(CrmCampaignType type) {
 
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(type);
@@ -54,7 +54,7 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 
 	@Override
 	public String deleteCampaignType(CrmCampaignType type) {
-		Session session = HibernateSessionFactory.getSessionFactory(type.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(type);
@@ -78,7 +78,7 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCampaignType> listAllCampaignType(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCampaignType.class);
 			criteria.addOrder(Order.asc("typeID"));
@@ -96,7 +96,7 @@ public class CrmCampaignTypeDaoImpl implements CrmCampaignTypeDao {
 
 	@Override
 	public CrmCampaignType findCampaignTypeById(int typeID, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmCampaignType) session.get(CrmCampaignType.class, typeID);
 		} catch (Exception e) {

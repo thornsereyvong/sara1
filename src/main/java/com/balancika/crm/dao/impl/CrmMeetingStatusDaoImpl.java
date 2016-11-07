@@ -19,7 +19,7 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 
 	@Override
 	public boolean insertMeetingStatus(CrmMeetingStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -36,7 +36,7 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 
 	@Override
 	public boolean updateMeetingStatus(CrmMeetingStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -53,7 +53,7 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 
 	@Override
 	public String deleteMeetingStatus(CrmMeetingStatus status) {
-		Session session = HibernateSessionFactory.getSessionFactory(status.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.delete(status);
@@ -74,7 +74,7 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 
 	@Override
 	public CrmMeetingStatus findMeetingStatusById(int statusId, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmMeetingStatus.class);
 			criteria.add(Restrictions.eq("statusId", statusId));
@@ -91,7 +91,7 @@ public class CrmMeetingStatusDaoImpl implements CrmMeetingStatusDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeetingStatus> listMeetingStatus(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmMeetingStatus.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);

@@ -23,7 +23,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 	
 	@Override
 	public boolean insertEventLocation(CrmEventLocation location) {
-		Session session = HibernateSessionFactory.getSessionFactory(location.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			location.setLoId(IdAutoGenerator("LOC"));
@@ -42,7 +42,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 
 	@Override
 	public boolean updateEventLocation(CrmEventLocation location) {
-		Session session = HibernateSessionFactory.getSessionFactory(location.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			session.update(location);
@@ -58,7 +58,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 
 	@Override
 	public String deleteEventLocation(CrmEventLocation location) {
-		Session session = HibernateSessionFactory.getSessionFactory(location.getMeDataSource()).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()).openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query  = session.createSQLQuery("DELETE FROM crm_location WHERE LO_ID = :loId");
@@ -88,7 +88,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmEventLocation> listEventLocations(MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmEventLocation.class);
 			criteria.addOrder(Order.asc("loId"));
@@ -105,7 +105,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 
 	@Override
 	public CrmEventLocation findEventLocationById(String id, MeDataSource dataSource) {
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		
 		try {
 			Criteria criteria = session.createCriteria(CrmEventLocation.class);

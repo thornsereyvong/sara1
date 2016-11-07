@@ -18,7 +18,7 @@ import com.balancika.crm.model.MeDataSource;
 public class CrmModule {
 
 	public List<?> listModuleDetailsByModuleName(String module, MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listModuleDetailsByModuleName(:module)");
 			query.setParameter("module", module);
@@ -35,7 +35,7 @@ public class CrmModule {
 	
 	@SuppressWarnings("unchecked")
 	public List<Object> listSystemModules(MeDataSource dataSource){
-		Session session = HibernateSessionFactory.getSessionFactory(dataSource).openSession();
+		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listSystemModules()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);

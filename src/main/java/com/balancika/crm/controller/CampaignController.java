@@ -255,7 +255,7 @@ public class CampaignController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT)
+	@RequestMapping(value="/edit", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> updateCampaign(@RequestBody CrmCampaign campaign) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(campaignService.updateCampaign(campaign) == false){
@@ -268,7 +268,7 @@ public class CampaignController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove/{campId}", method = RequestMethod.POST)
+	@RequestMapping(value="/remove", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> deleteCampaign(@PathVariable("campId") String campId, @RequestBody MeDataSource dataSource) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(campaignService.deleteCampaign(campId, dataSource).equalsIgnoreCase("OK")){
