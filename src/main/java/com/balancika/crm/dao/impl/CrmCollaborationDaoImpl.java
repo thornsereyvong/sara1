@@ -9,6 +9,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,21 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 	
 	@Autowired
 	private CrmLikeDao likeDao;
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertCollaboration(CrmCollaboration collaboration) {
-		Session session = new HibernateSessionFactory().getSessionFactory(collaboration.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(collaboration.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			collaboration.setColCreateDate(LocalDateTime.now());
@@ -43,11 +55,13 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			e.printStackTrace();
 		}
 		return false;
@@ -55,18 +69,21 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 
 	@Override
 	public boolean updateCollaboration(CrmCollaboration collaboration) {
-		Session session = new HibernateSessionFactory().getSessionFactory(collaboration.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(collaboration.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(collaboration);
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			e.printStackTrace();
 		}
 		return false;
@@ -74,18 +91,21 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 
 	@Override
 	public boolean deleteCollaboration(CrmCollaboration collaboration) {
-		Session session = new HibernateSessionFactory().getSessionFactory(collaboration.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(collaboration.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(collaboration);
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			e.printStackTrace();
 		}
 		return false;
@@ -94,7 +114,8 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCollaboration> listCollaborations(String moduleId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		List<CrmCollaboration> collaborations = new ArrayList<CrmCollaboration>();
 		try {
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
@@ -116,13 +137,15 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmCollaboration findCollaborationById(int collapId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCollaboration.class);
 			criteria.add(Restrictions.eq("colId", collapId));
@@ -134,6 +157,7 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -141,7 +165,8 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Map<String, Object>> listAllCollaboration(String username, String moduleType, String moduleId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listAllCollaborationRelatedToModule(:username, :moduleType, :moduleId)");
 			query.setParameter("username", username);
@@ -155,6 +180,7 @@ public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

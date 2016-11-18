@@ -11,6 +11,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -28,11 +29,22 @@ import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
 public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listQuoteStartupPage(MeDataSource dataSource) {	
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCustomer.class, "cust");
 			criteria.setProjection(Projections.projectionList()
@@ -74,6 +86,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		
 		return null;
@@ -81,7 +94,8 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmShipAddress> listShipAdressesByCustId(String custId, MeDataSource dataSource){
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmShipAddress.class);
 			criteria.add(Restrictions.eq("docId", custId));
@@ -93,6 +107,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -100,7 +115,8 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> findItemChange(String priceCode, String itemId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL spItemChange(:priceCode, :itemId)");
 			query.setParameter("priceCode", priceCode);
@@ -112,6 +128,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -119,7 +136,8 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> findQuantityAvailable(String itemId, String locationId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("SELECT Qty FROM tbluptodate WHERE ItemID = :itemId AND LocationID = :locationId ;");
 			query.setParameter("itemId",itemId);
@@ -131,18 +149,23 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public boolean insertQuote(Quote quote) {
-		Session session = new HibernateSessionFactory().getSessionFactory(quote.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(quote.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			String quoteId = "";
-			if(quote.getSaleId().equalsIgnoreCase("")){
-				quoteId = ameIdAutoGenerator("QUOTE");
+			if(quote.getSaleId().equalsIgnoreCase("") || quote.getSaleId() == null){
+				quoteId = ameIdAutoGenerator("QUOTE", quote.getMeDataSource());
+				if(checkQuoteIdExist(quoteId, quote.getMeDataSource()).equals("EXIST")){
+					quoteId = ameIdAutoGenerator("QUOTE", quote.getMeDataSource());
+				}
 			}else{
 				quoteId = quote.getSaleId();
 			}
@@ -165,6 +188,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			} catch (PersistenceException e) {
 				session.getTransaction().rollback();
 				session.close();
+				sessionFactory.close();
 				return false;
 			}
 			
@@ -172,19 +196,22 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateQuote(Quote quote) {
-		Session session = new HibernateSessionFactory().getSessionFactory(quote.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(quote.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			quote.setPostStatus("Open");
@@ -211,19 +238,22 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteQuote(Quote quote) {
-		Session session = new HibernateSessionFactory().getSessionFactory(quote.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(quote.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM tblsbquotedetails WHERE SalID = :quoteId ;");
@@ -234,19 +264,22 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public Quote findQuoteById(String quoteId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(Quote.class);
@@ -255,11 +288,13 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			quote.setQuoteDetails(lisQuoteDetails(quoteId, dataSource));
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return quote;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		
 		return null;
@@ -267,7 +302,8 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	
 	@SuppressWarnings("unchecked")
 	public List<QuoteDetails> lisQuoteDetails(String quoteId, MeDataSource dataSource){
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("SELECT SalID AS saleId, LineNo AS lineNo, ItemID AS itemId,"
 					+ "UomID AS uomId, LocationID AS locationId, SalQty AS saleQuantity, UnitPrice AS unitPrice, TotalAmt AS totalAmt, "
@@ -283,6 +319,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -296,7 +333,8 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 
 	@Override
 	public String checkQuoteIdExist(String quoteId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(Quote.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("saleId"), "quoteId"));
@@ -310,6 +348,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -317,7 +356,8 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Quote> listQuotes(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listQuotes()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -327,6 +367,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -340,7 +381,8 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Quote> listCustomFieldOfQuotes(String opId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfQuotations(:opId)");
 			query.setParameter("opId", opId);
@@ -351,26 +393,28 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 	
 	
 	private void deleteOpportunityQuote(String quoteId, MeDataSource dataSource){
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_quote WHERE QuoteID = :quoteId ;");
 			query.setParameter("quoteId", quoteId);
 			query.executeUpdate();
 			session.getTransaction().commit();
-			session.close();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-			session.close();
+			
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +16,21 @@ import com.balancika.crm.model.MeDataSource;
 @Repository
 public class CrmIndustryDaoImpl implements CrmIndustryDao {
 
+	private SessionFactory sessionFactory;
+	
+	
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@Override
 	public boolean insertIndustry(CrmIndustry industry) {
-		Session session = new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(industry);
@@ -28,13 +41,15 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateIndustry(CrmIndustry industry) {
-		Session session = new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(industry);
@@ -45,13 +60,15 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteIndustry(CrmIndustry industry) {
-		Session session = new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(industry.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(industry);
@@ -62,6 +79,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -69,7 +87,8 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmIndustry> listIndustries(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmIndustry.class);
 			criteria.addOrder(Order.asc("industID"));
@@ -80,13 +99,15 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmIndustry finIndustryById(int industID, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmIndustry) session.get(CrmIndustry.class, industID);
 		} catch (Exception e) {
@@ -94,6 +115,7 @@ public class CrmIndustryDaoImpl implements CrmIndustryDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

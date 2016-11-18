@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
@@ -15,10 +16,21 @@ import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertOpportunityStage(CrmOpportunityStage opStage) {
-		Session session = new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(opStage);
@@ -29,13 +41,15 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateOpportunityStage(CrmOpportunityStage opStage) {
-		Session session = new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(opStage);
@@ -46,13 +60,15 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public String deleteOpportunityStage(CrmOpportunityStage opStage) {
-		Session session = new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(opStage.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(opStage);
@@ -68,6 +84,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return "FAILED";
 	}
@@ -75,7 +92,8 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmOpportunityStage> listOpportunityStages(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityStage.class);
 			criteria.addOrder(Order.asc("osId"));
@@ -86,13 +104,15 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmOpportunityStage findOpportunityStage(int opStageId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmOpportunityStage)session.get(CrmOpportunityStage.class, opStageId);
 		} catch (Exception e) {
@@ -100,6 +120,7 @@ public class CrmOpportunityStageDaoImpl implements CrmOpportunityStageDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

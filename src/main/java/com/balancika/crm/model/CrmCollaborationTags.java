@@ -8,8 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name="crm_colllaboration_tags")
@@ -25,7 +25,7 @@ public class CrmCollaborationTags implements Serializable{
 	@Column(name="username")
 	private String username;
 	
-	@Autowired
+	@Transient
 	private MeDataSource meDataSource;
 	
 	public int getTagId() {

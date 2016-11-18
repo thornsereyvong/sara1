@@ -40,13 +40,13 @@ public class CrmCallServiceImpl implements CrmCallService{
 	}
 
 	@Override
-	public Object findCallById(CrmCall call) {
-		return callDao.findCallById(call);
+	public Object findCallById(String callId, MeDataSource dataSource) {
+		return callDao.findCallById(callId, dataSource);
 	}
 
 	@Override
-	public CrmCall listCallStructureDetailsById(CrmCall call) {
-		return callDao.listCallStructureDetailsById(call);
+	public CrmCall listCallStructureDetailsById(String callId, MeDataSource dataSource) {
+		return callDao.listCallStructureDetailsById(callId, dataSource);
 	}
 
 	@Override

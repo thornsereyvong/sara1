@@ -9,6 +9,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -21,14 +22,26 @@ import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
 public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertCall(CrmCall call) {
-		Session session = new HibernateSessionFactory().getSessionFactory(call.getMeDataSource()).openSession();
+		System.out.println(call.getMeDataSource().getDb());
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(call.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
-			call.setCallId(IdAutoGenerator("AC_CL"));
+			call.setCallId(IdAutoGenerator("AC_CL", call.getMeDataSource()));
 			call.setCallStartDate(toLocalDateTime.convertStringToLocalDateTime(call.getStartDate()));
 			call.setCallCreateDate(LocalDateTime.now());
 			session.save(call);
@@ -40,14 +53,17 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} catch (ConstraintViolationException e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateCall(CrmCall call) {
-		Session session = new HibernateSessionFactory().getSessionFactory(call.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(call.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
@@ -60,14 +76,17 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} catch (ConstraintViolationException e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteCall(CrmCall call) {
-		Session session = new HibernateSessionFactory().getSessionFactory(call.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(call.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query 	= session.createSQLQuery("DELETE FROM crm_call WHERE CL_ID = :callId");
 			query.setParameter("callId", call.getCallId());
@@ -80,6 +99,7 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -87,7 +107,8 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCall> listCalls(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmCalls()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -97,16 +118,18 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
-	public Object findCallById(CrmCall call) {
-		Session session = new HibernateSessionFactory().getSessionFactory(call.getMeDataSource()).openSession();
+	public Object findCallById(String callId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmCallById(:callId)");
-			query.setParameter("callId", call.getCallId());
+			query.setParameter("callId", callId);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return query.uniqueResult();
 		} catch (Exception e) {
@@ -114,17 +137,19 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
-	public CrmCall listCallStructureDetailsById(CrmCall call) {
-		Session session = new HibernateSessionFactory().getSessionFactory(call.getMeDataSource()).openSession();
+	public CrmCall listCallStructureDetailsById(String callId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmCall.class);
-			criteria.add(Restrictions.eq("callId", call.getCallId()));
+			criteria.add(Restrictions.eq("callId", callId));
 			session.getTransaction().commit();
 			return (CrmCall) criteria.uniqueResult();
 		} catch (HibernateException e) {
@@ -132,6 +157,7 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -139,7 +165,8 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCall> listCallsRelatedToLead(String leadId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToLead(:leadId)");
 			query.setParameter("leadId", leadId);
@@ -150,6 +177,7 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} finally{
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -157,7 +185,8 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCall> listCallsRelatedToOpportunity(String opId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToOpportunity(:opId)");
 			query.setParameter("opId", opId);
@@ -168,6 +197,7 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -175,7 +205,8 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCall> listCallsRelatedToModule(String moduleId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCallsRelatedToModule(:moduleId)");
 			query.setParameter("moduleId", moduleId);
@@ -186,6 +217,7 @@ public class CrmCallDaoImpl extends CrmIdGenerator implements CrmCallDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

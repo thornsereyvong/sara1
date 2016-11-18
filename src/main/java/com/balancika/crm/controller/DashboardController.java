@@ -22,7 +22,7 @@ public class DashboardController {
 	@Autowired
 	private CrmDashboardService dashboardService;
 	
-	@RequestMapping(value ="/view/{username}", method = RequestMethod.GET)
+	@RequestMapping(value ="/view/{username}", method = RequestMethod.POST)
 	private ResponseEntity<Map<String, Object>> viewDashboard(@PathVariable("username") String username, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("DASHBOARD", dashboardService.viewDashboard(username, dataSource));

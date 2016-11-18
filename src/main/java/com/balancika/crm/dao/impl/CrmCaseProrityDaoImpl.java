@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
 
@@ -15,10 +16,21 @@ import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertCasePriority(CrmCasePriority casePriority) {
-		Session session = new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(casePriority);
@@ -29,13 +41,15 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 		} finally{
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateCasePriority(CrmCasePriority casePriority) {
-		Session session = new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(casePriority);
@@ -46,13 +60,15 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 		}finally{
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public String deleteCasePriority(CrmCasePriority casePriority) {
-		Session session = new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(casePriority.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(casePriority);
@@ -67,7 +83,9 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 			e.printStackTrace();
 			return "FAILED";
 		}finally{
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		
 	}
@@ -75,7 +93,8 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCasePriority> listCasePriorities(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCasePriority.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -85,13 +104,15 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmCasePriority findCasePriorityById(int priorityId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmCasePriority) session.get(CrmCasePriority.class, priorityId);
 		} catch (Exception e) {
@@ -99,6 +120,7 @@ public class CrmCaseProrityDaoImpl implements CrmCasePriorityDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

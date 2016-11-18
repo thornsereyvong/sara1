@@ -10,8 +10,8 @@ public interface CrmCallService {
 	boolean updateCall(CrmCall call);
 	boolean deleteCall(CrmCall call);
 	List<CrmCall> listCalls(MeDataSource dataSource);
-	Object findCallById(CrmCall call);
-	CrmCall listCallStructureDetailsById(CrmCall call);
+	Object findCallById(String callId, MeDataSource dataSource);
+	CrmCall listCallStructureDetailsById(String callId, MeDataSource dataSource);
 	List<CrmCall> listCallsRelatedToLead(String leadId, MeDataSource dataSource);
 	List<CrmCall> listCallsRelatedToOpportunity(String opId, MeDataSource dataSource);
 	List<CrmCall> listCallsRelatedToModule(String moduleId, MeDataSource dataSource);

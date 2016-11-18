@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,11 +25,22 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 
 	@Autowired
 	private Company config;
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeeting> listMeetings(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try{
 		SQLQuery query = session.createSQLQuery("CALL listCrmMeetings()");
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -38,17 +50,19 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public boolean insertMeeting(CrmMeeting meeting) {
-		Session session = new HibernateSessionFactory().getSessionFactory(meeting.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(meeting.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
-			meeting.setMeetingId(IdAutoGenerator("AC_ME"));
+			meeting.setMeetingId(IdAutoGenerator("AC_ME", meeting.getMeDataSource()));
 			meeting.setMeetingStartDate(toLocalDateTime.convertStringToLocalDateTime(meeting.getStartDate()));
 			meeting.setMeetingEndDate(toLocalDateTime.convertStringToLocalDateTime(meeting.getEndDate()));
 			meeting.setMeetingCreateDate(LocalDateTime.now());
@@ -60,13 +74,15 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateMeeting(CrmMeeting meeting) {
-		Session session = new HibernateSessionFactory().getSessionFactory(meeting.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(meeting.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
@@ -81,13 +97,15 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteMeeting(CrmMeeting meeting) {
-		Session session = new HibernateSessionFactory().getSessionFactory(meeting.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(meeting.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(meeting);
@@ -98,13 +116,15 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public Object findMeetingById(String meetingId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(sessionFactory);
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmMeetingById(:meetingId)");
 			query.setParameter("meetingId", meetingId);
@@ -115,13 +135,15 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmMeeting findMeetingDetailsById(String meetingId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmMeeting.class);
 			criteria.add(Restrictions.eq("meetingId", meetingId));
@@ -131,6 +153,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 		
@@ -139,7 +162,8 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeeting> listMeetingsRelatedToLead(String leadId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -150,6 +174,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -157,7 +182,8 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToOpportunity(:opId)");
 				query.setParameter("opId", opId);
@@ -168,6 +194,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -175,7 +202,8 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmMeeting> listMeetingsRelatedToModule(String moduleId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listMeetingsRelatedToModule(:moduleId)");
 				query.setParameter("moduleId", moduleId);
@@ -186,6 +214,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

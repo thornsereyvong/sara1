@@ -18,11 +18,9 @@ public class CrmShipAddress implements Serializable{
 	@Column(name="moduleid", nullable = false)
 	private String moduleId;
 	
-	@Id
 	@Column(name="docid")
 	private String docId;
 	
-	@Id
 	@Column(name="shipId")
 	private String shipId;
 	

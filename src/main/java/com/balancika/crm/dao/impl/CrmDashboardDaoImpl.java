@@ -8,6 +8,7 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
@@ -16,71 +17,91 @@ import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmDashboardDaoImpl implements CrmDashboardDao{
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object viewDashboard(String username, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
-		SQLQuery query = session.createSQLQuery("CALL loadCrmDashboardForSpecificUser(:username)");
-		query.setParameter("username", username);
-		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		List<Map<String, Object>> maps = query.list();
-		Map<String, Object> objMap = new HashMap<String, Object>();
-		
-		List<Map<String, Object>> meetingList = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> taskList = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> callList = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> noteList = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> eventList = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> locationList = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> leadList = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> campaignList = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> caseList = new ArrayList<Map<String,Object>>();
-		for(Map<String, Object> map : maps){
-			//System.err.println(map.get("KEY")+" "+map.get("VAL"));
-			switch (map.get("KEY").toString()) {
-				case "MEETING":
-					meetingList.add(generateMeetingMap(map.get("VAL").toString()));
-					break;
-				case "TASK":
-					taskList.add(generateTaskMap(map.get("VAL").toString()));
-					break;
-				case "CALL":
-					callList.add(generateCallMap(map.get("VAL").toString()));
-					break;
-				case "NOTE":
-					noteList.add(generateNoteMap(map.get("VAL").toString()));
-					break;
-				case "EVENT":
-					eventList.add(generateEventMap(map.get("VAL").toString()));
-					break;
-				case "LOCATION":
-					locationList.add(generateLocationMap(map.get("VAL").toString()));
-					break;
-				case "LEAD":
-					leadList.add(generateLeadMap(map.get("VAL").toString()));
-					break;
-				case "CAMPAIGN":
-					campaignList.add(generateCampaignMap(map.get("VAL").toString()));
-					break;
-				case "CASE":
-					caseList.add(generateCaseMap(map.get("VAL").toString()));
-					break;
-				default:
-					break;
-			}
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL loadCrmDashboardForSpecificUser(:username)");
+			query.setParameter("username", username);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			List<Map<String, Object>> maps = query.list();
+			Map<String, Object> objMap = new HashMap<String, Object>();
 			
+			List<Map<String, Object>> meetingList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> taskList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> callList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> noteList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> eventList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> locationList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> leadList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> campaignList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> caseList = new ArrayList<Map<String,Object>>();
+			for(Map<String, Object> map : maps){
+				//System.err.println(map.get("KEY")+" "+map.get("VAL"));
+				switch (map.get("KEY").toString()) {
+					case "MEETING":
+						meetingList.add(generateMeetingMap(map.get("VAL").toString()));
+						break;
+					case "TASK":
+						taskList.add(generateTaskMap(map.get("VAL").toString()));
+						break;
+					case "CALL":
+						callList.add(generateCallMap(map.get("VAL").toString()));
+						break;
+					case "NOTE":
+						noteList.add(generateNoteMap(map.get("VAL").toString()));
+						break;
+					case "EVENT":
+						eventList.add(generateEventMap(map.get("VAL").toString()));
+						break;
+					case "LOCATION":
+						locationList.add(generateLocationMap(map.get("VAL").toString()));
+						break;
+					case "LEAD":
+						leadList.add(generateLeadMap(map.get("VAL").toString()));
+						break;
+					case "CAMPAIGN":
+						campaignList.add(generateCampaignMap(map.get("VAL").toString()));
+						break;
+					case "CASE":
+						caseList.add(generateCaseMap(map.get("VAL").toString()));
+						break;
+					default:
+						break;
+				}
+				
+			}
+			objMap.put("MEETINGS", meetingList);
+			objMap.put("TASKS", taskList);
+			objMap.put("CALLS", callList);
+			objMap.put("NOTES", noteList);
+			objMap.put("EVENTS", eventList);
+			objMap.put("LOCATIONS", locationList);
+			objMap.put("LEADS", leadList);
+			objMap.put("CAMPAIGNS", campaignList);
+			objMap.put("CASES", caseList);
+			return objMap;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
-		objMap.put("MEETINGS", meetingList);
-		objMap.put("TASKS", taskList);
-		objMap.put("CALLS", callList);
-		objMap.put("NOTES", noteList);
-		objMap.put("EVENTS", eventList);
-		objMap.put("LOCATIONS", locationList);
-		objMap.put("LEADS", leadList);
-		objMap.put("CAMPAIGNS", campaignList);
-		objMap.put("CASES", caseList);
-		return objMap;
+		return null;
 	}
 	
 	private Map<String, Object> generateMeetingMap(String meetings){

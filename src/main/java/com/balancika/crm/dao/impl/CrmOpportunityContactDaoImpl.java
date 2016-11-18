@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -16,63 +17,83 @@ import com.balancika.crm.model.MeDataSource;
 @Repository
 public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 
+	private SessionFactory sessionFactory;
+	
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@Override
 	public boolean insterOpportunityContact(CrmOpportunityContact opCon) {
-		Session session = new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(opCon);
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateOpportunityContact(CrmOpportunityContact opCon) {
-		Session session = new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(opCon);
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteOpportunityContact(CrmOpportunityContact opCon) {
-		Session session = new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(opCon.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(opCon);
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public CrmOpportunityContact findOpportunityContactById(int opConId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory( new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmOpportunityContact)session.get(CrmOpportunityContact.class, opConId);
 		} catch (HibernateException e) {
@@ -80,6 +101,7 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 		
@@ -87,7 +109,8 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 
 	@Override
 	public Integer checkOpportunityContactIsExist(String opId, String conId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory( new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmOpportunityContact.class);
 			criteria.add(Restrictions.and(Restrictions.eq("opId", opId),Restrictions.eq("conId", conId)));
@@ -101,13 +124,15 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public Object viewOpportunityContactById(int opConId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory( new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL viewOpportunityById(:opConId)");
 			query.setParameter("opConId", opConId);
@@ -118,6 +143,7 @@ public class CrmOpportunityContactDaoImpl implements CrmOpportunityContactDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

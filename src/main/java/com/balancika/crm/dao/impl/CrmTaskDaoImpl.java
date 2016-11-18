@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
@@ -19,13 +20,24 @@ import com.balancika.crm.utilities.CrmIdGenerator;
 @Repository
 public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 
+	private SessionFactory sessionFactory;
+	
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@Override
 	public boolean insertTask(CrmTask task) {
-		Session session = new HibernateSessionFactory().getSessionFactory(task.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(task.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
-			task.setTaskId(IdAutoGenerator("AC_TA"));
+			task.setTaskId(IdAutoGenerator("AC_TA", task.getMeDataSource()));
 			task.setTaskStartDate(toLocalDateTime.convertStringToLocalDateTime(task.getStartDate()));
 			task.setTaskDueDate(toLocalDateTime.convertStringToLocalDateTime(task.getDueDate()));
 			task.setTaskCreateDate(LocalDateTime.now());
@@ -38,13 +50,15 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateTask(CrmTask task) {
-		Session session = new HibernateSessionFactory().getSessionFactory(task.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(task.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
@@ -59,13 +73,15 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteTask(CrmTask task) {
-		Session session = new HibernateSessionFactory().getSessionFactory(task.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(task.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(task);
@@ -76,6 +92,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -83,7 +100,8 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmTask> listTasks(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmTasks()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -93,13 +111,15 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public Object findTaskById(String taskId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmTaskById(:taskId)");
 			query.setParameter("taskId", taskId);
@@ -110,6 +130,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 		
@@ -117,7 +138,8 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 
 	@Override
 	public CrmTask findTaskDetailsById(String taskId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmTask)session.get(CrmTask.class, taskId);
 		} catch (Exception e) {
@@ -125,6 +147,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 		
@@ -133,7 +156,8 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmTask> listTasksRelatedToLead(String leadId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -144,6 +168,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -151,7 +176,8 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmTask> listTasksRelatedToOpportunity(String opId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToOpportunity(:opId)");
 				query.setParameter("opId", opId);
@@ -162,6 +188,7 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -169,7 +196,8 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmTask> listTasksRelatedToModule(String moduleId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listTasksRelatedToModule(:moduleId)");
 			query.setParameter("moduleId", moduleId);
@@ -180,8 +208,8 @@ public class CrmTaskDaoImpl extends CrmIdGenerator implements CrmTaskDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
-
 }

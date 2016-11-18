@@ -41,10 +41,10 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/view", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCallById(@RequestBody CrmCall cal){
+	@RequestMapping(value = "/view/{callId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findCallById(@RequestBody MeDataSource dataSource, @PathVariable("callId") String callId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		Object call = callService.findCallById(cal);
+		Object call = callService.findCallById(callId, dataSource);
 		if(call != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -106,10 +106,10 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/details", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findCallDetailsById(@RequestBody CrmCall cal){
+	@RequestMapping(value = "/list/details/{callId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findCallDetailsById(@RequestBody MeDataSource dataSource, @PathVariable("callId") String callId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCall call = callService.listCallStructureDetailsById(cal);
+		CrmCall call = callService.listCallStructureDetailsById(callId, dataSource);
 		if(call != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -137,7 +137,7 @@ public class CallController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateCall(@RequestBody CrmCall call){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(callService.updateCall(call) == true){

@@ -34,15 +34,23 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	
 	private Session session = null;
 	
-	@Autowired
 	private SessionFactory sessionFactory;
 	
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@Override
 	public boolean isInserted(CrmUser user) {
-		session = new HibernateSessionFactory().getSessionFactory(user.getDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(user.getDataSource()));
+		session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			user.setUserID(IdAutoGenerator("UM"));	
+			user.setUserID(IdAutoGenerator("UM", user.getDataSource()));	
 			user.setPassword(new PasswordEncrypt().BalEncrypt(user.getPassword()));
 			session.save(user);
 			session.getTransaction().commit();
@@ -53,13 +61,15 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean isUpdated(CrmUser user) {
-		session = new HibernateSessionFactory().getSessionFactory(user.getDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(user.getDataSource()));
+		session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(user);
@@ -70,13 +80,15 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean isDeleted(CrmUser user) {
-		session = new HibernateSessionFactory().getSessionFactory(user.getDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(user.getDataSource()));
+		session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(user);
@@ -87,13 +99,15 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public CrmUser findUserByUsername(String username, MeDataSource dataSource) {
-		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmUser.class);
 			criteria.add(Restrictions.eq("username", username));	
@@ -107,6 +121,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -114,7 +129,8 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmUser> listAllUsers(MeDataSource meDataSource) {
-		session = new HibernateSessionFactory().getSessionFactory(meDataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(meDataSource));
+		session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmUser.class, "user").createAlias("user.role", "role");
 			criteria.setProjection(Projections.projectionList()
@@ -134,24 +150,28 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmUser findUserById(String userID, MeDataSource dataSource) {
-		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			CrmUser result = (CrmUser) session.get(CrmUser.class, userID);
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -159,7 +179,8 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmUser> listSubordinateUserByUsername(String username, MeDataSource dataSource) {
-		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
 		try {
 			DetachedCriteria subCriteria = DetachedCriteria.forClass(CrmUser.class);
 			subCriteria.add(Restrictions.eq("username", username));
@@ -177,6 +198,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -184,7 +206,8 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	@Override
 	public CrmUser webLogin(CrmUser user) {
 		try {
-			session =  new HibernateSessionFactory().getSessionFactory(user.getDataSource()).openSession();
+			setSessionFactory(new HibernateSessionFactory().getSessionFactory(user.getDataSource()));
+			session = getSessionFactory().openSession();
 			Criteria criteria = session.createCriteria(CrmUser.class);
 			criteria.add(Restrictions.eq("username", user.getUsername()));
 			criteria.add(Restrictions.eq("status", 1));
@@ -195,14 +218,17 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public String checkChildOfUser(String username, MeDataSource dataSource) {
-		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("CALL checkChildOfUser(:username)");
@@ -214,7 +240,9 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return "NOT_EXIST";
 	}
@@ -222,7 +250,8 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listAllUsernameAndId(MeDataSource dataSource) {
-		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmUser.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("userID"), "userID").add(Projections.property("username"), "username"));
@@ -235,6 +264,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

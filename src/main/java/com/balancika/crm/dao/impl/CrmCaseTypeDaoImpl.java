@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
@@ -17,10 +18,20 @@ import com.balancika.crm.model.MeDataSource;
 @Repository
 public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertCaseType(CrmCaseType type) {
-		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(type);
@@ -31,13 +42,15 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateCaseType(CrmCaseType type) {
-		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(type);
@@ -48,13 +61,15 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public String deleteCaseType(CrmCaseType type) {
-		Session session = new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(type.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(type);
@@ -70,6 +85,7 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return "FAILED";
 
@@ -78,7 +94,8 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCaseType> listCaseTypes(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCaseType.class);
 			criteria.addOrder(Order.asc("caseTypeId"));
@@ -89,13 +106,15 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmCaseType findCaseTypeById(int typeId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmCaseType) session.get(CrmCaseType.class, typeId);
 		} catch (Exception e) {
@@ -103,8 +122,8 @@ public class CrmCaseTypeDaoImpl implements CrmCaseTypeDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
-
 }

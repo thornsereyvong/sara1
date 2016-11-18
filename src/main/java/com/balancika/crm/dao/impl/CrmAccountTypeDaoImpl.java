@@ -7,8 +7,7 @@ import javax.validation.ConstraintViolationException;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
@@ -19,12 +18,20 @@ import com.balancika.crm.model.MeDataSource;
 @Repository
 public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
-	@Autowired
-	private HibernateTransactionManager transactionManager;
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertAccountType(CrmAccountType accountType) {
-		Session session = new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()).openSession();//transactionManager.getSessionFactory().openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(accountType);
@@ -36,14 +43,17 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 			System.out.println("Account Type Name is Empty!");
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateAccountType(CrmAccountType accountType) {
-		Session session = new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(accountType);
@@ -52,14 +62,17 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteAccountType(CrmAccountType accountType) {
-		Session session = new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(accountType);
@@ -69,7 +82,9 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 			session.getTransaction().rollback();
 			System.out.println("Your AccountTypeId Not Exist!");
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -77,7 +92,8 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmAccountType> listAccountTypes(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmAccountType.class);
@@ -89,13 +105,15 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmAccountType findAccountTypeById(CrmAccountType accountType) {
-		Session session = new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmAccountType) session.get(CrmAccountType.class, accountType.getAccountID());
 		} catch (Exception e) {
@@ -103,6 +121,7 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
