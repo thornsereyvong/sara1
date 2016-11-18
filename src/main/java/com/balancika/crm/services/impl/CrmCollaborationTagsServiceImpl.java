@@ -20,8 +20,8 @@ public class CrmCollaborationTagsServiceImpl implements CrmCollaborationTagsServ
 	private CrmCollaborationTagsDao tagsDao;
 	
 	@Override
-	public boolean insertCollaborationTags(List<CrmCollaborationTags> tags) {
-		return tagsDao.insertCollaborationTags(tags);
+	public boolean insertCollaborationTags(List<CrmCollaborationTags> tags, MeDataSource dataSource) {
+		return tagsDao.insertCollaborationTags(tags, dataSource);
 	}
 
 	@Override

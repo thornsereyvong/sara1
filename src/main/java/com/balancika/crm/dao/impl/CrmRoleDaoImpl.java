@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -18,12 +19,23 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 
 	private Session session;
 	
+	private SessionFactory sessionFactory;
+	
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@Override
 	public boolean isInsertedRole(CrmRole role) {
-		session = new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()));
+		session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			role.setRoleId(IdAutoGenerator("RM"));
+			role.setRoleId(IdAutoGenerator("RM",role.getMeDataSource()));
 			role.setRoleName(role.getRoleName().toUpperCase());
 			session.save(role);
 			session.getTransaction().commit();
@@ -33,13 +45,15 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean isUpdatedRole(CrmRole role) {
-		session = new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()));
+		session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(role);
@@ -50,13 +64,15 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean isDeletedRole(CrmRole role) {
-		session = new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()));
+		session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(role);
@@ -65,14 +81,17 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public CrmRole findRoleById(String roleId, MeDataSource dataSource) {
-		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
 		try {
 			return (CrmRole) session.get(CrmRole.class, roleId);
 		} catch (Exception e) {
@@ -80,6 +99,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 		
@@ -88,7 +108,8 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmRole> listAllRoles(MeDataSource dataSource) {
-		session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmRole.class);
 			criteria.add(Restrictions.eq("roleStatus", 1));
@@ -100,6 +121,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

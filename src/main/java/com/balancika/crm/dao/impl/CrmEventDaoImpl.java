@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -19,13 +20,24 @@ import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
 public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertEvent(CrmEvent event) {
-		Session session = new HibernateSessionFactory().getSessionFactory(event.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(event.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			event.setEvId(IdAutoGenerator("AC_EV"));
+			event.setEvId(IdAutoGenerator("AC_EV", event.getMeDataSource()));
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
 			event.setEvStartDate(toLocalDateTime.convertStringToLocalDateTime(event.getStartDate()));
 			event.setEvEndDate(toLocalDateTime.convertStringToLocalDateTime(event.getEndDate()));
@@ -39,13 +51,15 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateEvent(CrmEvent event) {
-		Session session = new HibernateSessionFactory().getSessionFactory(event.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(event.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			DateTimeOperation toLocalDateTime = new DateTimeOperation();
@@ -60,13 +74,15 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteEnvent(CrmEvent event) {
-		Session session = new HibernateSessionFactory().getSessionFactory(event.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(event.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_event WHERE EV_ID = :evId");
 			query.setParameter("evId", event.getEvId());
@@ -78,6 +94,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -85,7 +102,8 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmEvent> listEvents(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmEvents()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -95,13 +113,15 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public Object findEventById(String evId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmEventById(:evId)");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -112,13 +132,15 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmEvent findEventDetailsById(String evId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmEvent.class);
 			criteria.add(Restrictions.eq("evId", evId));
@@ -128,6 +150,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 		
@@ -136,7 +159,8 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmEvent> listEventsRelatedToLead(String leadId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -147,6 +171,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -154,7 +179,8 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmEvent> listEventsRelatedToOpportunity(String opId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedOpportuntiy(:opId)");
 				query.setParameter("opId", opId);
@@ -165,6 +191,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -172,7 +199,8 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmEvent> listEventsRelatedToModule(String moduleId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listEventsRelatedToModule(:moduleId)");
 			query.setParameter("moduleId", moduleId);
@@ -183,6 +211,7 @@ public class CrmEventDaoImpl extends CrmIdGenerator implements CrmEventDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

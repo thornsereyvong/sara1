@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
@@ -16,10 +17,21 @@ import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean addCampaignStatus(CrmCampaignStatus status) {
-		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
 			session.save(status);
@@ -30,13 +42,15 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 		}finally{
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateCampaignStatus(CrmCampaignStatus status) {
-		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
 			session.update(status);
@@ -47,31 +61,36 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 		}finally{
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public String deleteCampaignStatus(CrmCampaignStatus status) {
-		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
 			session.delete(status);
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return "OK";
 		} catch (ConstraintViolationException e){
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return "FOREIGN_KEY_CONSTRAIN";
 		} catch (HibernateException e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return "FAILED";
 		}
 	}
@@ -79,8 +98,8 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmCampaignStatus> listAllCampaignStatus(MeDataSource dataSource) {
-		
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCampaignStatus.class);
 			criteria.addOrder(Order.asc("statusID"));
@@ -91,19 +110,23 @@ public class CrmCampaignStatusDaoImpl implements CrmCampaignStatusDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmCampaignStatus findCampaignStatusById(int statusID, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmCampaignStatus)session.get(CrmCampaignStatus.class, statusID);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

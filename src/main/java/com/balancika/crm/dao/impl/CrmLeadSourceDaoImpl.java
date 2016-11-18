@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
@@ -16,10 +17,21 @@ import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertLeadSource(CrmLeadSource source) {
-		Session session = new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(source);
@@ -30,14 +42,15 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateLeadSource(CrmLeadSource source) {
-
-		Session session = new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(source);
@@ -48,14 +61,15 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public String deleteLeadSource(CrmLeadSource source) {
-
-		Session session = new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(source.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(source);
@@ -71,6 +85,7 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return "FAILED";
 	}
@@ -78,7 +93,8 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLeadSource> getAllLeadSource(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLeadSource.class);
 			criteria.addOrder(Order.asc("sourceID"));
@@ -89,14 +105,15 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmLeadSource findLeadSourceById(int sourceID, MeDataSource dataSource) {
-
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmLeadSource) session.get(CrmLeadSource.class, sourceID);
 		} catch (Exception e) {
@@ -104,8 +121,8 @@ public class CrmLeadSourceDaoImpl implements CrmLeadSourceDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
-
 }

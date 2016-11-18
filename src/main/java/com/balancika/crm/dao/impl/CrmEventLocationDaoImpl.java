@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
@@ -21,12 +22,23 @@ import com.balancika.crm.utilities.CrmIdGenerator;
 @Repository
 public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventLocationDao{
 	
+	private SessionFactory sessionFactory;
+	
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@Override
 	public boolean insertEventLocation(CrmEventLocation location) {
-		Session session = new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			location.setLoId(IdAutoGenerator("LOC"));
+			location.setLoId(IdAutoGenerator("LOC", location.getMeDataSource()));
 			location.setLoCreateDate(new Date());
 			session.save(location);
 			session.getTransaction().commit();
@@ -36,13 +48,15 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateEventLocation(CrmEventLocation location) {
-		Session session = new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(location);
@@ -51,14 +65,17 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 		} finally {
+			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public String deleteEventLocation(CrmEventLocation location) {
-		Session session = new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(location.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query  = session.createSQLQuery("DELETE FROM crm_location WHERE LO_ID = :loId");
@@ -67,6 +84,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 			if(query.executeUpdate() > 0){
 				session.clear();
 				session.close();
+				sessionFactory.close();
 				return "OK";
 			}
 		} catch (ConstraintViolationException ex){
@@ -74,6 +92,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return "FOREIGN_KEY_CONSTRAIN";
 		}
 		catch (HibernateException e) {
@@ -81,6 +100,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return "FAILED";
 	}
@@ -88,7 +108,8 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmEventLocation> listEventLocations(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmEventLocation.class);
 			criteria.addOrder(Order.asc("loId"));
@@ -99,13 +120,15 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmEventLocation findEventLocationById(String id, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		
 		try {
 			Criteria criteria = session.createCriteria(CrmEventLocation.class);
@@ -116,6 +139,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

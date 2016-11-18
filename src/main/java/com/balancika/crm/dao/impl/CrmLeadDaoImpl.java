@@ -9,6 +9,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -41,12 +42,24 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 	@Autowired
 	private CrmMeetingDao meetingDao;
 
+	
+	private SessionFactory sessionFactory;
+	
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@Override
 	public boolean insertLead(CrmLead lead) {
-		Session session = new HibernateSessionFactory().getSessionFactory(lead.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(lead.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			lead.setLeadID(IdAutoGenerator("LE"));
+			lead.setLeadID(IdAutoGenerator("LE", lead.getMeDataSource()));
 			lead.setCreateDate(new Date());
 			session.save(lead);
 			session.getTransaction().commit();
@@ -56,14 +69,15 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateLead(CrmLead lead) {
-
-		Session session = new HibernateSessionFactory().getSessionFactory(lead.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(lead.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(lead);
@@ -74,14 +88,15 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteLead(CrmLead lead) {
-		
-		Session session = new HibernateSessionFactory().getSessionFactory(lead.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(lead.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(lead);
@@ -92,6 +107,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -99,7 +115,8 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLead> getAllLead(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmLeads()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -109,13 +126,15 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public Object findLeadById(String leadID, MeDataSource dataSource) {
-		Session session =  new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session =  getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmLeadById(:leadID)");
 			query.setParameter("leadID", leadID);
@@ -126,13 +145,14 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmLead findLeadDetailById(String leadID, MeDataSource dataSource) {
-		
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session =  new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
 		try {
 			return (CrmLead)session.get(CrmLead.class, leadID);
@@ -141,6 +161,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -148,7 +169,8 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLead> getLeadBySpecificUser(String username, MeDataSource dataSource) {
-		Session session =  new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listLeadWithSpecificUser(:username)");
 			query.setParameter("username", username);
@@ -159,6 +181,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -178,7 +201,8 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 	
 	@SuppressWarnings("unchecked")
 	private List<Object> listActivitesRelatedToLead(String leadId, MeDataSource dataSource) {
-		Session session =  new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listAllActivitiesRelatedToLead(:leadId)");
 				query.setParameter("leadId", leadId);
@@ -189,13 +213,15 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public boolean updateLeadStatusToConverted(String leadID, String custId, String opId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL updateLeadStatusToConverted(:leadId, :custId, :opId)");
 			query.setParameter("leadId", leadID);
@@ -209,8 +235,8 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
-
 }

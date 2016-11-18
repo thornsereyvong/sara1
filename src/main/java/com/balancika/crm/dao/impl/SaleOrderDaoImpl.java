@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -21,17 +22,30 @@ import com.balancika.crm.utilities.CrmIdGenerator;
 @Repository
 public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 	
+	private SessionFactory sessionFactory;
+	
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+
 	@Override
 	public boolean insertSaleOrder(SaleOrder saleOrder) {
-		Session session = new HibernateSessionFactory().getSessionFactory(saleOrder.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(saleOrder.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			String saleId = "";
 			
 			if(saleOrder.getSaleId().equals("") || saleOrder.getSaleId() == null){
-				saleId = ameIdAutoGenerator("AR-SO");
+				saleId = ameIdAutoGenerator("AR-SO", saleOrder.getMeDataSource());
 				if(checkSaleOrderIdExist(saleId, saleOrder.getMeDataSource()).equals("EXIST")){
-					saleId = ameIdAutoGenerator("AR-SO");
+					saleId = ameIdAutoGenerator("AR-SO", saleOrder.getMeDataSource());
 				}
 			}else{
 				saleId = saleOrder.getSaleId();
@@ -45,24 +59,30 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 				session.getTransaction().commit();
 				session.clear();
 				session.close();
+				sessionFactory.close();
 				return true;
 			}else{
 				session.getTransaction().rollback();
 				session.clear();
 				session.close();
+				sessionFactory.close();
 				return false;
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 
 	private boolean insertSaleOrderDetails(List<SaleOrderDetails> saleOrderDetails, String saleId, double disInvPer, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			double disInv;
@@ -81,11 +101,13 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 			session.getTransaction().commit();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			e.printStackTrace();
 		}
 		return false;
@@ -99,7 +121,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 	}
 	
 	private boolean deleteSaleOrderDetails(String saleId, MeDataSource dataSource){
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			String sql = "DELETE FROM tblsaleorderdetails WHERE SalID = :saleId ;";
@@ -108,12 +131,15 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 			session.getTransaction().commit();
 			query.executeUpdate();
 			this.deleteOpportunitySaleOrder(saleId, dataSource);
+			session.clear();
 			session.close();
+			sessionFactory.close();
 			return true;
 		} catch (Exception e) {
 			session.beginTransaction().rollback();
 			session.clear();
 			session.close();
+			sessionFactory.close();
 			e.printStackTrace();
 		}
 		return false;
@@ -122,7 +148,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 
 	@Override
 	public boolean updateSaleOrder(SaleOrder saleOrder) {
-		Session session = new HibernateSessionFactory().getSessionFactory(saleOrder.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(saleOrder.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			saleOrder.setPostStatus("Open");
@@ -133,6 +160,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 				if(status == true){
 					session.getTransaction().commit();
 					session.close();
+					sessionFactory.close();
 					return true;
 				}
 			}
@@ -140,6 +168,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 			e.getMessage();
 			session.getTransaction().rollback();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -147,7 +176,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 
 	@Override
 	public boolean deleteSaleOrder(SaleOrder saleOrder) {
-		Session session = new HibernateSessionFactory().getSessionFactory(saleOrder.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(saleOrder.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			if (deleteSaleOrderDetails(saleOrder.getSaleId(), saleOrder.getMeDataSource()) == true) {
@@ -157,12 +187,14 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 				query.executeUpdate();
 				this.deleteOpportunitySaleOrder(saleOrder.getSaleId(), saleOrder.getMeDataSource());
 				session.close();
+				sessionFactory.close();
 				return true;
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();;
 			session.getTransaction().rollback();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -170,7 +202,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 	
 	@SuppressWarnings("unchecked")
 	private List<SaleOrderDetails> listSaleOrderDetailsBySaleId(String saleId, MeDataSource dataSource){
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(SaleOrderDetails.class);
 			criteria.add(Restrictions.eq("saleId", saleId));
@@ -181,13 +214,15 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public SaleOrder findSaleOrderById(String saleId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(SaleOrder.class);
 			criteria.add(Restrictions.eq("saleId", saleId));
@@ -199,6 +234,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 		
@@ -208,7 +244,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listSaleOrders(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listSaleOrders()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -218,6 +255,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -232,7 +270,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 
 	@Override
 	public String checkSaleOrderIdExist(String saleId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(SaleOrder.class);
 			criteria.setProjection(Projections.projectionList().add(Projections.property("saleId")));
@@ -245,6 +284,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return "NOT_EXIST";
 	}
@@ -253,7 +293,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SaleOrder> listSomeFieldsOfSaleOrder(String opId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCustomFieldsOfSaleorder(:opId)");
 			query.setParameter("opId", opId);
@@ -264,6 +305,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -271,7 +313,8 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 
 	@Override
 	public boolean updateSaleOrderPostStatus(String saleId, String status, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("CALL updatePostStatus(:saleId, :postStatus)");
@@ -287,12 +330,14 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 	
 	private void deleteOpportunitySaleOrder(String saleId, MeDataSource dataSource){
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_saleorder WHERE S_O_ID = :saleId ;");
@@ -304,6 +349,7 @@ public class SaleOrderDaoImpl extends CrmIdGenerator implements SaleOrderDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 	}
 	

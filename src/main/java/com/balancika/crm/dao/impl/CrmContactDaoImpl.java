@@ -11,6 +11,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -27,13 +28,24 @@ import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertContact(CrmContact contact) {
-		Session session = new HibernateSessionFactory().getSessionFactory(contact.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(contact.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			contact.setConID(IdAutoGenerator("CO"));
+			contact.setConID(IdAutoGenerator("CO", contact.getMeDataSource()));
 			contact.setConCreateDate(new Date());
 			session.save(contact);
 			session.getTransaction().commit();
@@ -46,13 +58,15 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateContact(CrmContact contact) {
-		Session session = new HibernateSessionFactory().getSessionFactory(contact.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(contact.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(contact);
@@ -66,13 +80,15 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteContact(CrmContact contact) {
-		Session session = new HibernateSessionFactory().getSessionFactory(contact.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(contact.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			SQLQuery query = session.createSQLQuery("DELETE FROM crm_contact WHERE CO_ID = :conId");
@@ -88,6 +104,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
@@ -95,7 +112,8 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmContact> listContacts(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listCrmContacts()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -105,13 +123,15 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public Object findContactById(String conId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmContactById(:conId)");
 			query.setParameter("conId", conId);
@@ -122,13 +142,15 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmContact findContactDetailsById(String conId, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmContact) session.get(CrmContact.class, conId);
 		} catch (Exception e) {
@@ -136,6 +158,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -143,7 +166,8 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listContactRelatedToModule(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmContact.class);
 			criteria.setProjection(Projections.projectionList()
@@ -157,6 +181,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 		
@@ -165,7 +190,8 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listParentOfContact(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmContact.class);
 			criteria.setProjection(Projections.projectionList()
@@ -181,6 +207,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -196,7 +223,8 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmOpportunity> getOpportunityRelatedToContact(String conId, MeDataSource dataSource){
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL listOpportunitiesRelatedToContact(:conId)");
 			query.setParameter("conId",conId);
@@ -207,13 +235,15 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
 	private List<CrmCase> getCasesRelatedToContact(String conId, MeDataSource dataSource){
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.contact", "con");
 			criteria.add(Restrictions.eq("con.conID", conId));
@@ -234,6 +264,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -241,7 +272,8 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmContact> listSomeFieldsOfContact(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmContact.class, "con");
 			criteria.setProjection(Projections.projectionList()
@@ -256,6 +288,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}

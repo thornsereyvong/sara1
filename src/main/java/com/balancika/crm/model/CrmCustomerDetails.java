@@ -17,7 +17,6 @@ public class CrmCustomerDetails implements Serializable{
 	@Column(name="AID")
 	private int aId;
 	
-	@Id
 	@Column(name="CustID")
 	private String custId;
 	

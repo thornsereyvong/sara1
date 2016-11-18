@@ -45,7 +45,7 @@ public class CollaborationTagsController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addTags(@RequestBody List<CrmCollaborationTags> tags){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(tagsService.insertCollaborationTags(tags) == true){
+		if(tagsService.insertCollaborationTags(tags, tags.get(0).getMeDataSource()) == true){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);

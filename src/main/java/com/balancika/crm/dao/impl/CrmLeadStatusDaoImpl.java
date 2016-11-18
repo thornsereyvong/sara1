@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
@@ -16,10 +17,21 @@ import com.balancika.crm.model.MeDataSource;
 
 @Repository
 public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
+	
+	private SessionFactory sessionFactory;
+
+	public final SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public final void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public boolean insertLeadStatus(CrmLeadStatus status) {
-		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.save(status);
@@ -30,13 +42,15 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public boolean updateLeadStatus(CrmLeadStatus status) {
-		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.update(status);
@@ -47,14 +61,15 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
 
 	@Override
 	public String deleteLeadStatus(CrmLeadStatus status) {
-
-		Session session = new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.delete(status);
@@ -70,6 +85,7 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return "FAILED";
 	}
@@ -77,7 +93,8 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmLeadStatus> getAllLeadStatus(MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmLeadStatus.class);
 			criteria.addOrder(Order.asc("statusID"));
@@ -88,13 +105,15 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
 
 	@Override
 	public CrmLeadStatus findLeadStatusById(int statusID, MeDataSource dataSource) {
-		Session session = new HibernateSessionFactory().getSessionFactory(dataSource).openSession();
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
 		try {
 			return (CrmLeadStatus) session.get(CrmLeadStatus.class, statusID);
 		} catch (Exception e) {
@@ -102,6 +121,7 @@ public class CrmLeadStatusDaoImpl implements CrmLeadStatusDao {
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
