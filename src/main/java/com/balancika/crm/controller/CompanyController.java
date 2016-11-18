@@ -32,7 +32,7 @@ public class CompanyController {
 	@RequestMapping(value = "/database/list", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> listDatabase(@RequestBody MeDataSource meDataSource){
 		Map<String, Object>  map = new HashMap<String, Object>();
-		map.put("MESSAGE", "OK");
+		map.put("MESSAGE", "OK");	
 		map.put("DATABASE", companyService.listDatabases(meDataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
