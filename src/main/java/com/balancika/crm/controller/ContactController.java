@@ -81,6 +81,9 @@ public class ContactController {
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		System.out.println(dataSource.getDb()+"/"+dataSource.getIp());
+		
+		
 		List<CrmContact> arrContact = contactService.listContacts(dataSource);
 		if( arrContact == null){
 			map.put("MESSAGE", "FAILED");
