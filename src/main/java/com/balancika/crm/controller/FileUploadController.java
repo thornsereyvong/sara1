@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartResolver;
 
-import com.balancika.crm.utilities.FileVailidator;
 import com.balancika.crm.utilities.UploadFile;
 
 @RestController
@@ -25,9 +24,6 @@ public class FileUploadController {
 
 	@Autowired
 	private MultipartResolver multipartResolver;
-	
-	@Autowired
-	private FileVailidator fileVailidator; 
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/image")
 	public ResponseEntity<Map<String, Object>> uploadimage(

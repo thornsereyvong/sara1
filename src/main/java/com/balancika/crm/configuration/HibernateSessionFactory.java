@@ -23,10 +23,6 @@ public class HibernateSessionFactory {
 	
 	
 	public DataSource dataSource(MeDataSource meDataSource){
-		System.out.println(meDataSource.getDb());
-		meDataSource.setIp("192.168.0.128");// just test
-		meDataSource.setUn("posadmin");
-		meDataSource.setPw("Pa$$w0rd");
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		dataSource.setUrl("jdbc:mysql://"+meDataSource.getIp()+":"+meDataSource.getPort()+"/"+meDataSource.getDb()+"?useUnicode=true&characterEncoding=UTF-8");
