@@ -67,7 +67,7 @@ public class IndustryController {
 		if( industService.insertIndustry(industry) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "INSERTED");
@@ -82,7 +82,7 @@ public class IndustryController {
 		if( industService.updateIndustry(industry) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "UPDATED");
@@ -97,7 +97,7 @@ public class IndustryController {
 		if( industService.deleteIndustry(industry) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "DELETED");

@@ -149,7 +149,7 @@ public class EventController {
 	}
 	
 	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> addEvents(@RequestBody CrmEvent event){
+	public ResponseEntity<Map<String, Object>> deleteEvents(@RequestBody CrmEvent event){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(eventService.deleteEnvent(event) == true){
 			map.put("MESSAGE", "DELETED");
