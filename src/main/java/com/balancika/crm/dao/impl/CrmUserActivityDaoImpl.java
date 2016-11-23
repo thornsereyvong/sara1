@@ -1,5 +1,6 @@
 package com.balancika.crm.dao.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -32,6 +33,7 @@ public class CrmUserActivityDaoImpl implements CrmUserActivityDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			activity.setCreateDate(LocalDateTime.now());
 			session.save(activity);
 			session.getTransaction().commit();
 		} catch (Exception e) {
