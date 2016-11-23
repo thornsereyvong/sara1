@@ -130,7 +130,7 @@ public class MeetingController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateMeeting(@RequestBody CrmMeeting meeting){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(meetingService.updateMeeting(meeting) == true){

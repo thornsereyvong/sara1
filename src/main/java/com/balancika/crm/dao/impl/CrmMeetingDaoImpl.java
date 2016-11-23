@@ -123,7 +123,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 
 	@Override
 	public Object findMeetingById(String meetingId, MeDataSource dataSource) {
-		setSessionFactory(sessionFactory);
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
 			SQLQuery query = session.createSQLQuery("CALL findCrmMeetingById(:meetingId)");
