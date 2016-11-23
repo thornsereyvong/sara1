@@ -81,9 +81,6 @@ public class ContactController {
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		System.out.println(dataSource.getDb()+"/"+dataSource.getIp());
-		
-		
 		List<CrmContact> arrContact = contactService.listContacts(dataSource);
 		if( arrContact == null){
 			map.put("MESSAGE", "FAILED");
@@ -148,6 +145,7 @@ public class ContactController {
 		if( contact == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
+			map.put("MSG", "NOT_FOUND");
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
 		}
 		
@@ -176,12 +174,13 @@ public class ContactController {
 		if(contactService.insertContact(contact) == false){
 			map.put("MESSAGE", "FAILED");			
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 
+			map.put("MSG", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "INSERTED");
-		map.put("ID", contact.getConID());
 		map.put("STATUS", HttpStatus.CREATED.value());
+		map.put("MSG", "INSERTED");
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 	}
 
@@ -202,11 +201,13 @@ public class ContactController {
 		if(contactService.updateContact(contact) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 
+			map.put("MSG", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "UPDATED");
 		map.put("STATUS", HttpStatus.OK.value());
+		map.put("MSG", "UPDATED");
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -217,11 +218,13 @@ public class ContactController {
 		if(contactService.deleteContact(contact) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 
+			map.put("MSG", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "DELETED");
 		map.put("STATUS", HttpStatus.OK.value());
+		map.put("MSG", "DELETED");
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
