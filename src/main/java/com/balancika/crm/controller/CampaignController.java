@@ -27,6 +27,7 @@ import com.balancika.crm.services.CrmEventLocationService;
 import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmMeetingStatusService;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmTaskStatusService;
@@ -80,6 +81,9 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmContactService contactService;
+	
+	@Autowired
+	private CrmMessageService messageService;
 
 	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> allCampaign(@RequestBody MeDataSource dataSource){
@@ -88,7 +92,7 @@ public class CampaignController {
 		
 		List<CrmCampaign> arrCamp = campaignService.listCampaigns(dataSource);
 		if( arrCamp == null){
-			map.put("MESSAGE", "FAILED");
+			map.put("MESSAGE", messageService.getMessage("1006", "Campaign", "", dataSource));
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
 		}
@@ -117,7 +121,7 @@ public class CampaignController {
 		
 		List<Object> arrCamp = campaignService.listCampaignParents(dataSource);
 		if( arrCamp == null){
-			map.put("MESSAGE", "FAILED");
+			map.put("MESSAGE", messageService.getMessage("1006", "Campaign", "", dataSource));
 			map.put("DATA", arrCamp);
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
@@ -161,7 +165,7 @@ public class CampaignController {
 		
 		Object camp = campaignService.findCampaignById(campID, dataSource);
 		if( camp == null){
-			map.put("MESSAGE", "FAILED");
+			map.put("MESSAGE", messageService.getMessage("1006", "Campaign", "", dataSource));
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
@@ -179,7 +183,7 @@ public class CampaignController {
 		
 		CrmCampaign camp = campaignService.findCampaignDetailsById(campID, dataSource);
 		if( camp == null){
-			map.put("MESSAGE", "FAILED");
+			map.put("MESSAGE", messageService.getMessage("1006", "Campaign", "", dataSource));
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
 		}
@@ -197,7 +201,7 @@ public class CampaignController {
 		
 		List<Object> camp = campaignService.listCampaignIsNotEqual(campID, dataSource);
 		if( camp == null){
-			map.put("MESSAGE", "FAILED");
+			map.put("MESSAGE", messageService.getMessage("1006", "Campaign", "", dataSource));
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			map.put("DATA", new ArrayList<Object>());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
@@ -229,7 +233,7 @@ public class CampaignController {
 	public ResponseEntity<Map<String, Object>> addCampaign(@RequestBody CrmCampaign campaign) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(campaignService.insertCampaign(campaign) == false){
-			map.put("MESSAGE", "FAILED");
+			map.put("MESSAGE", messageService.getMessage("1003", "Campaign", "", campaign.getMeDataSource()));
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -248,7 +252,7 @@ public class CampaignController {
 		if(arrCampParent == null){
 			map.put("CAMP_PARENT", new ArrayList<Object>());
 		}else{
-			map.put("CAMP_PARENT", arrCampParent);
+			map.put("CAMP_PARENT", arrCampParent); 
 		}
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, campaign.getMeDataSource()));
 		map.put("CHILD", userService.checkChildOfUser(username, campaign.getMeDataSource()));
