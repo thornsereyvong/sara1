@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmCall;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
+import com.balancika.crm.services.CrmUserActivityService;
 
 @RestController
 @RequestMapping("/api/call")
@@ -23,6 +24,9 @@ public class CallController {
 
 	@Autowired
 	private CrmCallService callService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
 	
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCalls(@RequestBody MeDataSource dataSource){
