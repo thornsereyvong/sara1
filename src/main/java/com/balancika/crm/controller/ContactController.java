@@ -174,12 +174,13 @@ public class ContactController {
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(contactService.insertContact(contact) == false){
-			map.put("MESSAGE", "FAILED");
+			map.put("MESSAGE", "FAILED");			
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR); 
 		}
 		
 		map.put("MESSAGE", "INSERTED");
+		map.put("ID", contact.getConID());
 		map.put("STATUS", HttpStatus.CREATED.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 	}

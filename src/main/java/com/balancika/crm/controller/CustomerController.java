@@ -191,6 +191,7 @@ public class CustomerController {
 		
 		if(customerService.insertCustomer(customer) == true){
 			map.put("MESSAGE", "INSERTED");
+			
 			map.put("STATUS", HttpStatus.OK.value());
 			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
