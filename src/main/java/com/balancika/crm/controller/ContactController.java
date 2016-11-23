@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmContact;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCallStatusService;
@@ -25,9 +26,11 @@ import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmMeetingStatusService;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmTaskStatusService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -75,7 +78,17 @@ public class ContactController {
 	
 	@Autowired
 	private CrmEventLocationService eventLocationService;
-
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
+	
+	
 	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listContacts(@RequestBody MeDataSource dataSource){
 	
@@ -174,13 +187,16 @@ public class ContactController {
 		if(contactService.insertContact(contact) == false){
 			map.put("MESSAGE", "FAILED");			
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			map.put("MSG", HttpStatus.INTERNAL_SERVER_ERROR);
+			map.put("MSG", messageService.getMessage("1003", "contact", "", contact.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "INSERTED");
-		map.put("STATUS", HttpStatus.CREATED.value());
-		map.put("MSG", "INSERTED");
+		map.put("STATUS", HttpStatus.CREATED.value());		
+		map.put("MSG", messageService.getMessage("1000", "contact", contact.getConID(), contact.getMeDataSource()));
+		
+		activityService.addUserActivity(activity.getActivity(contact.getMeDataSource(), "Create", "Contact", contact.getConID()));
+		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 	}
 

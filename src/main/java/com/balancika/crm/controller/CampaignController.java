@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCampaign;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCallStatusService;
@@ -31,6 +32,7 @@ import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmTaskStatusService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
  
 @RestController
@@ -84,6 +86,9 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
 
 	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> allCampaign(@RequestBody MeDataSource dataSource){
@@ -237,6 +242,8 @@ public class CampaignController {
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
+		
 		map.put("MESSAGE", "INSERTED");
 		map.put("STATUS", HttpStatus.CREATED.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);

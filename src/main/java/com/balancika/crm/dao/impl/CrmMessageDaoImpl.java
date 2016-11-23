@@ -27,7 +27,7 @@ public class CrmMessageDaoImpl implements CrmMessageDao{
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
-			SQLQuery query = session.createSQLQuery("SELECT crmGenerateMessage(:code, :module :moduleId)");
+			SQLQuery query = session.createSQLQuery("SELECT crmGenerateMessage(:code, :module, :moduleId)");
 			query.setParameter("code", code);
 			query.setParameter("module", module);
 			query.setParameter("moduleId", moduleId);

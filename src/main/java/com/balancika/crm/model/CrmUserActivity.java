@@ -4,16 +4,19 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
+import org.hibernate.annotations.Type;
+import org.springframework.stereotype.Repository;
 
 @Entity
 @Table(name="crm_activity")
+@Repository
 public class CrmUserActivity implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -34,8 +37,10 @@ public class CrmUserActivity implements Serializable{
 	@Column(name="AC_ByUser")
 	private String byUser;
 	
-	@Convert(converter = LocalDateTimePersistenceConverter.class)
-	@Column(name="AC_Date")
+	
+	@Column(name = "AC_Date", updatable = false, insertable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Type(type = "date")
 	private LocalDateTime createDate;
 	
 	@Transient
@@ -43,6 +48,18 @@ public class CrmUserActivity implements Serializable{
 	
 	@Transient
 	private MeDataSource meDataSource;
+	
+	
+	public CrmUserActivity getActivity(MeDataSource dataSource, String action, String moduleName, String moduleId){		
+		CrmUserActivity act = new CrmUserActivity();
+		act.setMeDataSource(dataSource);
+		act.setAction(action);
+		act.setModuleName(moduleName);
+		act.setModuleId(moduleId);
+		act.setByUser(dataSource.getUserid());		
+		return act;
+		
+	}
 
 	public int getActId() {
 		return actId;
