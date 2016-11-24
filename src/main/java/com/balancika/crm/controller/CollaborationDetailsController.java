@@ -86,7 +86,7 @@ public class CollaborationDetailsController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> deleteCollaborationDetails(@RequestBody CrmCollaborationDetails details){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(detailsService.deleteCollaborationDetails(details) == true){
