@@ -11,5 +11,5 @@ public interface CrmAccountTypeDao {
 	boolean updateAccountType(CrmAccountType accountType);
 	boolean deleteAccountType(CrmAccountType accountType);
 	List<CrmAccountType> listAccountTypes(MeDataSource dataSource);
-	CrmAccountType findAccountTypeById(CrmAccountType accountType);
+	CrmAccountType findAccountTypeById(int typeId, MeDataSource dataSource);
 }

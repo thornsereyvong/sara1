@@ -40,7 +40,8 @@ public class CrmCallStatusServiceImpl implements CrmCallStatusService{
 	}
 
 	@Override
-	public CrmCallStatus findCallStatusById(CrmCallStatus status) {
-		return statusDao.findCallStatusById(status);
+	public CrmCallStatus findCallStatusById(int statusId, MeDataSource dataSource) {
+		return statusDao.findCallStatusById(statusId, dataSource);
 	}
+
 }

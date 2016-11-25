@@ -37,10 +37,10 @@ public class CaseStatusController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/{statusId}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value="/list/{statusId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findCaseStatusById(@PathVariable("statusId") int statusId,@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		CrmCaseStatus status = statusService.findCaseStatusById(statusId, dataSource);
@@ -53,7 +53,7 @@ public class CaseStatusController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	
@@ -69,10 +69,10 @@ public class CaseStatusController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateCaseStatus(@RequestBody CrmCaseStatus status){
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -84,10 +84,10 @@ public class CaseStatusController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove", method = RequestMethod.DELETE, produces = "application/json")
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> deleteCaseStatus(@RequestBody CrmCaseStatus caseStatus){
 		Map<String, Object> map = new HashMap<String, Object>();
 		

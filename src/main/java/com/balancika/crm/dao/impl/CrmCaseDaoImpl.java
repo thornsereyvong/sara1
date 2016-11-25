@@ -49,8 +49,8 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		}catch (ConstraintViolationException e) {
 			session.getTransaction().rollback();
 		}finally{
-			session.close();
 			session.clear();
+			session.close();
 			sessionFactory.close();
 		}
 		return false;

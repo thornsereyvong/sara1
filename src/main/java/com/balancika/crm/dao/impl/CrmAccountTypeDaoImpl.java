@@ -111,11 +111,11 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 	}
 
 	@Override
-	public CrmAccountType findAccountTypeById(CrmAccountType accountType) {
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(accountType.getMeDataSource()));
+	public CrmAccountType findAccountTypeById(int typeId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
-			return (CrmAccountType) session.get(CrmAccountType.class, accountType.getAccountID());
+			return (CrmAccountType) session.get(CrmAccountType.class, typeId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

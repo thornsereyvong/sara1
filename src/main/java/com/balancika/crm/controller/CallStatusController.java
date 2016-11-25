@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,13 +36,13 @@ public class CallStatusController {
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/view", method = RequestMethod.POST, produces = "application/json")
-	private ResponseEntity<Map<String, Object>> findCallStatusById(@RequestBody CrmCallStatus stat){
+	@RequestMapping(value="/view/{statusId}", method = RequestMethod.POST, produces = "application/json")
+	private ResponseEntity<Map<String, Object>> findCallStatusById(@RequestBody MeDataSource dataSource, @PathVariable("statusId") int statusId){
 		Map<String, Object> map = new ConcurrentHashMap<String, Object>();
-		CrmCallStatus status = statusService.findCallStatusById(stat);
+		CrmCallStatus status = statusService.findCallStatusById(statusId, dataSource);
 		if(status != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -50,7 +51,7 @@ public class CallStatusController {
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces = "application/json")
@@ -63,10 +64,10 @@ public class CallStatusController {
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	private ResponseEntity<Map<String, Object>> updateCallStatus(@RequestBody CrmCallStatus status){
 		Map<String, Object> map = new ConcurrentHashMap<String, Object>();
 		if(statusService.updateCallStatus(status) == true){
@@ -76,10 +77,10 @@ public class CallStatusController {
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove", method = RequestMethod.DELETE, produces = "application/json")
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
 	private ResponseEntity<Map<String, Object>> deleteCallStatus(@RequestBody CrmCallStatus status){
 		Map<String, Object> map = new ConcurrentHashMap<String, Object>();
 		if(statusService.deleteCallStatus(status).equals("OK")){

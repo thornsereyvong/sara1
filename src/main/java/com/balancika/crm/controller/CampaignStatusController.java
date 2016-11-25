@@ -35,13 +35,13 @@ public class CampaignStatusController {
 			
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 			
 		}else if(arrStatus.isEmpty()){
 			
 			map.put("MESSAGE", "NO_CONTENT");
 			map.put("STATUS", HttpStatus.NO_CONTENT.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
@@ -50,7 +50,7 @@ public class CampaignStatusController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/{statusID}", method = RequestMethod.GET)
+	@RequestMapping(value="/list/{statusID}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> findCampaignStatusById(@PathVariable("statusID") int statusID, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -59,7 +59,7 @@ public class CampaignStatusController {
 			
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 			
 		}
 		
@@ -82,11 +82,11 @@ public class CampaignStatusController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("Status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 
-	@RequestMapping(value="/edit", method = RequestMethod.PUT)
+	@RequestMapping(value="/edit", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> editCampaignStatus(@RequestBody CrmCampaignStatus status){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -99,7 +99,7 @@ public class CampaignStatusController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("Status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/remove", method = RequestMethod.POST)

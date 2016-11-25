@@ -111,12 +111,12 @@ public class CrmCallStatusDaoImpl implements CrmCallStatusDao {
 	}
 
 	@Override
-	public CrmCallStatus findCallStatusById(CrmCallStatus status) {
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(status.getMeDataSource()));
+	public CrmCallStatus findCallStatusById(int statusId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmCallStatus.class);
-			criteria.add(Restrictions.eq("callStatusId", status.getCallStatusId()));
+			criteria.add(Restrictions.eq("callStatusId", statusId));
 			return (CrmCallStatus) criteria.uniqueResult();
 		} catch (Exception e) {
 			e.printStackTrace();

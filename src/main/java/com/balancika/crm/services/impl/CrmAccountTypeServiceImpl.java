@@ -39,7 +39,9 @@ public class CrmAccountTypeServiceImpl implements CrmAccountTypeService {
 	}
 
 	@Override
-	public CrmAccountType findAccountTypeById(CrmAccountType accountType) {
-		return accountTypeDao.findAccountTypeById(accountType);
+	public CrmAccountType findAccountTypeById(int typeId, MeDataSource dataSource) {
+		return accountTypeDao.findAccountTypeById(typeId, dataSource);
 	}
+
+	
 }

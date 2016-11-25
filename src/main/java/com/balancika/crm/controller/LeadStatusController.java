@@ -35,7 +35,7 @@ public class LeadStatusController {
 		if(arrStatus == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
@@ -55,7 +55,7 @@ public class LeadStatusController {
 		if(status == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
@@ -72,7 +72,7 @@ public class LeadStatusController {
 		if(statusService.insertLeadStatus(status) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "INSERTED");
@@ -80,7 +80,7 @@ public class LeadStatusController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateLeadStatus(@RequestBody CrmLeadStatus status){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -88,7 +88,7 @@ public class LeadStatusController {
 		if(statusService.updateLeadStatus(status) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "UPADTED");

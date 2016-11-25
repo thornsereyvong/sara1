@@ -10,5 +10,5 @@ public interface CrmCallStatusService {
 	boolean updateCallStatus(CrmCallStatus status);
 	String deleteCallStatus(CrmCallStatus status);
 	List<CrmCallStatus> listCallStatus(MeDataSource meDataSource);
-	CrmCallStatus findCallStatusById(CrmCallStatus status);
+	CrmCallStatus findCallStatusById(int statusId, MeDataSource dataSource);
 }
