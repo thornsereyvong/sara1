@@ -37,7 +37,7 @@ public class TaskStatusController {
 		
 		statusMap.put("MESSAGE", "FAILED");
 		statusMap.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/list/{statusId}", method = RequestMethod.POST, produces = "application/json")
@@ -53,7 +53,7 @@ public class TaskStatusController {
 		
 		statusMap.put("MESSAGE", "FAILED");
 		statusMap.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
@@ -67,7 +67,7 @@ public class TaskStatusController {
 		
 		statusMap.put("MESSAGE", "FAILED");
 		statusMap.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
@@ -81,10 +81,10 @@ public class TaskStatusController {
 		
 		statusMap.put("MESSAGE", "FAILED");
 		statusMap.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(statusMap, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove/{statusId}", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> deleteTaskStatus(@RequestBody CrmTaskStatus status){
 		Map<String, Object> statusMap = new HashMap<String, Object>();
 		if(statusService.deleteTaskStatus(status).equalsIgnoreCase("OK")){

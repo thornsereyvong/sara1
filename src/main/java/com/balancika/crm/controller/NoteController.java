@@ -36,11 +36,11 @@ public class NoteController {
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 
-	@RequestMapping(value="/list/{noteId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> findNoteById(@PathVariable("noteId") String noteId, MeDataSource dataSource){
+	@RequestMapping(value="/list/{noteId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findNoteById(@PathVariable("noteId") String noteId,@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		CrmNote note = noteService.findNoteById(noteId, dataSource);
 		if(note != null){
@@ -51,7 +51,7 @@ public class NoteController {
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")
@@ -112,7 +112,7 @@ public class NoteController {
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
@@ -125,10 +125,10 @@ public class NoteController {
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove", method = RequestMethod.DELETE, produces = "application/json")
+	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> deleteNote(@RequestBody CrmNote note){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(noteService.deleteNote(note) == true){
@@ -138,6 +138,6 @@ public class NoteController {
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

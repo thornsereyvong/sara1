@@ -24,11 +24,11 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 
 	private SessionFactory sessionFactory;
 	
-	public final SessionFactory getSessionFactory() {
+	public  SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
-	public final void setSessionFactory(SessionFactory sessionFactory) {
+	public  void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 
@@ -99,7 +99,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 		Session session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmNote.class);
-			criteria.addOrder(Order.asc("noteId"));
+			criteria.addOrder(Order.desc("noteId"));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.list();
 		} catch (Exception e) {

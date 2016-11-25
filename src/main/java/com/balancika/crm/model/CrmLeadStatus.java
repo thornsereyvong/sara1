@@ -8,9 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name="crm_lead_status")
@@ -30,7 +30,7 @@ public class CrmLeadStatus implements Serializable{
 	@Column(name="LST_Des")
 	private String description;
 	
-	@Autowired
+	@Transient
 	private MeDataSource meDataSource;
 	
 	public int getStatusID() {

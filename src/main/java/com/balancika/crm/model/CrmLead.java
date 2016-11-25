@@ -375,11 +375,11 @@ public class CrmLead implements Serializable{
 		this.source = source;
 	}
 
-	public final MeDataSource getMeDataSource() {
+	public MeDataSource getMeDataSource() {
 		return meDataSource;
 	}
 
-	public final void setMeDataSource(MeDataSource meDataSource) {
+	public void setMeDataSource(MeDataSource meDataSource) {
 		this.meDataSource = meDataSource;
 	}
 }

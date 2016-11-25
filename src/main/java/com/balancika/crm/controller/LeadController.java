@@ -200,7 +200,7 @@ public class LeadController {
 			map.put("MESSAGE", "NOT_FOUND");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 	
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
@@ -233,11 +233,11 @@ public class LeadController {
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> updateList(@RequestBody CrmLead lead){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(leadService.updateLead(lead) == true){
@@ -247,7 +247,7 @@ public class LeadController {
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		
 	}
@@ -266,7 +266,25 @@ public class LeadController {
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}
+		
+	}
+	
+	@RequestMapping(value = "/edit/status/{leadId}/{custId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> updateLeadStatusToConverted(
+			@RequestBody MeDataSource dataSource, 
+			@PathVariable("leadId") String leadId, 
+			@PathVariable("custId") String custId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(leadService.updateLeadStatusToConverted(leadId,custId,null, dataSource)== true){
+			map.put("MESSAGE", "UPDATED");
+			map.put("STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}else{
+			map.put("MESSAGE", "FAILED");
+			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		
 	}
@@ -283,11 +301,11 @@ public class LeadController {
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 	}
 	
-	@RequestMapping(value = "/convert/startup/{username}/{leadId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/convert/startup/{username}/{leadId}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> convertLeadStartup(
 			@PathVariable("username") String username, 
 			@PathVariable("leadId") String leadId, 
@@ -321,9 +339,13 @@ public class LeadController {
 		CrmLead lead = new CrmLead();
 		lead.setStatus(status);
 		org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
+		String datasourceJson = "";
+		MeDataSource dataSource = new MeDataSource();
 		try {
 			jsonMap = objectMapper.readValue(json, Map.class);
 			lead.setLeadID(jsonMap.get("leadID").toString());
+			datasourceJson = objectMapper.writeValueAsString(jsonMap.get("DATASOURCE"));
+			dataSource = objectMapper.readValue(datasourceJson, MeDataSource.class);
 			//System.out.println(jsonMap);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -332,6 +354,7 @@ public class LeadController {
 			try {
 				String customerJson = objectMapper.writeValueAsString(jsonMap.get("CUSTOMER"));
 				CrmCustomer customer = objectMapper.readValue(customerJson, CrmCustomer.class);
+				customer.setMeDataSource(dataSource);
 				if(customerService.insertCustomer(customer) == true){
 					map.put("CUST_MESSAGE", "SUCCESS");
 					map.put("CUST_STATUS", HttpStatus.OK.value());
@@ -368,6 +391,7 @@ public class LeadController {
 				CrmCustomer customer = new CrmCustomer();
 				customer.setCustID(custId);
 				contact.setCustomer(customer);
+				contact.setMeDataSource(dataSource);
 				if(contactService.insertContact(contact) == true){
 					map.put("CON_MESSAGE", "SUCCESS");
 					map.put("CON_STATUS", HttpStatus.OK.value());
@@ -398,6 +422,7 @@ public class LeadController {
 				CrmCustomer customer = new CrmCustomer();
 				customer.setCustID(custId);
 				opportunity.setCustomer(customer);
+				opportunity.setMeDataSource(dataSource);
 				if(opportunityService.isInsertOpportunity(opportunity) == true){
 					CrmOpportunityContact opCon = new CrmOpportunityContact();
 					opCon.setConId(contactId);
