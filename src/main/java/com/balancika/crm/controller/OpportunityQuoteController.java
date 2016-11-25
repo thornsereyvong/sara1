@@ -44,7 +44,7 @@ public class OpportunityQuoteController {
 		}
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> updateOpportunityQuote(@RequestBody CrmOpportunityQuotation opQuote){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(opportunityQuoteService.updateOpportunityQuote(opQuote) == true){
@@ -58,7 +58,7 @@ public class OpportunityQuoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/remove", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> deleteOpportunityContact(@RequestBody CrmOpportunityQuotation opQuote){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(opportunityQuoteService.deleteOpportunityQuote(opQuote) == true){
@@ -72,7 +72,7 @@ public class OpportunityQuoteController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/view/{opQuoteId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/view/{opQuoteId}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> viewOpportunityQuote(@PathVariable("opQuoteId") int opQuoteId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		CrmOpportunityQuotation opportunityQuote = opportunityQuoteService.findOpportunityQuotationById(opQuoteId, dataSource);

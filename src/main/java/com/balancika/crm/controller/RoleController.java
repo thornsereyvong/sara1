@@ -40,7 +40,7 @@ public class RoleController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/{roleId}", method = RequestMethod.POST, produces="application/json")
@@ -57,7 +57,7 @@ public class RoleController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/role_by_user", method = RequestMethod.POST, produces="application/json")
@@ -74,7 +74,7 @@ public class RoleController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces="application/json")
@@ -89,10 +89,10 @@ public class RoleController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces="application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces="application/json")
 	public ResponseEntity<Map<String, Object>> updateRole(@RequestBody CrmRole role){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -104,10 +104,10 @@ public class RoleController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove/{roleId}", method = RequestMethod.DELETE, produces="application/json")
+	@RequestMapping(value="/remove/", method = RequestMethod.POST, produces="application/json")
 	public ResponseEntity<Map<String, Object>> deleteRole(@RequestBody CrmRole role){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -119,6 +119,6 @@ public class RoleController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

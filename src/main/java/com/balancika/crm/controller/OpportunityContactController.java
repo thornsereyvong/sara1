@@ -44,7 +44,7 @@ public class OpportunityContactController {
 		}
 	}
 	
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> updateOpportunityContact(@RequestBody CrmOpportunityContact opCon){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(opportunityContactService.updateOpportunityContact(opCon) == true){
@@ -72,7 +72,7 @@ public class OpportunityContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/view/{opConId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/view/{opConId}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> viewOpportunityContact(@PathVariable("opConId") int opConId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		CrmOpportunityContact opportunityContact = opportunityContactService.findOpportunityContactById(opConId, dataSource);

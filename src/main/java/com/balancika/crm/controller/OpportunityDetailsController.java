@@ -46,7 +46,7 @@ public class OpportunityDetailsController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/list/{opDetailsId}", method = RequestMethod.GET)
+	@RequestMapping(value="/list/{opDetailsId}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> findOpportunityById(@PathVariable("opDetailsId") int opDetailsId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		CrmOpportunityDetails details = opportunityDetailsService.findOpportunityDetailsById(opDetailsId, dataSource);
@@ -78,7 +78,7 @@ public class OpportunityDetailsController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT)
+	@RequestMapping(value="/edit", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> editOpportunity(@RequestBody CrmOpportunityDetails details){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(opportunityDetailsService.updateOpportunityDetails(details) == true){
@@ -92,7 +92,7 @@ public class OpportunityDetailsController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/remove", method = RequestMethod.PUT)
+	@RequestMapping(value="/remove", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> deleteOpportunity(@RequestBody CrmOpportunityDetails details){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(opportunityDetailsService.deleteOpportunityDetails(details) == true){
