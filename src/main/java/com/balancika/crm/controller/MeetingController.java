@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmMeeting;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMeetingService;
+import com.balancika.crm.services.CrmMessageService;
+import com.balancika.crm.services.CrmUserActivityService;
 
 @RestController
 @RequestMapping("/api/meeting")
@@ -23,6 +26,17 @@ public class MeetingController {
 
 	@Autowired
 	private CrmMeetingService meetingService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
+	
+	
 	
 	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listMeetings(@RequestBody MeDataSource dataSource){
@@ -123,10 +137,13 @@ public class MeetingController {
 		if(meetingService.insertMeeting(meeting) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			map.put("MSG", messageService.getMessage("1000", "meet", meeting.getMeetingId(), meeting.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(meeting.getMeDataSource(), "Create", "meeting", meeting.getMeetingId()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1003", "meeting", "", meeting.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -136,10 +153,15 @@ public class MeetingController {
 		if(meetingService.updateMeeting(meeting) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "meeting", meeting.getMeetingId(), meeting.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(meeting.getMeDataSource(), "Update", "Meeting", meeting.getMeetingId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "call", meeting.getMeetingId(), meeting.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -149,11 +171,15 @@ public class MeetingController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(meetingService.deleteMeeting(meeting) == true){
 			map.put("MESSAGE", "DELETED");
-			map.put("STATUS", HttpStatus.OK.value());
+			map.put("STATUS", HttpStatus.OK.value());			
+			map.put("MSG", messageService.getMessage("1002", "meeting", meeting.getMeetingId(), meeting.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(meeting.getMeDataSource(), "Delete", "Meeting", meeting.getMeetingId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1005", "meeting", meeting.getMeetingId(), meeting.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

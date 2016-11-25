@@ -46,4 +46,9 @@ public class CrmRoleServiceImpl implements CrmRoleService{
 		return roleDao.listAllRoles(dataSource);
 	}
 
+	@Override
+	public CrmRole findRoleByUsername(String username, MeDataSource dataSource) {
+		return roleDao.findRoleByUsername(username, dataSource);
+	}
+
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmRoleDao;
 import com.balancika.crm.model.CrmRole;
+import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
@@ -21,11 +22,11 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 	
 	private SessionFactory sessionFactory;
 	
-	public final SessionFactory getSessionFactory() {
+	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
-	public final void setSessionFactory(SessionFactory sessionFactory) {
+	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 
@@ -121,6 +122,26 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		} finally {
 			session.clear();
 			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+
+	@Override
+	public CrmRole findRoleByUsername(String username, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmUser.class);
+			criteria.add(Restrictions.eq("username", username));
+			CrmUser user = (CrmUser)criteria.uniqueResult();
+			CrmRole role = findRoleById(user.getRole().getRoleId(), dataSource);
+			return role;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//session.clear();
+			//session.close();
 			sessionFactory.close();
 		}
 		return null;

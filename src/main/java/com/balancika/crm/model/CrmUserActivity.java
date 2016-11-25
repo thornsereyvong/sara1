@@ -23,6 +23,8 @@ public class CrmUserActivity implements Serializable{
 	
 	@Id
 	@Column(name="AC_ID")
+	
+	
 	private int actId;
 
 	@Column(name="AC_Action")

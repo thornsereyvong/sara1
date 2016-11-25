@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmTask;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmTaskService;
+import com.balancika.crm.services.CrmUserActivityService;
 
 @RestController
 @RequestMapping("/api/task")
@@ -24,6 +27,14 @@ public class TaskContoller {
 	@Autowired
 	private  CrmTaskService taskService;
 	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listTasks(@RequestBody MeDataSource dataSource){
@@ -131,11 +142,16 @@ public class TaskContoller {
 		if(taskService.insertTask(task) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1000", "task", task.getTaskId(), task.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(task.getMeDataSource(), "Create", "task", task.getTaskId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FIALED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		map.put("MSG", messageService.getMessage("1003", "task", "", task.getMeDataSource()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
@@ -144,11 +160,18 @@ public class TaskContoller {
 		if(taskService.updateTask(task) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "task", task.getTaskId(), task.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(task.getMeDataSource(), "Update", "Task", task.getTaskId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FIALED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		map.put("MSG", messageService.getMessage("1004", "task", task.getTaskId(), task.getMeDataSource()));
+		
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
@@ -158,10 +181,16 @@ public class TaskContoller {
 		if(taskService.deleteTask(task) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1002", "task", task.getTaskId(), task.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(task.getMeDataSource(), "Delete", "Task", task.getTaskId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FIALED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		map.put("MSG", messageService.getMessage("1005", "task", task.getTaskId(), task.getMeDataSource()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

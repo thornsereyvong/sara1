@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmEvent;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmEventService;
+import com.balancika.crm.services.CrmMessageService;
+import com.balancika.crm.services.CrmUserActivityService;
 
 @RestController
 @RequestMapping("/api/event")
@@ -23,6 +26,15 @@ public class EventController {
 
 	@Autowired
 	private CrmEventService eventService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listEvents(@RequestBody MeDataSource dataSource){
@@ -37,7 +49,7 @@ public class EventController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/{evId}", method = RequestMethod.POST, produces = "application/json")
@@ -53,7 +65,7 @@ public class EventController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")
@@ -117,7 +129,7 @@ public class EventController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces = "application/json")
@@ -126,12 +138,19 @@ public class EventController {
 		if(eventService.insertEvent(event) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			
+			map.put("MSG", messageService.getMessage("1000", "event", event.getEvId(), event.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(event.getMeDataSource(), "Create", "event", event.getEvId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		map.put("MSG", messageService.getMessage("1003", "event", "", event.getMeDataSource()));
+		
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
@@ -140,12 +159,20 @@ public class EventController {
 		if(eventService.updateEvent(event) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "event", event.getEvId(), event.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(event.getMeDataSource(), "Update", "Event", event.getEvId()));
+			
+			
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		map.put("MSG", messageService.getMessage("1004", "event", event.getEvId(), event.getMeDataSource()));
+		
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
@@ -154,11 +181,19 @@ public class EventController {
 		if(eventService.deleteEnvent(event) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			
+			map.put("MSG", messageService.getMessage("1002", "event", event.getEvId(), event.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(event.getMeDataSource(), "Delete", "Meeting", event.getEvId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		map.put("MSG", messageService.getMessage("1005", "event", event.getEvId(), event.getMeDataSource()));
+		
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 }

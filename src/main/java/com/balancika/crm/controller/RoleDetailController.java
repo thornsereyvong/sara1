@@ -57,6 +57,23 @@ public class RoleDetailController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
+	@RequestMapping(value = "/list/all", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> findRoleDetail(@RequestBody MeDataSource dataSource){
+		Map<String, Object> map = new ConcurrentHashMap<String, Object>();
+		CrmRoleDetail roleDetails = roleDetailService.findRoleDetail(dataSource);
+		if(roleDetails != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", roleDetails);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	
+	
 	@RequestMapping(value = "/list/user/{username}/{moduleId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findRoleDetailsByUsername(@PathVariable("username") String username, @PathVariable("moduleId") String moduleId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new ConcurrentHashMap<String, Object>();

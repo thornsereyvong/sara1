@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCall;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmUserActivityService;
 
 @RestController
@@ -27,6 +29,12 @@ public class CallController {
 	
 	@Autowired
 	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCalls(@RequestBody MeDataSource dataSource){
@@ -42,7 +50,7 @@ public class CallController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		map.put("DATA", arrCall);
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/view/{callId}", method = RequestMethod.POST, produces = "application/json")
@@ -59,7 +67,7 @@ public class CallController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		map.put("DATA", call);
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")
@@ -133,11 +141,14 @@ public class CallController {
 		if(callService.insertCall(call) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			map.put("MSG", messageService.getMessage("1000", "call", call.getCallId(), call.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1003", "call", "", call.getMeDataSource()));
+		activityService.addUserActivity(activity.getActivity(call.getMeDataSource(), "Create", "Call", call.getCallId()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
@@ -147,11 +158,14 @@ public class CallController {
 		if(callService.updateCall(call) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1001", "call", call.getCallId(), call.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(call.getMeDataSource(), "Update", "Call", call.getCallId()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "call", call.getCallId(), call.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
@@ -161,11 +175,16 @@ public class CallController {
 		if(callService.deleteCall(call) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1002", "call", call.getCallId(), call.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(call.getMeDataSource(), "Delete", "Call", call.getCallId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1005", "call", call.getCallId(), call.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

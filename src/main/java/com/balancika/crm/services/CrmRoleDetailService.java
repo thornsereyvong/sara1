@@ -11,5 +11,6 @@ public interface CrmRoleDetailService {
 	 boolean deleteRoleDetail(CrmRoleDetail roleDetail);
 	 List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource);
 	 CrmRoleDetail findRoleDetailById(int roleDetailId, MeDataSource dataSource);
+	 CrmRoleDetail findRoleDetail(MeDataSource dataSource);
 	 Object findRoleDetailsByUsername(String username, String moduleId, MeDataSource dataSource);
 }

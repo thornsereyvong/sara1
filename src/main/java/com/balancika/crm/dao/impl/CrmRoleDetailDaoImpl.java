@@ -2,6 +2,7 @@ package com.balancika.crm.dao.impl;
 
 import java.util.List;
 
+
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -120,7 +121,14 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 		}
 		return null;
 	}
-
+	
+	@Override
+	public CrmRoleDetail findRoleDetail(MeDataSource dataSource) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+		
+	
 	@Override
 	public Object findRoleDetailsByUsername(String username,String moduleId, MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
@@ -141,5 +149,4 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 		return null;
 		
 	}
-
 }

@@ -51,4 +51,10 @@ public class CrmRoleDetailServiceImpl implements CrmRoleDetailService{
 		return roleDetailDao.findRoleDetailsByUsername(username,moduleId, dataSource);
 	}
 
+
+	@Override
+	public CrmRoleDetail findRoleDetail(MeDataSource dataSource) {
+		return roleDetailDao.findRoleDetail(dataSource);
+	}
+
 }

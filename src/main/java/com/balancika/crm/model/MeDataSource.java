@@ -56,6 +56,5 @@ public class MeDataSource implements Serializable{
 		this.port = port;
 		this.userid = userid;
 	}
-	public MeDataSource() {
-}
+	public MeDataSource() {}
 }

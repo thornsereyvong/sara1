@@ -11,4 +11,5 @@ public interface CrmRoleDao{
 	boolean isDeletedRole(CrmRole role);
 	CrmRole findRoleById(String roleId, MeDataSource dataSource);
 	List<CrmRole> listAllRoles(MeDataSource dataSource);
+	CrmRole findRoleByUsername(String username, MeDataSource dataSource);
 }
