@@ -20,6 +20,7 @@ import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.CrmLeadStatus;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.CrmOpportunityContact;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmAccountTypeService;
 import com.balancika.crm.services.CrmCallStatusService;
@@ -33,11 +34,13 @@ import com.balancika.crm.services.CrmLeadService;
 import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmLeadStatusService;
 import com.balancika.crm.services.CrmMeetingStatusService;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmOpportunityContactService;
 import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CrmOpportunityStageService;
 import com.balancika.crm.services.CrmOpportunityTypeService;
 import com.balancika.crm.services.CrmTaskStatusService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 import com.balancika.crm.services.CustomerGroupService;
 
@@ -101,6 +104,17 @@ public class LeadController {
 	
 	@Autowired
 	private CrmOpportunityContactService opContactService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
+	
+	
 	
 	@RequestMapping(value = "/list_all", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> getAllLead(@RequestBody MeDataSource dataSource){
@@ -229,10 +243,16 @@ public class LeadController {
 		if(leadService.insertLead(lead) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			
+			map.put("MSG", messageService.getMessage("1000", "lead", lead.getLeadID(), lead.getMeDataSource()));
+			
+			activityService.addUserActivity(activity.getActivity(lead.getMeDataSource(), "Create", "Lead", lead.getLeadID()));
+			
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.CREATED);
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			map.put("MSG", messageService.getMessage("1003", "lead", "", lead.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 	}
@@ -243,10 +263,13 @@ public class LeadController {
 		if(leadService.updateLead(lead) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1001", "lead", lead.getLeadID(), lead.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(lead.getMeDataSource(), "Update", "Lead", lead.getLeadID()));
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			map.put("MSG", messageService.getMessage("1004", "lead", lead.getLeadID(), lead.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		
@@ -297,10 +320,13 @@ public class LeadController {
 		if(leadService.deleteLead(lead) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1002", "lead", lead.getLeadID(), lead.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(lead.getMeDataSource(), "Delete", "Lead", lead.getLeadID()));
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			map.put("MSG", messageService.getMessage("1005", "lead", lead.getLeadID(), lead.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 	}

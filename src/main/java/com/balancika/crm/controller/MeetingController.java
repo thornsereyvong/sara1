@@ -161,7 +161,7 @@ public class MeetingController {
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		map.put("MSG", messageService.getMessage("1004", "call", meeting.getMeetingId(), meeting.getMeDataSource()));
+		map.put("MSG", messageService.getMessage("1004", "meet", meeting.getMeetingId(), meeting.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
