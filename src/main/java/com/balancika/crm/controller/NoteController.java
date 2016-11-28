@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmNote;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmNoteService;
+import com.balancika.crm.services.CrmUserActivityService;
 
 @RestController
 @RequestMapping("/api/note")
@@ -23,6 +26,15 @@ public class NoteController {
 	
 	@Autowired
 	private CrmNoteService noteService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listNotes(@RequestBody MeDataSource dataSource){
@@ -108,10 +120,17 @@ public class NoteController {
 		if(noteService.insertNote(note) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			
+			map.put("MSG", messageService.getMessage("1000", "note", note.getNoteId(), note.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(note.getMeDataSource(), "Create", "Note", note.getNoteId()));
+			
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1003", "note", "", note.getMeDataSource()));
+		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -121,10 +140,18 @@ public class NoteController {
 		if(noteService.updateNote(note) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "note", note.getNoteId(), note.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(note.getMeDataSource(), "Update", "Note", note.getNoteId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		
+		map.put("MSG", messageService.getMessage("1004", "call", note.getNoteId(), note.getMeDataSource()));
+		
+		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -134,10 +161,15 @@ public class NoteController {
 		if(noteService.deleteNote(note) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1002", "note", note.getNoteId(), note.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(note.getMeDataSource(), "Delete", "Note", note.getNoteId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}	
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1005", "note", note.getNoteId(), note.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

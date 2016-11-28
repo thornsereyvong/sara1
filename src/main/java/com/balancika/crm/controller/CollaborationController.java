@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCollaboration;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCollaborationService;
+import com.balancika.crm.services.CrmMessageService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -28,6 +31,14 @@ public class CollaborationController {
 	@Autowired
 	private CrmUserService userService;
 	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	@RequestMapping(value = "/list/{moduleId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCollaborations(@RequestBody MeDataSource dataSource, @PathVariable("moduleId") String moduleId){
@@ -54,11 +65,14 @@ public class CollaborationController {
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			map.put("COLLABORATION", collaborationService.findCollaborationById(collaboration.getColId(), collaboration.getMeDataSource()));
+			map.put("MSG", messageService.getMessage("1011", "", "", collaboration.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(collaboration.getMeDataSource(), "Create", "Collaboration", collaboration.getColId()+""));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1012", "", "", collaboration.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -82,11 +96,14 @@ public class CollaborationController {
 		if(collaborationService.deleteCollaboration(collaboration) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1013", "", "", collaboration.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(collaboration.getMeDataSource(), "Delete", "Collaboration", collaboration.getColId()+""));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1014", "", "", collaboration.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

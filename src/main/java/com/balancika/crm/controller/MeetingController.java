@@ -138,7 +138,7 @@ public class MeetingController {
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			map.put("MSG", messageService.getMessage("1000", "meet", meeting.getMeetingId(), meeting.getMeDataSource()));			
-			activityService.addUserActivity(activity.getActivity(meeting.getMeDataSource(), "Create", "meeting", meeting.getMeetingId()));
+			activityService.addUserActivity(activity.getActivity(meeting.getMeDataSource(), "Create", "Meeting", meeting.getMeetingId()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		map.put("MESSAGE", "FAILED");
@@ -161,7 +161,7 @@ public class MeetingController {
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		map.put("MSG", messageService.getMessage("1004", "call", meeting.getMeetingId(), meeting.getMeDataSource()));
+		map.put("MSG", messageService.getMessage("1004", "meet", meeting.getMeetingId(), meeting.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -172,6 +172,7 @@ public class MeetingController {
 		if(meetingService.deleteMeeting(meeting) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());			
+			
 			map.put("MSG", messageService.getMessage("1002", "meeting", meeting.getMeetingId(), meeting.getMeDataSource()));
 			activityService.addUserActivity(activity.getActivity(meeting.getMeDataSource(), "Delete", "Meeting", meeting.getMeetingId()));
 			

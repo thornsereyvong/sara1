@@ -217,13 +217,14 @@ public class ContactController {
 		if(contactService.updateContact(contact) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			map.put("MSG", HttpStatus.INTERNAL_SERVER_ERROR);
+			map.put("MSG", messageService.getMessage("1004", "contact", contact.getConID(), contact.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "UPDATED");
 		map.put("STATUS", HttpStatus.OK.value());
-		map.put("MSG", "UPDATED");
+		map.put("MSG", messageService.getMessage("1001", "contact", contact.getConID(), contact.getMeDataSource()));
+		activityService.addUserActivity(activity.getActivity(contact.getMeDataSource(), "Update", "Contact", contact.getConID()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -234,13 +235,14 @@ public class ContactController {
 		if(contactService.deleteContact(contact) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			map.put("MSG", HttpStatus.INTERNAL_SERVER_ERROR);
+			map.put("MSG", messageService.getMessage("1005", "contact", contact.getConID(), contact.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "DELETED");
 		map.put("STATUS", HttpStatus.OK.value());
-		map.put("MSG", "DELETED");
+		map.put("MSG", messageService.getMessage("1002", "contact", contact.getConID(), contact.getMeDataSource()));
+		activityService.addUserActivity(activity.getActivity(contact.getMeDataSource(), "Delete", "Contact", contact.getConID()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
