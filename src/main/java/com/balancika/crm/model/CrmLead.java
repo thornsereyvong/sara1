@@ -100,15 +100,13 @@ public class CrmLead implements Serializable{
 	private CrmLeadStatus status;
 	
 	/* relationship many to one between table crm_lead and crm_industry */
-	@ManyToOne(optional = true, targetEntity = CrmIndustry.class, fetch = FetchType.EAGER) 
-	@JoinColumn(name="LA_IndustID",
-			nullable = true)
+	@ManyToOne(fetch = FetchType.EAGER) 
+	@JoinColumn(name="LA_IndustID", nullable = true)
 	private CrmIndustry industry;
 	
 	/* relationship many to one between table crm_lead and crm_lead_soruce */
-	@ManyToOne(optional = true , targetEntity = CrmLeadSource.class, fetch = FetchType.EAGER) 
-	@JoinColumn(name="LA_SourceID",
-			nullable = true)
+	@ManyToOne(fetch = FetchType.EAGER) 
+	@JoinColumn(name="LA_SourceID", nullable = true)
 	private CrmLeadSource source;
 	
 	/* relationship many to one between table crm_lead and crm_camp */
