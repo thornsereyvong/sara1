@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.SaleOrder;
+import com.balancika.crm.services.CrmMessageService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.QuoteService;
 import com.balancika.crm.services.SaleOrderService;
 
@@ -27,6 +30,15 @@ public class SaleOrderController {
 	
 	@Autowired
 	private QuoteService quoteService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	
 	@RequestMapping(value="/list", method = RequestMethod.POST)
@@ -91,12 +103,17 @@ public class SaleOrderController {
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED);
 			map.put("saleId", saleOrder.getSaleId());
+			
+			map.put("MSG", messageService.getMessage("1000", "sale order", saleOrder.getSaleId(), saleOrder.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(saleOrder.getMeDataSource(), "Create", "Sale Order", saleOrder.getSaleId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR);
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		map.put("MSG", messageService.getMessage("1003", "sale order", "", saleOrder.getMeDataSource()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/edit", method = RequestMethod.POST)
@@ -107,12 +124,17 @@ public class SaleOrderController {
 		if(saleOrderService.updateSaleOrder(saleOrder) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK);
+			
+			map.put("MSG", messageService.getMessage("1001", "sale order", saleOrder.getSaleId(), saleOrder.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(saleOrder.getMeDataSource(), "Update", "Sale Order", saleOrder.getSaleId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR);
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		map.put("MSG", messageService.getMessage("1004", "sale order", saleOrder.getSaleId(), saleOrder.getMeDataSource()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/edit/post_status/{saleId}/{status}", method = RequestMethod.POST)
@@ -137,12 +159,17 @@ public class SaleOrderController {
 		if(saleOrderService.deleteSaleOrder(saleOrder) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK);
+			
+			map.put("MSG", messageService.getMessage("1002", "sale order", saleOrder.getSaleId(), saleOrder.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(saleOrder.getMeDataSource(), "Delete", "Sale Order", saleOrder.getSaleId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR);
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		map.put("MSG", messageService.getMessage("1005", "sale order", saleOrder.getSaleId(), saleOrder.getMeDataSource()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/check_entry_no/{saleId}", method = RequestMethod.POST)

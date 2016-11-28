@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.Quote;
+import com.balancika.crm.services.CrmMessageService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.QuoteService;
 
 @RestController
@@ -23,6 +26,15 @@ public class QuoteController {
 
 	@Autowired
 	private QuoteService quoteService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> listQuoteStartupPage(@RequestBody MeDataSource dataSource) {
@@ -147,11 +159,16 @@ public class QuoteController {
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED);
 			map.put("quoteId", quote.getSaleId());
+			
+			map.put("MSG", messageService.getMessage("1000", "quote", quote.getSaleId(), quote.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(quote.getMeDataSource(), "Create", "Quote", quote.getSaleId()));
+			
 			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.CREATED);
 		}
 
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR);
+		map.put("MSG", messageService.getMessage("1003", "quote", "", quote.getMeDataSource()));
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
@@ -162,11 +179,16 @@ public class QuoteController {
 		if (quoteService.updateQuote(quote) == true) {
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK);
+			
+			map.put("MSG", messageService.getMessage("1001", "quote", quote.getSaleId(), quote.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(quote.getMeDataSource(), "Update", "Quote", quote.getSaleId()));
+			
 			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 		}
 
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR);
+		map.put("MSG", messageService.getMessage("1004", "quote", quote.getSaleId(), quote.getMeDataSource()));
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
@@ -177,11 +199,18 @@ public class QuoteController {
 		if (quoteService.deleteQuote(quote)== true) {
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK);
+			
+			map.put("MSG", messageService.getMessage("1002", "quote", quote.getSaleId(), quote.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(quote.getMeDataSource(), "Delete", "Meeting", quote.getSaleId()));
+			
 			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 		}
 
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		map.put("MSG", messageService.getMessage("1005", "quote", quote.getSaleId(), quote.getMeDataSource()));
+		
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 
