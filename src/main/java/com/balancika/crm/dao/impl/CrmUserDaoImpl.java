@@ -52,6 +52,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			session.beginTransaction();
 			user.setUserID(IdAutoGenerator("UM", user.getDataSource()));	
 			user.setPassword(new PasswordEncrypt().BalEncrypt(user.getPassword()));
+			user.getUserApp().setAppId("CRM");
 			session.save(user);
 			session.getTransaction().commit();
 			return true;
