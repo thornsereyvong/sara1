@@ -336,6 +336,7 @@ public class LeadController {
 			@PathVariable("username") String username, 
 			@PathVariable("leadId") String leadId, 
 			@RequestBody MeDataSource dataSource){
+		
 		Map<String , Object> map = new HashMap<String, Object>();
 		map.put("GROUP", groupService.listCustomerGroups(dataSource));
 		map.put("PRICE_CODE", customerService.listPriceCode(dataSource));
@@ -470,6 +471,8 @@ public class LeadController {
 		}
 		map.put("MESSAGE", "SUCCESS");
 		map.put("STATUS", HttpStatus.OK.value());
+		map.put("MSG", messageService.getMessage("1007", "lead", lead.getLeadID(), dataSource));
+		activityService.addUserActivity(activity.getActivity(dataSource, "Convert", "Lead", lead.getLeadID()));
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 }

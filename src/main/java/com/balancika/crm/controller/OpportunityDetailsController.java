@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunityDetails;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmOpportunityDetailsService;
+import com.balancika.crm.services.CrmUserActivityService;
 
 @RestController
 @RequestMapping("/api/opportunity_details")
@@ -23,7 +26,14 @@ public class OpportunityDetailsController {
 
 	@Autowired
 	private CrmOpportunityDetailsService opportunityDetailsService;
+	@Autowired
+	private CrmMessageService messageService;
 	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	@RequestMapping(value="/startup", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> startupPage(@RequestBody MeDataSource dataSource){
 		return new ResponseEntity<Map<String,Object>>(opportunityDetailsService.startUpPage(dataSource), HttpStatus.OK);
@@ -84,11 +94,16 @@ public class OpportunityDetailsController {
 		if(opportunityDetailsService.updateOpportunityDetails(details) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "opportunity detail", details.getOpId(), details.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(details.getMeDataSource(), "Update", "Opportunity Detail", details.getOpId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "opportunity detail", details.getOpId(), details.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmOpportunity;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCallStatusService;
@@ -26,6 +27,7 @@ import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmLeadSourceService;
 import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmMeetingStatusService;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmOpportunityDetailsService;
 import com.balancika.crm.services.CrmOpportunityService;
@@ -33,6 +35,7 @@ import com.balancika.crm.services.CrmOpportunityStageService;
 import com.balancika.crm.services.CrmOpportunityTypeService;
 import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmTaskStatusService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -99,6 +102,15 @@ public class OpportunityController {
 	
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	@RequestMapping(value="/list_all", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listOpportunties(@RequestBody MeDataSource dataSource){
@@ -279,11 +291,17 @@ public class OpportunityController {
 		if(opService.isInsertOpportunity(opportunity) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			
+			map.put("MSG", messageService.getMessage("1000", "opportunity", opportunity.getOpId(), opportunity.getMeDataSource()));
+			
+			activityService.addUserActivity(activity.getActivity(opportunity.getMeDataSource(), "Create", "Opportunity", opportunity.getOpId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1003", "opportunity", "", opportunity.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -309,11 +327,16 @@ public class OpportunityController {
 		if(opService.isUpdateOpportunity(opportunity) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "opportunity", opportunity.getOpId(), opportunity.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(opportunity.getMeDataSource(), "Update", "Opportunity", opportunity.getOpId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "opportunity", opportunity.getOpId(), opportunity.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -323,11 +346,16 @@ public class OpportunityController {
 		if(opService.updateCustomFieldsOfOpprotunity(opportunity) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "opportunity", opportunity.getOpId(), opportunity.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(opportunity.getMeDataSource(), "Update", "Opportunity", opportunity.getOpId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "opportunity", opportunity.getOpId(), opportunity.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -339,11 +367,16 @@ public class OpportunityController {
 		if(opService.isDeleteOpportunity(opportunity) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1002", "opportunity", opportunity.getOpId(), opportunity.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(opportunity.getMeDataSource(), "Delete", "Opportunity", opportunity.getOpId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1005", "opportunity", opportunity.getOpId(), opportunity.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

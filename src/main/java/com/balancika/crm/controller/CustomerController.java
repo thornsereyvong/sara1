@@ -204,7 +204,7 @@ public class CustomerController {
 		
 		if(customerService.insertCustomer(customer) == true){
 			map.put("MESSAGE", "INSERTED");
-			
+			System.out.println(customer.getCustID());
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("MSG", messageService.getMessage("1000", "customer", customer.getCustID(), customer.getMeDataSource()));			
 			activityService.addUserActivity(activity.getActivity(customer.getMeDataSource(), "Create", "Customer", customer.getCustID()));

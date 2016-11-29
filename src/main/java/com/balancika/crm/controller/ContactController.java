@@ -98,7 +98,7 @@ public class ContactController {
 		if( arrContact == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
@@ -116,7 +116,7 @@ public class ContactController {
 		if( contact == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
@@ -159,7 +159,7 @@ public class ContactController {
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			map.put("MSG", "NOT_FOUND");
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND); 
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
 		
 		map.put("MESSAGE", "SUCCESS");
