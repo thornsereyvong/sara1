@@ -2,6 +2,7 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,6 +51,11 @@ public class CrmUser implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="URoleID", nullable = false)
 	private CrmRole role;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="UID", nullable = false, insertable = false, updatable = false)
+	private UserApp userApp;
 		
 	@Transient
 	private MeDataSource dataSource;
@@ -58,6 +64,17 @@ public class CrmUser implements Serializable{
 		
 	}
 	
+	
+	public UserApp getUserApp() {
+		return userApp;
+	}
+
+
+	public void setUserApp(UserApp userApp) {
+		this.userApp = userApp;
+	}
+
+
 	public String getUserID() {
 		return userID;
 	}
