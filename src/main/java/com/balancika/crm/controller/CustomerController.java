@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCustomer;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.services.CrmAccountTypeService;
@@ -27,10 +28,12 @@ import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmIndustryService;
 import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmMeetingStatusService;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmTaskStatusService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 import com.balancika.crm.services.CustomerGroupService;
 
@@ -89,6 +92,16 @@ public class CustomerController {
 	
 	@Autowired
 	private CrmContactService contactService;
+	
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCustomers(@RequestBody MeDataSource datasource){
@@ -193,12 +206,14 @@ public class CustomerController {
 			map.put("MESSAGE", "INSERTED");
 			
 			map.put("STATUS", HttpStatus.OK.value());
-			
+			map.put("MSG", messageService.getMessage("1000", "customer", customer.getCustID(), customer.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(customer.getMeDataSource(), "Create", "Customer", customer.getCustID()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1003", "customer", "", customer.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -210,12 +225,14 @@ public class CustomerController {
 		if(customerService.updateCustomer(customer) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
-			
+			map.put("MSG", messageService.getMessage("1001", "customer", customer.getCustID(), customer.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(customer.getMeDataSource(), "Update", "Customer", customer.getCustID()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "customer", customer.getCustID(), customer.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -227,12 +244,14 @@ public class CustomerController {
 		if(customerService.deleteCustomer(customer) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
-			
+			map.put("MSG", messageService.getMessage("1002", "customer", customer.getCustID(), customer.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(customer.getMeDataSource(), "Delete", "Customer", customer.getCustID()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1005", "customer", customer.getCustID(), customer.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

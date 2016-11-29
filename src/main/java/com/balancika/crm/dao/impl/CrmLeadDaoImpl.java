@@ -65,6 +65,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.clear();

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCampaign;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCallStatusService;
@@ -88,6 +89,9 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 
 	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> allCampaign(@RequestBody MeDataSource dataSource){
@@ -237,14 +241,17 @@ public class CampaignController {
 	public ResponseEntity<Map<String, Object>> addCampaign(@RequestBody CrmCampaign campaign) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(campaignService.insertCampaign(campaign) == false){
-			map.put("MESSAGE", messageService.getMessage("1003", "Campaign", "", campaign.getMeDataSource()));
+			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			map.put("MSG", messageService.getMessage("1003", "campaign", "", campaign.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		
 		map.put("MESSAGE", "INSERTED");
 		map.put("STATUS", HttpStatus.CREATED.value());
+		map.put("MSG", messageService.getMessage("1000", "campaign", campaign.getCampID(), campaign.getMeDataSource()));			
+		activityService.addUserActivity(activity.getActivity(campaign.getMeDataSource(), "Create", "Campaign", campaign.getCampID()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 	}
 	
@@ -271,23 +278,28 @@ public class CampaignController {
 		if(campaignService.updateCampaign(campaign) == false){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
+			map.put("MSG", messageService.getMessage("1004", "campaign", campaign.getCampID(), campaign.getMeDataSource()));
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		map.put("MESSAGE", "UPDATED");
 		map.put("STATUS", HttpStatus.OK.value());
+		map.put("MSG", messageService.getMessage("1001", "campaign", campaign.getCampID(), campaign.getMeDataSource()));
+		activityService.addUserActivity(activity.getActivity(campaign.getMeDataSource(), "Update", "Campaign", campaign.getCampID()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/remove", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> deleteCampaign(@PathVariable("campId") String campId, @RequestBody MeDataSource dataSource) {
+	public ResponseEntity<Map<String, Object>> deleteCampaign(@RequestBody CrmCampaign campaign) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(campaignService.deleteCampaign(campId, dataSource).equalsIgnoreCase("OK")){
+		if(campaignService.deleteCampaign(campaign.getCampID(), campaign.getMeDataSource()).equalsIgnoreCase("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1002", "campaign", campaign.getCampID(), campaign.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(campaign.getMeDataSource(), "Delete", "Campaign", campaign.getCampID()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
-		if(campaignService.deleteCampaign(campId, dataSource).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
+		if(campaignService.deleteCampaign(campaign.getCampID(), campaign.getMeDataSource()).equalsIgnoreCase("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -295,6 +307,7 @@ public class CampaignController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1005", "customer", campaign.getCampID(), campaign.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 }
