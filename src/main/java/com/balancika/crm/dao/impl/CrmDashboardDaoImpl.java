@@ -53,6 +53,7 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 				//System.err.println(map.get("KEY")+" "+map.get("VAL"));
 				switch (map.get("KEY").toString()) {
 					case "MEETING":
+						System.out.println(generateMeetingMap(map.get("VAL").toString()));
 						meetingList.add(generateMeetingMap(map.get("VAL").toString()));
 						break;
 					case "TASK":

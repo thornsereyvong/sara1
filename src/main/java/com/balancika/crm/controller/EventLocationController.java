@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmEventLocation;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmEventLocationService;
+import com.balancika.crm.services.CrmMessageService;
+import com.balancika.crm.services.CrmUserActivityService;
 
 @RestController
 @RequestMapping("/api/event_location")
@@ -23,6 +26,15 @@ public class EventLocationController {
 
 	@Autowired
 	private CrmEventLocationService locationService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listEventLocations(@RequestBody MeDataSource dataSource){
@@ -60,11 +72,19 @@ public class EventLocationController {
 		if(locationService.insertEventLocation(location) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			
+			map.put("MSG", messageService.getMessage("1000", "location", location.getLoId(), location.getMeDataSource()));			
+			activityService.addUserActivity(activity.getActivity(location.getMeDataSource(), "Create", "Location", location.getLoId()));
+			
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		map.put("MSG", messageService.getMessage("1003", "location", "", location.getMeDataSource()));
+		
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
@@ -73,11 +93,16 @@ public class EventLocationController {
 		if(locationService.updateEventLocation(location) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "location", location.getLoId(), location.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(location.getMeDataSource(), "Update", "Location", location.getLoId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		map.put("MSG", messageService.getMessage("1004", "location", location.getLoId(), location.getMeDataSource()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
@@ -86,16 +111,22 @@ public class EventLocationController {
 		if(locationService.deleteEventLocation(location).equals("OK")){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			
+			map.put("MSG", messageService.getMessage("1001", "location", location.getLoId(), location.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(location.getMeDataSource(), "Update", "Location", location.getLoId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		if(locationService.deleteEventLocation(location).equals("FOREIGN_KEY_CONSTRAIN")){
 			map.put("MESSAGE", "FOREIGN_KEY_CONSTRAIN");
 			map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			map.put("MSG", messageService.getMessage("1010", "location", location.getLoId(), location.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "location", location.getLoId(), location.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
