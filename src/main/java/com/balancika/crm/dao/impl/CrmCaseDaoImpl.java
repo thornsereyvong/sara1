@@ -72,7 +72,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		}finally{
 			session.clear();
 			session.close();
-			session.close();
+			sessionFactory.close();
 		}
 		return false;
 	}
