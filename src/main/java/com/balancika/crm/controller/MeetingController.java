@@ -137,7 +137,7 @@ public class MeetingController {
 		if(meetingService.insertMeeting(meeting) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
-			map.put("MSG", messageService.getMessage("1000", "meet", meeting.getMeetingId(), meeting.getMeDataSource()));			
+			map.put("MSG", messageService.getMessage("1000", "meeting", meeting.getMeetingId(), meeting.getMeDataSource()));			
 			activityService.addUserActivity(activity.getActivity(meeting.getMeDataSource(), "Create", "Meeting", meeting.getMeetingId()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
