@@ -16,6 +16,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -24,6 +26,8 @@ import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
 @Table(name="crm_case")
+@DynamicInsert
+@DynamicUpdate
 public class CrmCase implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -88,6 +92,71 @@ public class CrmCase implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="CS_MDate", insertable = false, updatable = false)
 	private Date modifyDate;
+	
+	@Column(name="CS_RosolvedBy")
+	private String resolvedBy;
+	
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
+	@Column(name="CS_ResolvedDate")
+	private LocalDateTime resolvedDate;
+	
+	@Transient
+	private String convertResolvedDate;
+	
+	@Column(name="CS_EscalateTo")
+	private String escalateTo;
+	
+	@Column(name="CS_EscalateStatus")
+	private String escalateStatus;
+	
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
+	@Column(name="CS_FollowupDate")
+	private LocalDateTime followupDate;
+	
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
+	@Column(name="CS_ElapsedTime")
+	private LocalDateTime elapsedTime;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="CS_PriceCode")
+	private PriceCode priceCode;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="CS_Class")
+	private AmeClass ameClass;
+	
+	@Column(name="CS_TotalSTax", columnDefinition = "double default 0")
+	private double totalSTax;
+	
+	@Column(name="CS_TotalVTax", columnDefinition = "double default 0")
+	private double totalVTax;
+	
+	@Column(name="CS_TotalAmt", columnDefinition = "double default 0")
+	private double totalAmt;
+	
+	@Column(name="CS_InvDisDol", columnDefinition = "double default 0")
+	private double invDisDol;
+	
+	@Column(name="CS_InvDisPer", columnDefinition = "double default 0")
+	private double invDisPer;
+	
+	@Column(name="CS_TotalDis", columnDefinition = "double default 0")
+	private double totalDis;
+	
+	@Column(name="CS_NetTotalAmt", columnDefinition = "double default 0")
+	private double netTotalAmt;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="CS_OriginID")
+	private CrmCaseOrigin origin;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="CS_ItemID")
+	private AmeItem item;
 	
 	@Transient
 	private MeDataSource meDataSource;
@@ -223,4 +292,149 @@ public class CrmCase implements Serializable{
 	public final void setMeDataSource(MeDataSource meDataSource) {
 		this.meDataSource = meDataSource;
 	}
+
+	public String getResolvedBy() {
+		return resolvedBy;
+	}
+
+	public void setResolvedBy(String resolvedBy) {
+		this.resolvedBy = resolvedBy;
+	}
+
+	public LocalDateTime getResolvedDate() {
+		return resolvedDate;
+	}
+
+	public void setResolvedDate(LocalDateTime resolvedDate) {
+		this.resolvedDate = resolvedDate;
+	}
+
+	public String getConvertResolvedDate() {
+		return convertResolvedDate;
+	}
+
+	public void setConvertResolvedDate(String convertResolvedDate) {
+		this.convertResolvedDate = convertResolvedDate;
+	}
+
+	public String getEscalateTo() {
+		return escalateTo;
+	}
+
+	public void setEscalateTo(String escalateTo) {
+		this.escalateTo = escalateTo;
+	}
+
+	public String getEscalateStatus() {
+		return escalateStatus;
+	}
+
+	public void setEscalateStatus(String escalateStatus) {
+		this.escalateStatus = escalateStatus;
+	}
+
+	public LocalDateTime getFollowupDate() {
+		return followupDate;
+	}
+
+	public void setFollowupDate(LocalDateTime followupDate) {
+		this.followupDate = followupDate;
+	}
+
+	public LocalDateTime getElapsedTime() {
+		return elapsedTime;
+	}
+
+	public void setElapsedTime(LocalDateTime elapsedTime) {
+		this.elapsedTime = elapsedTime;
+	}
+
+	public PriceCode getPriceCode() {
+		return priceCode;
+	}
+
+	public void setPriceCode(PriceCode priceCode) {
+		this.priceCode = priceCode;
+	}
+
+	public AmeClass getAmeClass() {
+		return ameClass;
+	}
+
+	public void setAmeClass(AmeClass ameClass) {
+		this.ameClass = ameClass;
+	}
+
+	public double getTotalSTax() {
+		return totalSTax;
+	}
+
+	public void setTotalSTax(double totalSTax) {
+		this.totalSTax = totalSTax;
+	}
+
+	public double getTotalVTax() {
+		return totalVTax;
+	}
+
+	public void setTotalVTax(double totalVTax) {
+		this.totalVTax = totalVTax;
+	}
+
+	public double getTotalAmt() {
+		return totalAmt;
+	}
+
+	public void setTotalAmt(double totalAmt) {
+		this.totalAmt = totalAmt;
+	}
+
+	public double getInvDisDol() {
+		return invDisDol;
+	}
+
+	public void setInvDisDol(double invDisDol) {
+		this.invDisDol = invDisDol;
+	}
+
+	public double getInvDisPer() {
+		return invDisPer;
+	}
+
+	public void setInvDisPer(double invDisPer) {
+		this.invDisPer = invDisPer;
+	}
+
+	public double getTotalDis() {
+		return totalDis;
+	}
+
+	public void setTotalDis(double totalDis) {
+		this.totalDis = totalDis;
+	}
+
+	public double getNetTotalAmt() {
+		return netTotalAmt;
+	}
+
+	public void setNetTotalAmt(double netTotalAmt) {
+		this.netTotalAmt = netTotalAmt;
+	}
+
+	public CrmCaseOrigin getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(CrmCaseOrigin origin) {
+		this.origin = origin;
+	}
+
+	public AmeItem getItem() {
+		return item;
+	}
+
+	public void setItem(AmeItem item) {
+		this.item = item;
+	}
+	
 }
