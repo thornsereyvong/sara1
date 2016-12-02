@@ -335,6 +335,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 				for(CrmOpportunityDetails details : opp.getDetails()){
 					details.setOpId(opp.getOpId());
 					details.setDisInv(generateDisInvByItem(details.getNetTotalAmt(), opportunity.getDisInvPer()));
+					details.setMeDataSource(opp.getMeDataSource());
 					detailsService.insertOpportunityDetails(details);
 				}
 			}
