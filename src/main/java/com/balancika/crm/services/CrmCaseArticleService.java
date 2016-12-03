@@ -13,4 +13,5 @@ public interface CrmCaseArticleService {
 	List<CrmCaseArticle> listCasesArticle(MeDataSource dataSource);
 	Object findCaseArticleById(String articleId, MeDataSource dataSource);
 	CrmCaseArticle findCaseArticleDetailsById(String articleId, MeDataSource dataSource);
+
 }
