@@ -52,7 +52,7 @@ public class CrmRoleDetail implements Serializable{
 	@Column(name = "RM_View")
 	private String roleView;
 	
-	/*@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	/*@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="RM_RoleID", nullable = true)
 	private CrmRole role;*/
 

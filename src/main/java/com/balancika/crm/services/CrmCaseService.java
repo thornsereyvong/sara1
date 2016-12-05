@@ -13,4 +13,5 @@ public interface CrmCaseService {
 	List<CrmCase> listCases(MeDataSource dataSource);
 	Object findCaseById(String caseId, MeDataSource dataSource);
 	CrmCase findCaseDetailsById(String caseId, MeDataSource dataSource);
+	boolean updateCustomFieldOfCase(CrmCase cases);
 }

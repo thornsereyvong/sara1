@@ -48,4 +48,9 @@ public class CrmCaseServiceImpl implements CrmCaseService{
 	public CrmCase findCaseDetailsById(String caseId, MeDataSource dataSource) {
 		return caseDao.findCaseDetailsById(caseId, dataSource);
 	}
+
+	@Override
+	public boolean updateCustomFieldOfCase(CrmCase cases) {
+		return caseDao.updateCustomFieldOfCase(cases);
+	}
 }

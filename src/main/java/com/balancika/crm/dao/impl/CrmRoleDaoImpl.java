@@ -3,6 +3,7 @@ package com.balancika.crm.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -142,6 +143,26 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		} finally {
 			//session.clear();
 			//session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findRoleDetailsByRoleId(String roleId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crmFindRoleById(:roleId)");
+			query.setParameter("roleId", roleId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
 			sessionFactory.close();
 		}
 		return null;

@@ -10,6 +10,7 @@ public interface CrmRoleService {
 	boolean isUpdatedRole(CrmRole role);
 	boolean isDeletedRole(CrmRole role);
 	CrmRole findRoleById(String roleId, MeDataSource dataSource);
+	List<Object> findRoleDetailsByRoleId(String roleId, MeDataSource dataSource);
 	List<CrmRole> listAllRoles(MeDataSource dataSource);
 	CrmRole findRoleByUsername(String username, MeDataSource dataSource);
 }

@@ -226,6 +226,21 @@ public class CaseController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/edit/custom", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> updateCustomFieldOfCase(@RequestBody CrmCase cases){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(caseService.updateCustomFieldOfCase(cases) == true){
+			map.put("MESSAGE", "UPDATED");
+			map.put("STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+		
 	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> deleteCases(@RequestBody CrmCase cases){
 		

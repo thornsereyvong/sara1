@@ -154,4 +154,23 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		}
 		return null;
 	}
+
+	@Override
+	public boolean updateCustomFieldOfCase(CrmCase cases) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(cases.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			session.save(cases);
+			session.getTransaction().commit();
+			return  true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return false;
+	}
 }

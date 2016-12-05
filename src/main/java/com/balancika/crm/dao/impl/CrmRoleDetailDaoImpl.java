@@ -2,16 +2,18 @@ package com.balancika.crm.dao.impl;
 
 import java.util.List;
 
-
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
+import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmRoleDetailDao;
+import com.balancika.crm.model.CrmModule;
 import com.balancika.crm.model.CrmRoleDetail;
 import com.balancika.crm.model.MeDataSource;
 
@@ -20,11 +22,11 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 	
 	private SessionFactory sessionFactory;
 	
-	public final SessionFactory getSessionFactory() {
+	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
-	public final void setSessionFactory(SessionFactory sessionFactory) {
+	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 
@@ -87,12 +89,15 @@ public class CrmRoleDetailDaoImpl implements CrmRoleDetailDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource) {
+	public List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource, String roleId) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
-			Criteria criteria = session.createCriteria(CrmRoleDetail.class);
-			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			Criteria criteria = session.createCriteria(CrmModule.class, "m");
+			Criteria roleDetails = criteria.createCriteria("roleDetail", JoinType.LEFT_OUTER_JOIN);
+			Criteria role = roleDetails.createCriteria("role", JoinType.INNER_JOIN);
+			role.add(Restrictions.sqlRestriction("{alias}.roleId", roleId, StringType.INSTANCE));
+			//criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.list();
 		} catch (Exception e) {
 			e.printStackTrace();
