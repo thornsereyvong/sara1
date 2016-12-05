@@ -39,8 +39,7 @@ public class CrmCaseArticle implements Serializable{
 	@Column(name="A_Description")
 	private String articleDes;
 	
-	@Column(name="A_ItemID")
-	private String articleItemId;
+	
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="A_CDate")
@@ -100,14 +99,6 @@ public class CrmCaseArticle implements Serializable{
 
 	public void setArticleDes(String articleDes) {
 		this.articleDes = articleDes;
-	}
-
-	public String getArticleItemId() {
-		return articleItemId;
-	}
-
-	public void setArticleItemId(String articleItemId) {
-		this.articleItemId = articleItemId;
 	}
 
 	public LocalDateTime getArticleCreateDate() {
