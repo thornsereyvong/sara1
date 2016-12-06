@@ -13,30 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.balancika.crm.model.CrmCase;
 import com.balancika.crm.model.CrmCaseArticle;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
-import com.balancika.crm.services.CrmCallService;
-import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCaseArticleService;
-import com.balancika.crm.services.CrmCasePriorityService;
-import com.balancika.crm.services.CrmCaseService;
-import com.balancika.crm.services.CrmCaseStatusService;
-import com.balancika.crm.services.CrmCaseTypeService;
-import com.balancika.crm.services.CrmCollaborationService;
-import com.balancika.crm.services.CrmContactService;
-import com.balancika.crm.services.CrmCustomerService;
-import com.balancika.crm.services.CrmEventLocationService;
-import com.balancika.crm.services.CrmEventService;
-import com.balancika.crm.services.CrmMeetingService;
-import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmMessageService;
-import com.balancika.crm.services.CrmNoteService;
-import com.balancika.crm.services.CrmTaskService;
-import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserActivityService;
-import com.balancika.crm.services.CrmUserService;
 
 @RestController
 @RequestMapping("/api/case-article")
