@@ -23,9 +23,7 @@ public class CrmUserActivity implements Serializable{
 	
 	@Id
 	@Column(name="AC_ID")
-	
-	
-	private int actId;
+	private String actId;
 
 	@Column(name="AC_Action")
 	private String action;
@@ -63,11 +61,11 @@ public class CrmUserActivity implements Serializable{
 		
 	}
 
-	public int getActId() {
+	public String getActId() {
 		return actId;
 	}
 
-	public void setActId(int actId) {
+	public void setActId(String actId) {
 		this.actId = actId;
 	}
 

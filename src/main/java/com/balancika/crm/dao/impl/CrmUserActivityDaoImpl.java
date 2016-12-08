@@ -13,9 +13,10 @@ import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmUserActivityDao;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
-public class CrmUserActivityDaoImpl implements CrmUserActivityDao{
+public class CrmUserActivityDaoImpl extends CrmIdGenerator implements CrmUserActivityDao{
 	
 	private SessionFactory sessionFactory;
 
@@ -33,6 +34,7 @@ public class CrmUserActivityDaoImpl implements CrmUserActivityDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			activity.setActId(IdAutoGenerator("AC", activity.getMeDataSource()));
 			activity.setCreateDate(LocalDateTime.now());
 			session.save(activity);
 			session.getTransaction().commit();
