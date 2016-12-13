@@ -6,12 +6,17 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
@@ -33,12 +38,13 @@ public class CrmCaseArticle implements Serializable{
 	@Column(name="A_Key")
 	private String articleKey;
 	
-	@Column(name="A_CaseID")
-	private String articleCaseId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="A_ItemID")
+	private AmeItem item;
 	
 	@Column(name="A_Description")
 	private String articleDes;
-	
 	
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
@@ -54,6 +60,9 @@ public class CrmCaseArticle implements Serializable{
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="A_MDate")
 	private LocalDateTime atricleModifiedDate;
+	
+	@Transient
+	private String convertModifiedDate;
 	
 	@Column(name="A_MBy")
 	private String articleModifiedBy;
@@ -85,12 +94,12 @@ public class CrmCaseArticle implements Serializable{
 		this.articleKey = articleKey;
 	}
 
-	public String getArticleCaseId() {
-		return articleCaseId;
+	public AmeItem getItem() {
+		return item;
 	}
 
-	public void setArticleCaseId(String articleCaseId) {
-		this.articleCaseId = articleCaseId;
+	public void setItem(AmeItem item) {
+		this.item = item;
 	}
 
 	public String getArticleDes() {
@@ -148,4 +157,13 @@ public class CrmCaseArticle implements Serializable{
 	public void setMeDataSource(MeDataSource meDataSource) {
 		this.meDataSource = meDataSource;
 	}
+
+	public String getConvertModifiedDate() {
+		return convertModifiedDate;
+	}
+
+	public void setConvertModifiedDate(String convertModifiedDate) {
+		this.convertModifiedDate = convertModifiedDate;
+	}
+	
 }

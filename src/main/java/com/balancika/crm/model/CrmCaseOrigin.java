@@ -24,7 +24,7 @@ public class CrmCaseOrigin implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="CS_OriginID")
-	private int orignId;
+	private int originId;
 	
 	@Column(name="CS_Title")
 	private String originTitle;
@@ -35,12 +35,12 @@ public class CrmCaseOrigin implements Serializable{
 	@Transient
 	private MeDataSource meDataSource;
 
-	public int getOrignId() {
-		return orignId;
+	public int getOriginId() {
+		return originId;
 	}
 
-	public void setOrignId(int orignId) {
-		this.orignId = orignId;
+	public void setOriginId(int originId) {
+		this.originId = originId;
 	}
 
 	public String getOriginTitle() {

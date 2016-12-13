@@ -444,5 +444,12 @@ public class CrmCase implements Serializable{
 	public void setItem(AmeItem item) {
 		this.item = item;
 	}
-	
+
+	public List<CrmCaseDetail> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<CrmCaseDetail> details) {
+		this.details = details;
+	}
 }

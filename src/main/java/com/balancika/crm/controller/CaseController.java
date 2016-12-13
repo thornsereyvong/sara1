@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.services.AmeItemService;
 import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCallStatusService;
+import com.balancika.crm.services.CrmCaseOriginService;
 import com.balancika.crm.services.CrmCasePriorityService;
 import com.balancika.crm.services.CrmCaseService;
 import com.balancika.crm.services.CrmCaseStatusService;
@@ -28,9 +31,11 @@ import com.balancika.crm.services.CrmEventLocationService;
 import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmMeetingStatusService;
+import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmTaskService;
 import com.balancika.crm.services.CrmTaskStatusService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -88,6 +93,21 @@ public class CaseController {
 	@Autowired
 	private CrmEventLocationService locationService;
 	
+	@Autowired
+	private AmeItemService itemService;
+	
+	@Autowired
+	private CrmCaseOriginService originService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
+	
 	
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCases(@RequestBody MeDataSource dataSource){
@@ -130,8 +150,10 @@ public class CaseController {
 		map.put("CASE", caseService.findCaseById(caseId, dataSource));
 		map.put("CASE_STATUS", statusService.listCaseStatus(dataSource));
 		map.put("CASE_TYPE", typeService.listCaseTypes(dataSource));
+		map.put("CASE_ORIGIN", originService.listCaseOrigins(dataSource));
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
 		map.put("CONTACTS", contactService.listContactRelatedToModule(dataSource));
+		map.put("ITEMS", itemService.listItems(dataSource));
 		map.put("CASE_PRIORITY", priorityService.listCasePriorities(dataSource));
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
 		map.put("COLLABORATIONS", collaborationService.listCollaborations(caseId,dataSource));
@@ -155,10 +177,12 @@ public class CaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("CASE_STATUS", statusService.listCaseStatus(dataSource));
 		map.put("CASE_TYPE", typeService.listCaseTypes(dataSource));
+		map.put("CASE_ORIGIN", originService.listCaseOrigins(dataSource));
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
 		map.put("CONTACTS", contactService.listContactRelatedToModule(dataSource));
 		map.put("CASE_PRIORITY", priorityService.listCasePriorities(dataSource));
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("ITEMS", itemService.listItems(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -168,11 +192,13 @@ public class CaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("CASE_STATUS", statusService.listCaseStatus(dataSource));
 		map.put("CASE_TYPE", typeService.listCaseTypes(dataSource));
+		map.put("CASE_ORIGIN", originService.listCaseOrigins(dataSource));
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
 		map.put("CONTACTS", contactService.listContactRelatedToModule(dataSource));
 		map.put("CASE_PRIORITY", priorityService.listCasePriorities(dataSource));
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
 		map.put("CASE", caseService.findCaseById(caseId, dataSource));
+		map.put("ITEMS", itemService.listItems(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -200,13 +226,16 @@ public class CaseController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(caseService.insertCase(cases) == true){
+			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Create", "Case", cases.getCaseId()));
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			map.put("MSG", messageService.getMessage("1000", "case", cases.getCaseId(), cases.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1003", "case", cases.getCaseId(), cases.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -216,13 +245,16 @@ public class CaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if(caseService.updateCase(cases) == true){
+			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1001", "case", cases.getCaseId(), cases.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "case", cases.getCaseId(), cases.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -247,13 +279,16 @@ public class CaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if(caseService.deleteCase(cases) == true){
+			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Delete", "Case", cases.getCaseId()));
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1002", "case", cases.getCaseId(), cases.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1005", "case", cases.getCaseId(), cases.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 

@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.balancika.crm.dao.CrmCaseDao;
+import com.balancika.crm.dao.CrmCaseArticleDao;
 import com.balancika.crm.model.CrmCaseArticle;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCaseArticleService;
@@ -17,42 +17,36 @@ import com.balancika.crm.services.CrmCaseArticleService;
 public class CrmCaseArticleServiceImpl implements CrmCaseArticleService{
 
 	@Autowired
-	private CrmCaseDao caseDao;
+	private CrmCaseArticleDao articleDao;
 	
 
 	@Override
 	public boolean insertCaseArticle(CrmCaseArticle article) {
-		// TODO Auto-generated method stub
-		return false;
+		return articleDao.insertCaseArticle(article);
 	}
 
 	@Override
 	public boolean updateCaseArticle(CrmCaseArticle article) {
-		// TODO Auto-generated method stub
-		return false;
+		return articleDao.updateCaseArticle(article);
 	}
 
 	@Override
 	public boolean deleteCaseArticle(CrmCaseArticle article) {
-		// TODO Auto-generated method stub
-		return false;
+		return articleDao.deleteCaseArticle(article);
 	}
 
 	@Override
 	public CrmCaseArticle findCaseArticleDetailsById(String articleId, MeDataSource dataSource) {
-		// TODO Auto-generated method stub
-		return null;
+		return articleDao.findCaseArticleDetailsById(articleId, dataSource);
 	}
 
 	@Override
 	public List<CrmCaseArticle> listCasesArticle(MeDataSource dataSource) {
-		// TODO Auto-generated method stub
-		return null;
+		return articleDao.listCaseArticles(dataSource);
 	}
 
 	@Override
 	public Object findCaseArticleById(String articleId, MeDataSource dataSource) {
-		// TODO Auto-generated method stub
-		return null;
+		return articleDao.findCaseArticleById(articleId, dataSource);
 	}
 }
