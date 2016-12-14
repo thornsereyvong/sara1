@@ -12,7 +12,6 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
@@ -128,14 +127,20 @@ public class CrmCaseArticleDaoImpl extends CrmIdGenerator implements CrmCaseArti
 	}
 
 	@Override
-	public Object findCaseArticleById(String caseId, MeDataSource dataSource) {
+	public Object findCaseArticleById(String articleId, MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
-			SQLQuery query = session.createSQLQuery("CALL findCrmCaseArticleById(:caseId)");
+			/*SQLQuery query = session.createSQLQuery("CALL findCrmCaseArticleById(:caseId)");
 			query.setParameter("caseId", caseId);
 			query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-			return query.uniqueResult();
+			return query.uniqueResult();*/
+			Criteria criteria = session.createCriteria(CrmCaseArticle.class);
+			criteria.add(Restrictions.eq("articleId", articleId));
+			CrmCaseArticle article = (CrmCaseArticle)criteria.uniqueResult();
+			article.setConvertCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(article.getArticleCreateDate()));
+			article.setConvertModifiedDate(new DateTimeOperation().reverseLocalDateTimeToString(article.getAtricleModifiedDate()));
+			return article;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

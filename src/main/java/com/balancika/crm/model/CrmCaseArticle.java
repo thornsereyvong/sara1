@@ -33,7 +33,7 @@ public class CrmCaseArticle implements Serializable{
 	private String articleId;
 	
 	@Column(name="A_Title")
-	private String atricleTitle;
+	private String articleTitle;
 	
 	@Column(name="A_Key")
 	private String articleKey;
@@ -48,13 +48,13 @@ public class CrmCaseArticle implements Serializable{
 	
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
-	@Column(name="A_CDate")
+	@Column(name="A_CDate", updatable = false)
 	private LocalDateTime articleCreateDate;
 	
 	@Transient
 	private String convertCreateDate;
 	
-	@Column(name="A_CBy")
+	@Column(name="A_CBy", updatable = false)
 	private String articleCreateBy;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
@@ -78,12 +78,12 @@ public class CrmCaseArticle implements Serializable{
 		this.articleId = articleId;
 	}
 
-	public String getAtricleTitle() {
-		return atricleTitle;
+	public String getArticleTitle() {
+		return articleTitle;
 	}
 
-	public void setAtricleTitle(String atricleTitle) {
-		this.atricleTitle = atricleTitle;
+	public void setArticleTitle(String articleTitle) {
+		this.articleTitle = articleTitle;
 	}
 
 	public String getArticleKey() {

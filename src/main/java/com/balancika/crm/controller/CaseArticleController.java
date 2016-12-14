@@ -116,24 +116,18 @@ public class CaseArticleController {
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateCases(@RequestBody CrmCaseArticle article){
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		if(articleService.updateCaseArticle(article)== true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
-			
 			map.put("MSG", messageService.getMessage("1001", "article", article.getArticleId(), article.getMeDataSource()));
 			activityService.addUserActivity(activity.getActivity(article.getMeDataSource(), "Update", "Article", article.getArticleId()));
-			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		
 		map.put("MSG", messageService.getMessage("1004", "article", article.getArticleId(), article.getMeDataSource()));
-		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
