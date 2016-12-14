@@ -60,6 +60,23 @@ public class RoleController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/list/role_details/{roleId}", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> findRoleDetailsByRoleId(@PathVariable("roleId") String roleId, @RequestBody MeDataSource dataSource){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> roles = roleService.findRoleDetailsByRoleId(roleId, dataSource);
+		if(roles != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", roles);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/list/role_by_user", method = RequestMethod.POST, produces="application/json")
 	public ResponseEntity<Map<String, Object>> findRoleByUsername(@RequestBody MeDataSource dataSource){
 		

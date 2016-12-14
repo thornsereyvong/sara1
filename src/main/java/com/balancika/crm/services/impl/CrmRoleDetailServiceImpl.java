@@ -36,8 +36,8 @@ public class CrmRoleDetailServiceImpl implements CrmRoleDetailService{
 	}
 
 	@Override
-	public List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource) {
-		return roleDetailDao.listRoleDetails(dataSource);
+	public List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource, String roleId) {
+		return roleDetailDao.listRoleDetails(dataSource, roleId);
 	}
 
 	@Override

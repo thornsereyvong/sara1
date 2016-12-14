@@ -1,6 +1,7 @@
 package com.balancika.crm.dao.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.ConstraintViolationException;
@@ -19,6 +20,7 @@ import com.balancika.crm.dao.CrmCaseArticleDao;
 import com.balancika.crm.model.CrmCaseArticle;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmCaseArticleDaoImpl extends CrmIdGenerator implements CrmCaseArticleDao{
@@ -105,9 +107,16 @@ public class CrmCaseArticleDaoImpl extends CrmIdGenerator implements CrmCaseArti
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
-			SQLQuery query = session.createSQLQuery("CALL listCrmCaseArticles()");
+			/*SQLQuery query = session.createSQLQuery("CALL listCrmCaseArticles()");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return query.list();
+			return query.list();*/
+			Criteria criteria = session.createCriteria(CrmCaseArticle.class);
+			ArrayList<CrmCaseArticle> articles = (ArrayList<CrmCaseArticle>)criteria.list();
+			for(CrmCaseArticle art : articles){
+				art.setConvertCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(art.getArticleCreateDate()));
+				art.setConvertModifiedDate(new DateTimeOperation().reverseLocalDateTimeToString(art.getAtricleModifiedDate()));
+			}
+			return articles;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

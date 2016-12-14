@@ -9,7 +9,7 @@ public interface CrmRoleDetailService {
 	boolean insertRoleDetail(CrmRoleDetail roleDetail);
 	 boolean updateRoleDetail(CrmRoleDetail roleDetail);
 	 boolean deleteRoleDetail(CrmRoleDetail roleDetail);
-	 List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource);
+	 List<CrmRoleDetail> listRoleDetails(MeDataSource dataSource, String roleId);
 	 CrmRoleDetail findRoleDetailById(int roleDetailId, MeDataSource dataSource);
 	 CrmRoleDetail findRoleDetail(MeDataSource dataSource);
 	 Object findRoleDetailsByUsername(String username, String moduleId, MeDataSource dataSource);
