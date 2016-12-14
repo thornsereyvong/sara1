@@ -28,7 +28,7 @@ public class CrmRoleDetail implements Serializable{
 	
 	@OneToOne
 	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name = "RM_ModuleID", nullable = false)
+	@JoinColumn(name = "RM_ModuleID", nullable = true)
 	private CrmModule module;
 	
 	@Column(name = "RM_Access")

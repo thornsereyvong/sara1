@@ -94,6 +94,7 @@ public class CrmCaseArticle implements Serializable{
 		this.articleKey = articleKey;
 	}
 
+
 	public AmeItem getItem() {
 		return item;
 	}

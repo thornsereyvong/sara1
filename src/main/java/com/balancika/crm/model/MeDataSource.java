@@ -47,7 +47,9 @@ public class MeDataSource implements Serializable{
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}	
-	
+	public String toString(){
+		return ip+"/"+port+"/"+db+"/"+un+"/"+pw+"/"+userid;
+	}
 	public MeDataSource(String ip, String un, String pw, String db, String port, String userid) {
 		this.ip = ip;
 		this.un = un;
