@@ -8,7 +8,7 @@ import com.balancika.crm.model.MeDataSource;
 public interface CrmRoleService {
 	boolean isInsertedRole(CrmRole role);
 	boolean isUpdatedRole(CrmRole role);
-	boolean isDeletedRole(CrmRole role);
+	boolean isDeletedRole(CrmRole role);     
 	CrmRole findRoleById(String roleId, MeDataSource dataSource);
 	List<CrmRole> listAllRoles(MeDataSource dataSource);
 	CrmRole findRoleByUsername(String username, MeDataSource dataSource);

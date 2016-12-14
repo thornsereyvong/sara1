@@ -57,6 +57,9 @@ public class CaseArticleController {
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCaseArticles(@RequestBody MeDataSource dataSource){
 		
+		System.out.println(dataSource.toString());
+		
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<CrmCaseArticle> arrCase = caseService.listCasesArticle(dataSource);
 		if(arrCase != null){

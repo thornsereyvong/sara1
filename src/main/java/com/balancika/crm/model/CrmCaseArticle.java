@@ -33,8 +33,8 @@ public class CrmCaseArticle implements Serializable{
 	@Column(name="A_Key")
 	private String articleKey;
 	
-	@Column(name="A_CaseID")
-	private String articleCaseId;
+	@Column(name="A_ItemID")
+	private String articleItemId;
 	
 	@Column(name="A_Description")
 	private String articleDes;
@@ -85,12 +85,14 @@ public class CrmCaseArticle implements Serializable{
 		this.articleKey = articleKey;
 	}
 
-	public String getArticleCaseId() {
-		return articleCaseId;
+	
+
+	public String getArticleItemId() {
+		return articleItemId;
 	}
 
-	public void setArticleCaseId(String articleCaseId) {
-		this.articleCaseId = articleCaseId;
+	public void setArticleItemId(String articleItemId) {
+		this.articleItemId = articleItemId;
 	}
 
 	public String getArticleDes() {
