@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmCaseArticle;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.services.AmeItemService;
 import com.balancika.crm.services.CrmCaseArticleService;
 import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmUserActivityService;
@@ -25,7 +26,7 @@ import com.balancika.crm.services.CrmUserActivityService;
 public class CaseArticleController {
 	
 	@Autowired
-	private CrmCaseArticleService caseService;
+	private CrmCaseArticleService articleService;
 	
 	@Autowired
 	private CrmMessageService messageService;
@@ -36,11 +37,14 @@ public class CaseArticleController {
 	@Autowired
 	private CrmUserActivity activity;
 	
+	@Autowired
+	private AmeItemService itemService;
+	
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCaseArticles(@RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CrmCaseArticle> arrCase = caseService.listCasesArticle(dataSource);
+		List<CrmCaseArticle> arrCase = articleService.listCasesArticle(dataSource);
 		if(arrCase != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -54,11 +58,11 @@ public class CaseArticleController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/{articleId}", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/view/{articleId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findCaseById(@PathVariable("articleId") String articleId, @RequestBody MeDataSource dataSource){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		Object cases = caseService.findCaseArticleById(articleId, dataSource);
+		Object cases = articleService.findCaseArticleById(articleId, dataSource);
 		if(cases != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -71,11 +75,26 @@ public class CaseArticleController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/startup", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> addStartupPage(@RequestBody MeDataSource dataSource){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ITEMS", itemService.listItems(dataSource));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/startup/{articleId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> editStartupPage(@PathVariable("articleId") String articleId, @RequestBody MeDataSource dataSource){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ITEMS", itemService.listItems(dataSource));
+		map.put("ARTICLE", articleService.findCaseArticleById(articleId, dataSource));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addCases(@RequestBody CrmCaseArticle article){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(caseService.insertCaseArticle(article) == true){
+		if(articleService.insertCaseArticle(article) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			
@@ -97,7 +116,7 @@ public class CaseArticleController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(caseService.updateCaseArticle(article)== true){
+		if(articleService.updateCaseArticle(article)== true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			
@@ -120,7 +139,7 @@ public class CaseArticleController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(caseService.deleteCaseArticle(article) == true){
+		if(articleService.deleteCaseArticle(article) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			

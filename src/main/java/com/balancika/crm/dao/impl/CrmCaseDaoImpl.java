@@ -19,6 +19,7 @@ import com.balancika.crm.dao.CrmCaseDao;
 import com.balancika.crm.model.CrmCase;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
@@ -40,6 +41,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		try {
 			session.beginTransaction();
 			cases.setCaseId(IdAutoGenerator("CS", cases.getMeDataSource()));
+			cases.setFollowupDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertFollowupDate()));
 			cases.setCreateDate(LocalDateTime.now());
 			session.save(cases);
 			session.getTransaction().commit();
@@ -62,6 +64,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			cases.setFollowupDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertFollowupDate()));
 			session.update(cases);
 			session.getTransaction().commit();
 			return true;	

@@ -116,6 +116,9 @@ public class CrmCase implements Serializable{
 	@Column(name="CS_FollowupDate")
 	private LocalDateTime followupDate;
 	
+	@Transient
+	private String convertFollowupDate;
+	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="CS_ElapsedTime")
 	private LocalDateTime elapsedTime;
@@ -347,6 +350,14 @@ public class CrmCase implements Serializable{
 
 	public void setFollowupDate(LocalDateTime followupDate) {
 		this.followupDate = followupDate;
+	}
+
+	public String getConvertFollowupDate() {
+		return convertFollowupDate;
+	}
+
+	public void setConvertFollowupDate(String convertFollowupDate) {
+		this.convertFollowupDate = convertFollowupDate;
 	}
 
 	public LocalDateTime getElapsedTime() {
