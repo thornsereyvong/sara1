@@ -140,7 +140,6 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 					.add(Projections.property("role.roleName"),"roleName")
 					.add(Projections.property("role.createDate"),"createDate"));
 			criteria.add(Restrictions.eq("status", 1));
-			criteria.add(Restrictions.ne("role.roleName", "CRM_ADMIN"));
 			criteria.addOrder(Order.desc("userID"));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return criteria.list();

@@ -19,6 +19,7 @@ import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.AmeItemService;
 import com.balancika.crm.services.CrmCallService;
 import com.balancika.crm.services.CrmCallStatusService;
+import com.balancika.crm.services.CrmCaseArticleService;
 import com.balancika.crm.services.CrmCaseOriginService;
 import com.balancika.crm.services.CrmCasePriorityService;
 import com.balancika.crm.services.CrmCaseService;
@@ -47,6 +48,9 @@ public class CaseController {
 	
 	@Autowired
 	private CrmUserService userService;
+	
+	@Autowired
+	private CrmCaseArticleService articleService;
 	
 	@Autowired
 	private CrmCustomerService customerService;
@@ -156,6 +160,8 @@ public class CaseController {
 		map.put("ITEMS", itemService.listItems(dataSource));
 		map.put("CASE_PRIORITY", priorityService.listCasePriorities(dataSource));
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
+		map.put("ALL_USERS", userService.listAllUsers(dataSource));
+		map.put("ARTICLES", articleService.listCasesArticle(dataSource));
 		map.put("COLLABORATIONS", collaborationService.listCollaborations(caseId,dataSource));
 		map.put("EVENTS", eventService.listEventsRelatedToModule(caseId, dataSource));
 		map.put("NOTES", noteService.listNoteRelatedToEachModule(caseId, dataSource));
