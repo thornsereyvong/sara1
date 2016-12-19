@@ -50,10 +50,8 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 			List<Map<String, Object>> campaignList = new ArrayList<Map<String,Object>>();
 			List<Map<String, Object>> caseList = new ArrayList<Map<String,Object>>();
 			for(Map<String, Object> map : maps){
-				//System.err.println(map.get("KEY")+" "+map.get("VAL"));
 				switch (map.get("KEY").toString()) {
 					case "MEETING":
-						System.out.println(generateMeetingMap(map.get("VAL").toString()));
 						meetingList.add(generateMeetingMap(map.get("VAL").toString()));
 						break;
 					case "TASK":
