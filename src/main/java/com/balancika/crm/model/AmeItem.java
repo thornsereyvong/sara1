@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-@Entity
+@Entity(name = "AmeItem")
 @Table(name="tblitem")
 public class AmeItem implements Serializable{
 
@@ -30,7 +30,7 @@ public class AmeItem implements Serializable{
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="UOMID")
 	private AmeUom itemUom;
-
+	
 	public String getItemId() {
 		return itemId;
 	}
