@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -57,7 +56,7 @@ public class HBUCompetitor implements Serializable{
 	@Transient
 	private MeDataSource meDataSource;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="hbu_competitor_item",
 			joinColumns = {@JoinColumn(name="COM_ID", nullable = false)},
 			inverseJoinColumns = {@JoinColumn(name="ItemID", nullable = false)}

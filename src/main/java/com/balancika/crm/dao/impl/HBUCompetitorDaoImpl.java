@@ -38,6 +38,7 @@ public class HBUCompetitorDaoImpl extends CrmIdGenerator implements HBUCompetito
 			competitor.setComCreateDate(LocalDateTime.now());
 			session.save(competitor);
 			session.getTransaction().commit();
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -56,6 +57,7 @@ public class HBUCompetitorDaoImpl extends CrmIdGenerator implements HBUCompetito
 			session.beginTransaction();
 			session.update(competitor);
 			session.getTransaction().commit();
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -74,6 +76,7 @@ public class HBUCompetitorDaoImpl extends CrmIdGenerator implements HBUCompetito
 			session.beginTransaction();
 			session.delete(competitor);
 			session.getTransaction().commit();
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

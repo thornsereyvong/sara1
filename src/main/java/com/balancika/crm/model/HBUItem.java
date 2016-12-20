@@ -8,8 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity(name="HBUItem")
 @Table(name="tblitem")
+@DynamicInsert
+@DynamicUpdate
 public class HBUItem implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
