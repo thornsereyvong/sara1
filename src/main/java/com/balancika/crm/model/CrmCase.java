@@ -164,6 +164,14 @@ public class CrmCase implements Serializable{
 	@JoinColumn(name="CS_ItemID")
 	private AmeItem item;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="CS_ArticleID")
+	private CrmCaseArticle article;
+	
+	@Column(name="CS_Key")
+	private String key;
+	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="CS_ID")
@@ -171,6 +179,26 @@ public class CrmCase implements Serializable{
 	
 	@Transient
 	private MeDataSource meDataSource;
+
+	
+	
+	
+	
+	public CrmCaseArticle getArticle() {
+		return article;
+	}
+
+	public void setArticle(CrmCaseArticle article) {
+		this.article = article;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
 
 	public String getCaseId() {
 		return caseId;
