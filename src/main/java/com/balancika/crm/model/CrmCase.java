@@ -73,7 +73,7 @@ public class CrmCase implements Serializable{
 	@Column(name="CS_Des")
 	private String des;
 	
-	@Column(name="CS_Resolution")
+	@Column(name="CS_Resolution", updatable = false)
 	private String resolution;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
