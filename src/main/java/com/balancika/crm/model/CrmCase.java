@@ -27,7 +27,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
-@Entity
+@Entity(name="crmCase")
 @Table(name="crm_case")
 @DynamicInsert
 @DynamicUpdate

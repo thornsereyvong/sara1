@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.model.CrmCaseSolution;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.AmeItemService;
@@ -247,6 +248,25 @@ public class CaseController {
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateCases(@RequestBody CrmCase cases){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(caseService.updateCase(cases) == true){
+			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
+			map.put("MESSAGE", "UPDATED");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1001", "case", cases.getCaseId(), cases.getMeDataSource()));
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "case", cases.getCaseId(), cases.getMeDataSource()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/resolve", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> updateCases(@RequestBody CrmCaseSolution cases){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
