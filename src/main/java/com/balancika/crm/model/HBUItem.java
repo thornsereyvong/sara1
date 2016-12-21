@@ -1,10 +1,16 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -25,6 +31,13 @@ public class HBUItem implements Serializable{
 	
 	@Column(name="ItemName")
 	private String itemName;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name="hbu_competitor_item",
+			joinColumns = {@JoinColumn(name="ItemID", nullable = false)},
+			inverseJoinColumns = {@JoinColumn(name="COM_ID", nullable = false)}
+			)
+	private List<HBUCompetitor> competitors = new ArrayList<HBUCompetitor>();
 	
 	@Transient
 	private MeDataSource meDataSource;

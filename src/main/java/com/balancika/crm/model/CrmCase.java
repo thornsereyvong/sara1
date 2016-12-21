@@ -23,14 +23,16 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity(name="crmCase")
 @Table(name="crm_case")
-@DynamicInsert
-@DynamicUpdate
+@DynamicInsert(value = true)
+@DynamicUpdate(value = true)
+@SelectBeforeUpdate(value = true)
 public class CrmCase implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -96,20 +98,20 @@ public class CrmCase implements Serializable{
 	@Column(name="CS_MDate", insertable = false, updatable = false)
 	private Date modifyDate;
 	
-	@Column(name="CS_RosolvedBy")
+	@Column(name="CS_RosolvedBy", updatable = false)
 	private String resolvedBy;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
-	@Column(name="CS_ResolvedDate")
+	@Column(name="CS_ResolvedDate", updatable = false)
 	private LocalDateTime resolvedDate;
 	
 	@Transient
 	private String convertResolvedDate;
 	
-	@Column(name="CS_EscalateTo")
+	@Column(name="CS_EscalateTo", updatable = false)
 	private String escalateTo;
 	
-	@Column(name="CS_EscalateStatus")
+	@Column(name="CS_EscalateStatus", updatable = false)
 	private String escalateStatus;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
@@ -120,7 +122,7 @@ public class CrmCase implements Serializable{
 	private String convertFollowupDate;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
-	@Column(name="CS_ElapsedTime")
+	@Column(name="CS_ElapsedTime", updatable = false)
 	private LocalDateTime elapsedTime;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
