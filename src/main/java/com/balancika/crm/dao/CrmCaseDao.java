@@ -3,6 +3,7 @@ package com.balancika.crm.dao;
 import java.util.List;
 
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.model.CrmCaseSolution;
 import com.balancika.crm.model.MeDataSource;
 
 public interface CrmCaseDao {
@@ -14,4 +15,5 @@ public interface CrmCaseDao {
 	Object findCaseById(String caseId, MeDataSource dataSource);
 	CrmCase findCaseDetailsById(String caseId, MeDataSource dataSource);
 	boolean updateCustomFieldOfCase(CrmCase cases);
+	boolean updateCase(CrmCaseSolution cases);
 }

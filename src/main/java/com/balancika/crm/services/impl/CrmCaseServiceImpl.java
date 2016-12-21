@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCaseDao;
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.model.CrmCaseSolution;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmCaseService;
 
@@ -52,5 +53,10 @@ public class CrmCaseServiceImpl implements CrmCaseService{
 	@Override
 	public boolean updateCustomFieldOfCase(CrmCase cases) {
 		return caseDao.updateCustomFieldOfCase(cases);
+	}
+
+	@Override
+	public boolean updateCase(CrmCaseSolution cases) {
+		return caseDao.updateCase(cases);
 	}
 }

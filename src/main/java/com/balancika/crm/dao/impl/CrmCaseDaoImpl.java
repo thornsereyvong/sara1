@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCaseDao;
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.model.CrmCaseSolution;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
 import com.balancika.crm.utilities.DateTimeOperation;
@@ -64,7 +65,14 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			cases.setFollowupDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertFollowupDate()));
+			
+			if(cases.getConvertFollowupDate() != "")
+				cases.setFollowupDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertFollowupDate()));
+			
+			if(cases.getConvertResolvedDate() != "")
+				cases.setResolvedDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertResolvedDate()));
+			
+			
 			session.update(cases);
 			session.getTransaction().commit();
 			return true;	
@@ -172,6 +180,29 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean updateCase(CrmCaseSolution cases) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(cases.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			if(cases.getConvertResolvedDate() != "")
+				cases.setResolvedDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertResolvedDate()));
+			session.update(cases);
+			session.getTransaction().commit();
+			return true;	
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		}catch (ConstraintViolationException e) {
+			session.getTransaction().rollback();
+		}finally{
 			session.clear();
 			session.close();
 			sessionFactory.close();
