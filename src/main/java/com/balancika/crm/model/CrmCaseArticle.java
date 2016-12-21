@@ -40,7 +40,7 @@ public class CrmCaseArticle implements Serializable{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name="A_ItemID")
+	@JoinColumn(name="A_ItemID", nullable = true)
 	private AmeItem item;
 	
 	@Column(name="A_Description")
