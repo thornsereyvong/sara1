@@ -65,9 +65,9 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			System.out.println("CrmCase update");
-			if(!cases.getConvertFollowupDate().equals(""))
+			if(cases.getConvertFollowupDate() != null)
 				cases.setFollowupDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertFollowupDate()));
+		
 			session.update(cases);
 			session.getTransaction().commit();
 			return true;	
@@ -188,9 +188,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			System.out.println("CrmCaseSolution update");
-			if(!cases.getConvertResolvedDate().equals(""))
-				cases.setResolvedDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertResolvedDate()));
+			System.out.println("CrmCaseSolution update");			
 			session.update(cases);
 			session.getTransaction().commit();
 			return true;	
@@ -205,4 +203,5 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		}
 		return false;
 	}
+	
 }

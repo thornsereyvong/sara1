@@ -20,7 +20,7 @@ public class AmeItem implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name="ItemID", unique = true, nullable = false)
+	@Column(name="ItemID")
 	private String itemId;
 	
 	@Column(name="ItemName")

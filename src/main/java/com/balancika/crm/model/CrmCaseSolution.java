@@ -17,6 +17,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
+
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity(name="crmCaseSolution")
@@ -41,6 +42,10 @@ public class CrmCaseSolution implements Serializable{
 	@Column(name="CS_Resolution")
 	private String resolution;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="CS_ATo")
+	private CrmUser assignTo;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="CS_ResolvedDate")
@@ -64,6 +69,90 @@ public class CrmCaseSolution implements Serializable{
 	@Transient
 	private MeDataSource meDataSource;
 	
+	@Transient
+	private boolean createArt;
+	
+	@Transient
+	private String key;
+	
+	@Transient
+	private String createBy;
+	
+	@Transient
+	private String itemId;
+	
+	@Transient
+	private String title;
+	@Transient
+	private String escalateTo;
+	@Transient
+	private String currentAssign;
+	
+
+	public CrmUser getAssignTo() {
+		return assignTo;
+	}
+
+	public void setAssignTo(CrmUser assignTo) {
+		this.assignTo = assignTo;
+	}
+
+	public String getEscalateTo() {
+		return escalateTo;
+	}
+
+	public void setEscalateTo(String escalateTo) {
+		this.escalateTo = escalateTo;
+	}
+
+	public String getCurrentAssign() {
+		return currentAssign;
+	}
+
+	public void setCurrentAssign(String currentAssign) {
+		this.currentAssign = currentAssign;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
+	}
+
+	public boolean isCreateArt() {
+		return createArt;
+	}
+
+	public void setCreateArt(boolean createArt) {
+		this.createArt = createArt;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+
 	public String getResolution() {
 		return resolution;
 	}

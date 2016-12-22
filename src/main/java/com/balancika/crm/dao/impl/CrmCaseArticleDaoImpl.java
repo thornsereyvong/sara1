@@ -46,6 +46,7 @@ public class CrmCaseArticleDaoImpl extends CrmIdGenerator implements CrmCaseArti
 			session.getTransaction().commit();
 			return true;	
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		}catch (ConstraintViolationException e) {
 			session.getTransaction().rollback();
@@ -67,6 +68,7 @@ public class CrmCaseArticleDaoImpl extends CrmIdGenerator implements CrmCaseArti
 			session.getTransaction().commit();
 			return true;	
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		}catch (ConstraintViolationException e) {
 			session.getTransaction().rollback();
@@ -91,6 +93,7 @@ public class CrmCaseArticleDaoImpl extends CrmIdGenerator implements CrmCaseArti
 				return true;	
 			}
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		}finally{
 			session.clear();

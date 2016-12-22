@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.balancika.crm.model.AmeItem;
 import com.balancika.crm.model.CrmCase;
+import com.balancika.crm.model.CrmCaseArticle;
 import com.balancika.crm.model.CrmCaseSolution;
+import com.balancika.crm.model.CrmCaseStatus;
+import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.AmeItemService;
@@ -113,6 +117,8 @@ public class CaseController {
 	@Autowired
 	private CrmUserActivity activity;
 	
+	@Autowired
+	private CrmCaseArticleService article;
 	
 	@RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listCases(@RequestBody MeDataSource dataSource){
@@ -269,13 +275,41 @@ public class CaseController {
 	public ResponseEntity<Map<String, Object>> updateCases(@RequestBody CrmCaseSolution cases){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		if(caseService.updateCase(cases) == true){
-			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
-			map.put("MESSAGE", "UPDATED");
-			map.put("STATUS", HttpStatus.OK.value());
-			map.put("MSG", messageService.getMessage("1001", "case", cases.getCaseId(), cases.getMeDataSource()));
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		if(cases.isCreateArt()){
+			CrmCaseArticle art = new CrmCaseArticle();
+			AmeItem item = null;
+			System.out.println(cases.getItemId()+" itemId");
+			if(cases.getItemId() != null){
+				item = new AmeItem();
+				item.setItemId(cases.getItemId());
+				art.setItem(item);
+			}
+			
+			art.setArticleCreateBy(cases.getCreateBy());
+			art.setArticleKey(cases.getKey());
+			art.setArticleDes(cases.getResolution());
+			art.setArticleTitle(cases.getTitle());
+			art.setMeDataSource(cases.getMeDataSource());
+			
+			if(article.insertCaseArticle(art)){
+	
+				cases.setArticle(art);
+				if(caseService.updateCase(cases) == true){
+					activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
+					map.put("MESSAGE", "UPDATED");
+					map.put("STATUS", HttpStatus.OK.value());
+					map.put("MSG", messageService.getMessage("1001", "case", cases.getCaseId(), cases.getMeDataSource()));
+					return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+				}
+			}
+		}else{
+			if(caseService.updateCase(cases) == true){
+				activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
+				map.put("MESSAGE", "UPDATED");
+				map.put("STATUS", HttpStatus.OK.value());
+				map.put("MSG", messageService.getMessage("1001", "case", cases.getCaseId(), cases.getMeDataSource()));
+				return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+			}
 		}
 		
 		map.put("MESSAGE", "FAILED");
@@ -283,6 +317,27 @@ public class CaseController {
 		map.put("MSG", messageService.getMessage("1004", "case", cases.getCaseId(), cases.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
+	
+	
+	@RequestMapping(value = "/escalate", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> escalate(@RequestBody CrmCaseSolution cases){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("-----------------------"+cases.getAssignTo().getUserID());
+		if(caseService.updateCase(cases) == true){
+			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
+			map.put("MESSAGE", "UPDATED");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1001", "case", cases.getCaseId(), cases.getMeDataSource()));
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+			
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "case", cases.getCaseId(), cases.getMeDataSource()));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	
 	@RequestMapping(value = "/edit/custom", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateCustomFieldOfCase(@RequestBody CrmCase cases){
