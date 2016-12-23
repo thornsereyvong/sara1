@@ -29,7 +29,7 @@ public class HBUItem implements Serializable{
 	@Column(name="ItemID")
 	private String itemId;
 	
-	@Column(name="ItemName")
+	@Column(name="ItemName", updatable = false)
 	private String itemName;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -52,6 +52,14 @@ public class HBUItem implements Serializable{
 
 	public String getItemName() {
 		return itemName;
+	}
+
+	public List<HBUCompetitor> getCompetitors() {
+		return competitors;
+	}
+
+	public void setCompetitors(List<HBUCompetitor> competitors) {
+		this.competitors = competitors;
 	}
 
 	public void setItemName(String itemName) {

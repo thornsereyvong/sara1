@@ -12,13 +12,15 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
 @Table(name = "hbu_competitor")
-@DynamicInsert
-@DynamicUpdate
+@DynamicInsert(value = true)
+@DynamicUpdate(value = true)
+@SelectBeforeUpdate(value = true)
 public class HBUCompetitor implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -34,10 +36,10 @@ public class HBUCompetitor implements Serializable{
 	private String comAddress;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
-	@Column(name = "COM_CreateDate")
+	@Column(name = "COM_CreateDate", updatable = false)
 	private LocalDateTime comCreateDate;
 	
-	@Column(name = "COM_CreateBy")
+	@Column(name = "COM_CreateBy", updatable = false)
 	private String comCreateBy;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
