@@ -455,6 +455,7 @@ public class LeadController {
 					opCon.setConId(contactId);
 					opCon.setOpId(opportunity.getOpId());
 					opCon.setOpConType("Primary");
+					opCon.setMeDataSource(opportunity.getMeDataSource());
 					opContactService.insterOpportunityContact(opCon);
 					map.put("OP_MESSAGE", "SUCCESS");
 					map.put("OP_STATUS", HttpStatus.OK.value());
