@@ -3,6 +3,7 @@ package com.balancika.crm.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ import org.hibernate.annotations.FetchMode;
 
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
-@Entity
+@Entity(name="HBUMarketSurvey")
 @Table(name = "hbu_market_survey")
 @DynamicInsert
 @DynamicUpdate
@@ -33,7 +34,7 @@ public class HBUMarketSurvey implements Serializable{
 	private String msId;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
-	@Column(name="MS_Date")
+	@Column(name="MS_Date", updatable = false)
 	private LocalDateTime msDate;
 	
 	@Transient
@@ -44,7 +45,7 @@ public class HBUMarketSurvey implements Serializable{
 	@JoinColumn(name = "MS_ItemID")
 	private AmeItem item;
 	
-	@Column(name="MS_CreateBy")
+	@Column(name="MS_CreateBy", updatable = false)
 	private String msCreateBy;
 	
 	@Column(name="MS_ModifiedBy")
@@ -52,6 +53,11 @@ public class HBUMarketSurvey implements Serializable{
 	
 	@Column(name="MS_ModifiedDate")
 	private LocalDateTime msModifiedDate;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="MarketSurveyID")
+	private HBUMarketSurveyDetails details;
 	
 	@Transient
 	private String convertModifiedDate;
@@ -130,5 +136,12 @@ public class HBUMarketSurvey implements Serializable{
 	public void setMeDataSource(MeDataSource meDataSource) {
 		this.meDataSource = meDataSource;
 	}
-	
+
+	public HBUMarketSurveyDetails getDetails() {
+		return details;
+	}
+
+	public void setDetails(HBUMarketSurveyDetails details) {
+		this.details = details;
+	}
 }

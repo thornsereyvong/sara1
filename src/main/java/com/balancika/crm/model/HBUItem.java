@@ -16,11 +16,15 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 @Entity(name="HBUItem")
 @Table(name="tblitem")
 @DynamicInsert
 @DynamicUpdate
+@SelectBeforeUpdate
 public class HBUItem implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -33,11 +37,20 @@ public class HBUItem implements Serializable{
 	private String itemName;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.JOIN)
 	@JoinTable(name="hbu_competitor_item",
-			joinColumns = {@JoinColumn(name="ItemID", nullable = false)},
-			inverseJoinColumns = {@JoinColumn(name="COM_ID", nullable = false)}
+			joinColumns = {@JoinColumn(name="ItemID")},
+			inverseJoinColumns = {@JoinColumn(name="COM_ID")}
 			)
 	private List<HBUCompetitor> competitors = new ArrayList<HBUCompetitor>();
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	@JoinTable(name="hbu_item_customer",
+			joinColumns = {@JoinColumn(name="ItemID")},
+			inverseJoinColumns = {@JoinColumn(name="CustID")}
+			)
+	private List<HBUCustomer> customers = new ArrayList<HBUCustomer>();
 	
 	@Transient
 	private MeDataSource meDataSource;
@@ -72,5 +85,13 @@ public class HBUItem implements Serializable{
 
 	public void setMeDataSource(MeDataSource meDataSource) {
 		this.meDataSource = meDataSource;
+	}
+
+	public List<HBUCustomer> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(List<HBUCustomer> customers) {
+		this.customers = customers;
 	}
 }
