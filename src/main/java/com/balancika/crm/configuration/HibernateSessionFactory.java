@@ -36,6 +36,8 @@ public class HibernateSessionFactory {
 	    properties.put("hibernate.show_sql", "true");
 	    properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 	    properties.put("hibernate.format_sql", "true");
+	    properties.put("hibernate.jdbc.batch_size", "50");
+	    properties.put("hibernate.cache.use_second_level_cache", "true");
 	    return properties;
 	}
 	

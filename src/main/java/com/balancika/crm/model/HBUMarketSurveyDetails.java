@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-@Entity
+@Entity(name = "HBUMarketSurveyDetails")
 @Table(name="hbu_market_survey_details")
 @DynamicInsert
 @DynamicUpdate
@@ -26,8 +26,8 @@ public class HBUMarketSurveyDetails implements Serializable{
 	@Column(name="MS_DetailID")
 	private int msDetailId;
 	
-	@Column(name="MS_ID")
-	private String msId;
+	@Column(name="MarketSurveyID")
+	private String marketSurveyId;
 	
 	@Column(name="CustID")
 	private String custId;
@@ -49,12 +49,12 @@ public class HBUMarketSurveyDetails implements Serializable{
 		this.msDetailId = msDetailId;
 	}
 
-	public String getMsId() {
-		return msId;
+	public String getMarketSurveyId() {
+		return marketSurveyId;
 	}
 
-	public void setMsId(String msId) {
-		this.msId = msId;
+	public void setMarketSurveyId(String marketSurveyId) {
+		this.marketSurveyId = marketSurveyId;
 	}
 
 	public String getCustId() {

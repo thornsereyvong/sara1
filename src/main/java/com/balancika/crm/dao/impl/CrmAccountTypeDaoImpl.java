@@ -20,11 +20,11 @@ public class CrmAccountTypeDaoImpl implements CrmAccountTypeDao {
 
 	private SessionFactory sessionFactory;
 
-	public final SessionFactory getSessionFactory() {
+	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
-	public final void setSessionFactory(SessionFactory sessionFactory) {
+	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 

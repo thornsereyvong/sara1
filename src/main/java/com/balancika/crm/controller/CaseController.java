@@ -17,8 +17,6 @@ import com.balancika.crm.model.AmeItem;
 import com.balancika.crm.model.CrmCase;
 import com.balancika.crm.model.CrmCaseArticle;
 import com.balancika.crm.model.CrmCaseSolution;
-import com.balancika.crm.model.CrmCaseStatus;
-import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.AmeItemService;
