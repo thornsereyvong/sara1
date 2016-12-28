@@ -14,8 +14,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
@@ -29,9 +27,6 @@ import com.balancika.crm.utilities.PasswordEncrypt;
 @Transactional
 public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
 	private Session session = null;
 	
 	private SessionFactory sessionFactory;
@@ -140,6 +135,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 					.add(Projections.property("role.roleName"),"roleName")
 					.add(Projections.property("role.createDate"),"createDate"));
 			criteria.add(Restrictions.eq("status", 1));
+			criteria.add(Restrictions.ne("role.roleName", "CRM_ADMIN"));
 			criteria.addOrder(Order.desc("userID"));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return criteria.list();
