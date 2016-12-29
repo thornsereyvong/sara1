@@ -60,19 +60,23 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			SQLQuery location = session.createSQLQuery("SELECT LocationID, Des AS LocationName FROM tbllocation;");
 			SQLQuery uom = session.createSQLQuery("SELECT UomID,Des AS UomName FROM tbluom;");
 			SQLQuery priceCode = session.createSQLQuery("SELECT PriceCode,Description FROM tblpricecode;");
+			SQLQuery shipTo = session.createSQLQuery("SELECT moduleid 'moduleId', docid 'docId', shipid 'shipId', shipname 'shipName', inactive 'inactive' FROM tblshipaddress WHERE inactive = 0");
+			
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			emp.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			item.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			location.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			uom.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			priceCode.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			shipTo.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			List<Object> arrMap = new ArrayList<Object>();
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<CrmCustomer> customers = criteria.list();
-			for(CrmCustomer customer : customers){
-				customer.setShipAddresses(listShipAdressesByCustId(customer.getCustID(), dataSource));
-			}
+			
+			//System.out.println("-----------------------------"+listAllShipAddress(dataSource).size());
+			
 			map.put("customer", customers);
+			map.put("shipToAddress", shipTo.list());
 			map.put("classCode", query.list());
 			map.put("employee", emp.list());
 			map.put("item", item.list());
@@ -111,6 +115,25 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	private List<CrmShipAddress> listAllShipAddress(MeDataSource dataSource){
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			Criteria criteria = session.createCriteria(CrmShipAddress.class);
+			criteria.addOrder(Order.asc("docId"));
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	@Override
