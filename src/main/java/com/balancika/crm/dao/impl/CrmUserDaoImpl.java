@@ -9,11 +9,9 @@ import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
@@ -177,17 +175,10 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		session = getSessionFactory().openSession();
 		try {
-			DetachedCriteria subCriteria = DetachedCriteria.forClass(CrmUser.class);
-			subCriteria.add(Restrictions.eq("username", username));
-			subCriteria.setProjection((Projections.projectionList().add(Projections.property("userID"), "userID")))
-					   .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			Criteria criteria = session.createCriteria(CrmUser.class, "user");
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.property("user.userID"), "userID")
-					.add(Projections.property("user.username"), "username"));
-			criteria.add(Restrictions.or(Subqueries.propertyEq("parentID", subCriteria), Restrictions.eq("username", username)));
-			criteria.addOrder(Order.asc("userID")).setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return criteria.list();
+			SQLQuery query = session.createSQLQuery("CALL crmListSubordinateUserByUsername(:username)");
+			query.setParameter("username", username);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
 		}catch(Exception e){
 			e.printStackTrace();
 		} finally {
