@@ -138,7 +138,7 @@ public class LeadController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<CrmLead> arrLead = leadService.getLeadBySpecificUser(username, dataSource);
 		
-		if(arrLead.isEmpty()){
+		if(arrLead == null){
 			map.put("MESSAGE", "NOT_FOUND");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			map.put("DATA", arrLead);
