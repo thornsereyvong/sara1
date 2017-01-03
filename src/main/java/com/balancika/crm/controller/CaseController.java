@@ -179,6 +179,10 @@ public class CaseController {
 		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
 		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
 		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
+		
+		//System.out.println(userService.listAllUsers(dataSource).size());
+		
+		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -276,7 +280,7 @@ public class CaseController {
 		if(cases.isCreateArt()){
 			CrmCaseArticle art = new CrmCaseArticle();
 			AmeItem item = null;
-			System.out.println(cases.getItemId()+" itemId");
+			
 			if(cases.getItemId() != null){
 				item = new AmeItem();
 				item.setItemId(cases.getItemId());
@@ -292,12 +296,20 @@ public class CaseController {
 			if(article.insertCaseArticle(art)){
 	
 				cases.setArticle(art);
+				
+				
+				
 				if(caseService.updateCase(cases) == true){
+					
+					System.out.println(cases.getArticle().getArticleId());
+					
 					activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
 					map.put("MESSAGE", "UPDATED");
 					map.put("STATUS", HttpStatus.OK.value());
 					map.put("MSG", messageService.getMessage("1001", "case", cases.getCaseId(), cases.getMeDataSource()));
 					return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+				}else{
+					System.out.println("error--------------------------");
 				}
 			}
 		}else{

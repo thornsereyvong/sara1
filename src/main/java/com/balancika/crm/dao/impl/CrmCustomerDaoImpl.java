@@ -213,7 +213,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PriceCode> listPriceCode(MeDataSource dataSource) {
+	public List<PriceCode> listPriceCode(MeDataSource dataSource) {						
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {

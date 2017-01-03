@@ -187,8 +187,8 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(cases.getMeDataSource()));
 		Session session = getSessionFactory().openSession();
 		try {
-			session.beginTransaction();
-			System.out.println("CrmCaseSolution update");			
+			session.beginTransaction();	
+			cases.setResolvedDate(new DateTimeOperation().convertStringToLocalDateTime(cases.getConvertResolvedDate()));
 			session.update(cases);
 			session.getTransaction().commit();
 			return true;	
