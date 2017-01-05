@@ -126,10 +126,10 @@ public class QuoteController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/check_entry_no/{quoteId}", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> checkQuoteIdExist(@RequestBody MeDataSource dataSource, @PathVariable("quoteId") String quoteId) {
+	@RequestMapping(value = "/check_entry_no", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> checkQuoteIdExist(@RequestBody Quote quote) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("MESSAGE", quoteService.checkQuoteIdExist(quoteId, dataSource));
+		map.put("MESSAGE", quoteService.checkQuoteIdExist(quote.getSaleId(), quote.getMeDataSource()));
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
