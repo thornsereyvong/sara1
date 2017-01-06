@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.HBUItem;
+import com.balancika.crm.model.HBUItemCompetitor;
+import com.balancika.crm.model.HBUItemCustomer;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmUserActivityService;
@@ -51,9 +53,22 @@ public class HBUItemController {
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> addCompetitorToItem(@RequestBody HBUItem item){
+	public ResponseEntity<Map<String, Object>> addCompetitorToItem(@RequestBody HBUItemCompetitor itemCompetitor){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(itemService.addCompetitorsToItem(item) == true){
+		if(itemService.addCompetitorsToItem(itemCompetitor) == true){
+			map.put("MESSAGE", "INSERTED");
+			map.put("STATUS", HttpStatus.CREATED.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/add/customer", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> addCustomerToItem(@RequestBody HBUItemCustomer itemCustomer){
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(itemService.addCustomerOfItem(itemCustomer) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -64,9 +79,9 @@ public class HBUItemController {
 	}
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> updateCompetitorToItem(@RequestBody HBUItem item){
+	public ResponseEntity<Map<String, Object>> updateCompetitorToItem(@RequestBody HBUItemCompetitor itemCompetitor){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(itemService.addCompetitorsToItem(item) == true){
+		if(itemService.addCompetitorsToItem(itemCompetitor) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

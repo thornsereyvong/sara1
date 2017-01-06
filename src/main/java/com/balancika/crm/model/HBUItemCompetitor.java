@@ -13,40 +13,25 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-@Entity(name="HBUItem")
-@Table(name="tblitem")
-@DynamicInsert
-@DynamicUpdate
-public class HBUItem implements Serializable{
-	
+@Entity(name="HBUItemCompetitor")
+@Table(name="hbu_competitor_item")
+public class HBUItemCompetitor implements Serializable{
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name="ItemID")
 	private String itemId;
 	
-	@Column(name="ItemName", updatable = false)
-	private String itemName;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@Fetch(FetchMode.JOIN)
 	@JoinTable(name = "hbu_competitor_item", 
-		joinColumns = {@JoinColumn(name = "ItemID")},
+		joinColumns = {@JoinColumn(name = "ItemID", referencedColumnName = "itemId")},
 		inverseJoinColumns = {@JoinColumn(name="COM_ID")})
 	private List<HBUCompetitor> competitors;
-	
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SUBSELECT)
-	@JoinTable(name = "hbu_item_customer", 
-		joinColumns = {@JoinColumn(name = "ItemID")},
-		inverseJoinColumns = {@JoinColumn(name="Cust_ID")})
-	private List<HBUCustomer> customers;
 	
 	@Transient
 	private MeDataSource meDataSource;
@@ -59,12 +44,12 @@ public class HBUItem implements Serializable{
 		this.itemId = itemId;
 	}
 
-	public String getItemName() {
-		return itemName;
+	public List<HBUCompetitor> getCompetitors() {
+		return competitors;
 	}
 
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
+	public void setCompetitors(List<HBUCompetitor> competitors) {
+		this.competitors = competitors;
 	}
 
 	public MeDataSource getMeDataSource() {
@@ -75,20 +60,4 @@ public class HBUItem implements Serializable{
 		this.meDataSource = meDataSource;
 	}
 
-	public List<HBUCompetitor> getCompetitors() {
-		return competitors;
-	}
-
-	public void setCompetitors(List<HBUCompetitor> competitors) {
-		this.competitors = competitors;
-	}
-
-	public List<HBUCustomer> getCustomers() {
-		return customers;
-	}
-
-	public void setCustomers(List<HBUCustomer> customers) {
-		this.customers = customers;
-	}
-	
 }

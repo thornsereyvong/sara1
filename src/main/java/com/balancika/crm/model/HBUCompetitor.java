@@ -17,16 +17,16 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
-@Table(name = "hbu_competitor")
-@DynamicInsert(value = true)
-@DynamicUpdate(value = true)
-@SelectBeforeUpdate(value = true)
+@Table(name="hbu_competitor")
+@DynamicInsert
+@DynamicUpdate
+@SelectBeforeUpdate
 public class HBUCompetitor implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name = "COM_ID", nullable = false)
+	@Column(name="COM_ID")
 	private String comId;
 	
 	@Column(name = "COM_Name")

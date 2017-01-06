@@ -12,7 +12,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.QuoteDao;
 import com.balancika.crm.model.CrmCustomer;
-import com.balancika.crm.model.CrmShipAddress;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.Quote;
 import com.balancika.crm.model.QuoteDetails;
@@ -96,7 +94,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	private List<CrmShipAddress> listShipAdressesByCustId(String custId, MeDataSource dataSource){
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
@@ -132,7 +130,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			sessionFactory.close();
 		}
 		return null;
-	}
+	}*/
 
 
 	@SuppressWarnings("unchecked")

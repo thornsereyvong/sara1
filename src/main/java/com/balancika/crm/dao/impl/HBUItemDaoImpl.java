@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.HBUItemDao;
 import com.balancika.crm.model.HBUItem;
+import com.balancika.crm.model.HBUItemCompetitor;
+import com.balancika.crm.model.HBUItemCustomer;
 import com.balancika.crm.model.MeDataSource;
 
 @Repository
@@ -25,12 +27,13 @@ public class HBUItemDaoImpl implements HBUItemDao{
 	}
 
 	@Override
-	public boolean addCompetitorsToItem(HBUItem item) {
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(item.getMeDataSource()));
+	public boolean addCompetitorsToItem(HBUItemCompetitor itemCompetitor) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(itemCompetitor.getMeDataSource()));
 		Session session = getSessionFactory().openSession();
 		try {
+			System.out.println(itemCompetitor.getCompetitors().get(0).getComId());
 			session.beginTransaction();
-			session.saveOrUpdate(item);
+			session.saveOrUpdate(itemCompetitor);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
@@ -65,6 +68,25 @@ public class HBUItemDaoImpl implements HBUItemDao{
 			sessionFactory.close();
 		}
 		return null;
+	}
+
+	@Override
+	public boolean addCustomerOfItem(HBUItemCustomer itemCustomer) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(itemCustomer.getMeDataSource()));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			session.saveOrUpdate(itemCustomer);
+			session.getTransaction().commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return false;
 	}
 
 
