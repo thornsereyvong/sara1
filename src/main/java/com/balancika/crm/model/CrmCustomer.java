@@ -67,6 +67,10 @@ public class CrmCustomer implements Serializable{
 	@Column(name = "CreateFrom")
 	private String createFrom;
 	
+	
+	@Column(name = "TermCreditLimit", updatable=false)
+	private double termCreditLimit;
+	
 	@Column(name="TermNetDueIn", columnDefinition = "int default 0")
 	private int termNetDueIn;
 	
@@ -113,6 +117,17 @@ public class CrmCustomer implements Serializable{
 	
 	@Transient
 	private MeDataSource meDataSource;
+	
+	
+	public double getTermCreditLimit() {
+		return termCreditLimit;
+	}
+
+	public void setTermCreditLimit(double termCreditLimit) {
+		this.termCreditLimit = termCreditLimit;
+	}
+	
+	
 	
 	public String getCustID() {
 		return custID;
