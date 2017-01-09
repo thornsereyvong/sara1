@@ -114,17 +114,26 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 
 	@Override
 	public Map<String, Object> createMarketSurveyStartup(MeDataSource dataSource) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			List<HBUItem> items = listItems(dataSource);
+			List<HBUCustomer> customers = listCustomers(dataSource);
+			map.put("ITEMS", items);
+			map.put("CUSTOMERS", customers);
+			return map;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<HBUCustomer> listCustomers(MeDataSource dataSource){
+		System.out.println(dataSource.toString());
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			Criteria criteria = session.createCriteria(HBUItem.class);
+			Criteria criteria = session.createCriteria(HBUCustomer.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			session.getTransaction().commit();
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("ITEMS", criteria.list());
-			map.put("CUSTOMERS", listCustomers(session));
-			return map;
+			List<HBUCustomer> customers =  (List<HBUCustomer>)criteria.list();
+			return customers;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -133,14 +142,29 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 			sessionFactory.close();
 		}
 		return null;
+		
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<HBUCustomer> listCustomers(Session session){
-		session.beginTransaction();
-		Criteria criteria = session.createCriteria(HBUCustomer.class);
-		session.getTransaction().commit();
-		return (List<HBUCustomer>)criteria.list();
+	private List<HBUItem> listItems(MeDataSource dataSource){
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(HBUItem.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			session.getTransaction().commit();
+			List<HBUItem> items = (List<HBUItem>)criteria.list();
+			return items;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+		
 	}
 
 	@Override
