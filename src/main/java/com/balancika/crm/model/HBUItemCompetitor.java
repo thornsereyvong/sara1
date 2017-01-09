@@ -17,7 +17,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 @Entity(name="HBUItemCompetitor")
-@Table(name="hbu_competitor_item")
+@Table(name="tblitem")
 public class HBUItemCompetitor implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -26,16 +26,16 @@ public class HBUItemCompetitor implements Serializable{
 	@Column(name="ItemID")
 	private String itemId;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.JOIN)
 	@JoinTable(name = "hbu_competitor_item", 
-		joinColumns = {@JoinColumn(name = "ItemID", referencedColumnName = "itemId")},
+		joinColumns = {@JoinColumn(name = "ItemID")},
 		inverseJoinColumns = {@JoinColumn(name="COM_ID")})
 	private List<HBUCompetitor> competitors;
 	
 	@Transient
 	private MeDataSource meDataSource;
-
+ 
 	public String getItemId() {
 		return itemId;
 	}

@@ -31,7 +31,6 @@ public class HBUItemDaoImpl implements HBUItemDao{
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(itemCompetitor.getMeDataSource()));
 		Session session = getSessionFactory().openSession();
 		try {
-			System.out.println(itemCompetitor.getCompetitors().get(0).getComId());
 			session.beginTransaction();
 			session.saveOrUpdate(itemCompetitor);
 			session.getTransaction().commit();

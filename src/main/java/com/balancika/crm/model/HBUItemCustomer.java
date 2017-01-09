@@ -18,20 +18,20 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 @Entity(name="HBUItemCustomer")
-@Table(name="hbu_item_customer")
+@Table(name="tblitem")
 public class HBUItemCustomer implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@Column(name="ItemID")
 	private String itemId;
-
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.JOIN)
 	@JoinTable(name = "hbu_item_customer", 
-		joinColumns = {@JoinColumn(name = "ItemID", referencedColumnName = "itemId")},
-		inverseJoinColumns = {@JoinColumn(name="Cust_ID", referencedColumnName = "custId")})
+		joinColumns = {@JoinColumn(name = "ItemID",columnDefinition = "itemId")},
+		inverseJoinColumns = {@JoinColumn(name="CustID", columnDefinition = "custId")})
 	private List<HBUCustomer> customers;
 	
 	@Transient

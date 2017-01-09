@@ -45,7 +45,7 @@ public class HBUItem implements Serializable{
 	@Fetch(FetchMode.SUBSELECT)
 	@JoinTable(name = "hbu_item_customer", 
 		joinColumns = {@JoinColumn(name = "ItemID")},
-		inverseJoinColumns = {@JoinColumn(name="Cust_ID")})
+		inverseJoinColumns = {@JoinColumn(name="CustID")})
 	private List<HBUCustomer> customers;
 	
 	@Transient
