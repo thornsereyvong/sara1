@@ -1,6 +1,5 @@
 package com.balancika.crm.dao.impl;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +17,7 @@ import com.balancika.crm.model.HBUItem;
 import com.balancika.crm.model.HBUMarketSurvey;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketSurveyDao{
@@ -39,7 +39,7 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 		try {
 			session.beginTransaction();
 			survey.setMsId(IdAutoGenerator("MS", survey.getMeDataSource()));
-			survey.setMsDate(LocalDateTime.now());
+			survey.setMsDate(new DateTimeOperation().convertStringToLocalDateTime(survey.getConvertMsDate()));
 			session.save(survey);
 			session.getTransaction().commit();
 			return true;
