@@ -38,6 +38,7 @@ public class HibernateSessionFactory {
 	    properties.put("hibernate.format_sql", "true");
 	    properties.put("hibernate.jdbc.batch_size", "50");
 	    properties.put("hibernate.cache.use_second_level_cache", "true");
+	    properties.put("hibernate.c3p0.timeout", "3000");
 	    return properties;
 	}
 	

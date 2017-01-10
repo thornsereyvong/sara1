@@ -16,7 +16,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-@Entity
+@Entity(name="CrmUser")
 @Table(name = "tbluser")
 public class CrmUser implements Serializable{
 
@@ -49,7 +49,7 @@ public class CrmUser implements Serializable{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name="URoleID", nullable = false)
+	@JoinColumn(name="URoleID", nullable = true)
 	private CrmRole role;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

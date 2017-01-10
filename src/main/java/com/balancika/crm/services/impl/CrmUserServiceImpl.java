@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmUserDao;
 import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.model.CrmUserLogin;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmUserService;
 
@@ -58,7 +59,7 @@ public class CrmUserServiceImpl implements CrmUserService{
 	}
 
 	@Override
-	public CrmUser webLogin(CrmUser user) {
+	public CrmUserLogin webLogin(CrmUserLogin user) {
 		return userDao.webLogin(user);
 	}
 

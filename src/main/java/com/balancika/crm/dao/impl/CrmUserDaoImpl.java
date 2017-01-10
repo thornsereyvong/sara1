@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmUserDao;
 import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.model.CrmUserLogin;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
 import com.balancika.crm.utilities.PasswordEncrypt;
@@ -190,14 +192,18 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 	}
 
 	@Override
-	public CrmUser webLogin(CrmUser user) {
+	public CrmUserLogin webLogin(CrmUserLogin user) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(user.getDataSource()));
+		session = getSessionFactory().openSession();
 		try {
-			setSessionFactory(new HibernateSessionFactory().getSessionFactory(user.getDataSource()));
-			session = getSessionFactory().openSession();
-			Criteria criteria = session.createCriteria(CrmUser.class);
-			criteria.add(Restrictions.eq("username", user.getUsername()));
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmUserLogin.class);
+			Criterion userName = Restrictions.eq("username", user.getUsername());
+			Criterion userId = Restrictions.eq("userID", user.getUsername());
+			criteria.add(Restrictions.or(userName, userId));
 			criteria.add(Restrictions.eq("status", 1));
-			CrmUser result = (CrmUser)criteria.uniqueResult();
+			session.getTransaction().commit();
+			CrmUserLogin result = (CrmUserLogin)criteria.uniqueResult();
 			if(result != null){
 					return result;
 				}

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.model.CrmUserLogin;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmUserService;
 
@@ -110,9 +111,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/login/web", method = RequestMethod.POST, produces="application/json")
-	public ResponseEntity<Map<String, Object>> webLogin(@RequestBody CrmUser users){
+	public ResponseEntity<Map<String, Object>> webLogin(@RequestBody CrmUserLogin users){
 		Map<String, Object> map = new HashMap<String, Object>();
-		CrmUser user = userService.webLogin(users);
+		CrmUserLogin user = userService.webLogin(users);
 		if(user != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
