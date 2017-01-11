@@ -54,5 +54,38 @@ public class ModuleController {
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
-
+	
+	
+	@RequestMapping(value = "/list/by-role/{roleId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listSystemModulesByRoleId(@RequestBody MeDataSource dataSource, @PathVariable("roleId") String roleId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> arrList = moduleService.listSystemModulesByRoleID(dataSource,roleId);
+		if(arrList != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", arrList);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		map.put("DATA", null);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
+	@RequestMapping(value = "/role-detail/{user}/{moduleId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listSystemModulesByuserByModule(@PathVariable("moduleId") String moduleId, @PathVariable("user") String user, @RequestBody MeDataSource dataSource){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> arrList = moduleService.listRoleByUserByModule(dataSource,moduleId,user);
+		if(arrList != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", arrList);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		map.put("DATA", null);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+	}
 }

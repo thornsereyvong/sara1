@@ -60,6 +60,10 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 			session.beginTransaction();
 			session.update(role);
 			session.getTransaction().commit();
+			
+			SQLQuery query = session.createSQLQuery("CALL crm_delete_role_detail_by_id()");
+			query.executeUpdate();
+			
 			return true;
 		} catch (Exception e) {
 			session.getTransaction().rollback();
@@ -76,12 +80,15 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()));
 		session = getSessionFactory().openSession();
 		try {
-			session.beginTransaction();
-			session.delete(role);
-			session.getTransaction().commit();
+			
+			SQLQuery query = session.createSQLQuery("CALL crm_delete_role_by_id(:roleId)");
+			query.setParameter(":roleId", role.getRoleId());
+			query.executeUpdate();
+	
 			return true;
 		} catch (Exception e) {
-			session.getTransaction().rollback();
+			//session.getTransaction().rollback();
+			//return false;
 		} finally {
 			session.clear();
 			session.close();

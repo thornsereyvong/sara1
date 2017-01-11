@@ -60,6 +60,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			SQLQuery uom = session.createSQLQuery("SELECT UomID,Des AS UomName FROM tbluom;");
 			SQLQuery priceCode = session.createSQLQuery("SELECT PriceCode,Description FROM tblpricecode;");
 			SQLQuery shipTo = session.createSQLQuery("SELECT moduleid 'moduleId', docid 'docId', shipid 'shipId', shipname 'shipName', inactive 'inactive' FROM tblshipaddress WHERE inactive = 0");
+			SQLQuery empWithEmp = session.createSQLQuery("SELECT ue.EmpID from tbluser u JOIN tbluseremployee ue on u.UID=ue.UID WHERE u.UName = '"+dataSource.getUserid()+"'");
 			
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			emp.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -68,6 +69,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			uom.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			priceCode.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			shipTo.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			empWithEmp.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			List<Object> arrMap = new ArrayList<Object>();
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<CrmCustomer> customers = criteria.list();
@@ -82,6 +84,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			map.put("location", location.list());
 			map.put("uom", uom.list());
 			map.put("priceCode", priceCode.list());
+			map.put("empLinkUser", empWithEmp.uniqueResult());
 			arrMap.add(map);
 			return arrMap;
 		} catch (Exception e) {

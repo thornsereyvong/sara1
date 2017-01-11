@@ -64,4 +64,44 @@ public class CrmModule {
 		return null;
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	public List<Object> listSystemModulesByRoleID(MeDataSource dataSource,String roleId){
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crm_listSystemModulesByRoleId(:roleId)");
+			query.setParameter("roleId", roleId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object> listRoleByUserByModule(MeDataSource dataSource,String moduleId,String username){
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crm_listSystemModuleByUser(:username, :moduleId)");
+			query.setParameter("username", username);
+			query.setParameter("moduleId", moduleId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+	
 }

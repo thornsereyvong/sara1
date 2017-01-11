@@ -19,6 +19,20 @@ public class CrmModule implements Serializable{
 	
 	@Column(name="Remarks")
 	private String moduleName;
+	
+	@Column(name="Group")
+	private String groupModule;
+	
+	
+	
+
+	public String getGroupModule() {
+		return groupModule;
+	}
+
+	public void setGroupModule(String groupModule) {
+		this.groupModule = groupModule;
+	}
 
 	public String getModuleId() {
 		return moduleId;
