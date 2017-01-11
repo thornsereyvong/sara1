@@ -2,6 +2,7 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -54,10 +56,10 @@ public class HBUMarketSurvey implements Serializable{
 	@Column(name="MS_ModifiedDate")
 	private LocalDateTime msModifiedDate;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="MarketSurveyID")
-	private HBUMarketSurveyDetails details;
+	private List<HBUMarketSurveyDetails> details;
 	
 	@Transient
 	private String convertModifiedDate;
@@ -137,11 +139,11 @@ public class HBUMarketSurvey implements Serializable{
 		this.meDataSource = meDataSource;
 	}
 
-	public HBUMarketSurveyDetails getDetails() {
+	public List<HBUMarketSurveyDetails> getDetails() {
 		return details;
 	}
 
-	public void setDetails(HBUMarketSurveyDetails details) {
+	public void setDetails(List<HBUMarketSurveyDetails> details) {
 		this.details = details;
 	}
 }
