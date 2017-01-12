@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -48,6 +49,10 @@ public class HBUCompetitor implements Serializable{
 	
 	@Column(name="COM_ModifiedBy")
 	private String comModifiedBy;
+	
+	@OrderBy(value="DESC")
+	@Column(name="COM_Status")
+	private String comStatus;
 	
 	@Transient
 	private MeDataSource meDataSource;
@@ -106,6 +111,14 @@ public class HBUCompetitor implements Serializable{
 
 	public void setComModifiedBy(String comModifiedBy) {
 		this.comModifiedBy = comModifiedBy;
+	}
+
+	public String getComStatus() {
+		return comStatus;
+	}
+
+	public void setComStatus(String comStatus) {
+		this.comStatus = comStatus;
 	}
 
 	public MeDataSource getMeDataSource() {

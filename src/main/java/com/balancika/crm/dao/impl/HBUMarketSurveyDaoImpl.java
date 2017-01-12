@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.HBUMarketSurveyDao;
@@ -17,7 +18,6 @@ import com.balancika.crm.model.HBUItem;
 import com.balancika.crm.model.HBUMarketSurvey;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
-import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketSurveyDao{
@@ -38,8 +38,13 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			/*if(survey.getMsId() == null){
+				survey.setMsId(IdAutoGenerator("MS", survey.getMeDataSource()));
+			}*/
+			/*SQLQuery query  = session.createSQLQuery("DELETE FROM hbu_market_survey_details WHERE MarketSurveyID = :msId ;");
+			query.setParameter("msId", survey.getMsId());
+			query.executeUpdate();*/
 			survey.setMsId(IdAutoGenerator("MS", survey.getMeDataSource()));
-			survey.setMsDate(new DateTimeOperation().convertStringToLocalDateTime(survey.getConvertMsDate()));
 			session.save(survey);
 			session.getTransaction().commit();
 			return true;
@@ -122,9 +127,10 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 			return map;
 	}
 	
+	@Transactional(readOnly = true)
 	@SuppressWarnings("unchecked")
 	private List<HBUCustomer> listCustomers(MeDataSource dataSource){
-		System.out.println(dataSource.toString());
+		//System.out.println(dataSource.toString());
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
@@ -145,6 +151,7 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 		
 	}
 	
+	@Transactional(readOnly = true)
 	@SuppressWarnings("unchecked")
 	private List<HBUItem> listItems(MeDataSource dataSource){
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
@@ -169,6 +176,50 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 
 	@Override
 	public Map<String, Object> updateMaketSurveyStartup(String msId, MeDataSource dataSource) {
+		return null;
+	}
+
+	@Transactional(readOnly = true)
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<HBUMarketSurvey> listMarketSurveys(MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(HBUMarketSurvey.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			session.getTransaction().commit();
+			List<HBUMarketSurvey> surveys = (List<HBUMarketSurvey>)criteria.list();
+			return surveys;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+
+	@Override
+	public HBUMarketSurvey findMarketSurveyByItemID(String itemId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(HBUMarketSurvey.class);
+			criteria.add(Restrictions.eq("item.itemId", itemId));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			session.getTransaction().commit();
+			HBUMarketSurvey survey = (HBUMarketSurvey)criteria.uniqueResult();
+			return survey;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
 		return null;
 	}
 
