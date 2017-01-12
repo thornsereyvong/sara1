@@ -12,5 +12,6 @@ public interface CrmRoleService {
 	CrmRole findRoleById(String roleId, MeDataSource dataSource);
 	List<Object> findRoleDetailsByRoleId(String roleId, MeDataSource dataSource);
 	List<CrmRole> listAllRoles(MeDataSource dataSource);
+	List<Object> findRoleMaster(MeDataSource dataSource);
 	CrmRole findRoleByUsername(String username, MeDataSource dataSource);
 }

@@ -245,12 +245,15 @@ public class CaseController {
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			map.put("MSG", messageService.getMessage("1000", "case", cases.getCaseId(), cases.getMeDataSource()));
+			
+			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Create", "Case", cases.getCaseId()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		map.put("MSG", messageService.getMessage("1003", "case", cases.getCaseId(), cases.getMeDataSource()));
+		map.put("MSG", messageService.getMessage("1003", "case", "", cases.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -260,10 +263,10 @@ public class CaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if(caseService.updateCase(cases) == true){
-			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("MSG", messageService.getMessage("1001", "case", cases.getCaseId(), cases.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		

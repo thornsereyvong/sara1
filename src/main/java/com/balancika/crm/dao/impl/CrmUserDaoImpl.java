@@ -71,6 +71,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.clear();
@@ -127,7 +128,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(meDataSource));
 		session = getSessionFactory().openSession();
 		try {
-			Criteria criteria = session.createCriteria(CrmUser.class, "user").createAlias("user.role", "role");
+			/*Criteria criteria = session.createCriteria(CrmUser.class, "user").createAlias("user.role", "role");
 			criteria.setProjection(Projections.projectionList()
 					.add(Projections.property("userID"),"userID")
 					.add(Projections.property("username"),"username")
@@ -137,8 +138,12 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			criteria.add(Restrictions.eq("status", 1));
 			criteria.add(Restrictions.ne("role.roleName", "CRM_ADMIN"));
 			criteria.addOrder(Order.desc("userID"));
-			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return criteria.list();
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);*/
+			
+			SQLQuery query = session.createSQLQuery("CALL crm_list_crm_users()");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			
+			return query.list();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

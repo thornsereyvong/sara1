@@ -31,8 +31,7 @@ public class CrmUser implements Serializable{
 	@Column(name="UName", nullable = false, unique = true)
 	private String username;
 	
-	@NotEmpty
-	@Column(name="UPassword", nullable = false)
+	@Column(name="UPassword", updatable=false)
 	private String password;
 	
 	@Column(name="UType")
@@ -44,7 +43,7 @@ public class CrmUser implements Serializable{
 	@Column(name="UStatus", nullable = false, length = 1)
 	private int status;
 
-	@Column(name="UParentID")
+	@Column(name="UParentID", updatable=false)
 	private String parentID;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -56,4 +56,10 @@ public class CrmRoleServiceImpl implements CrmRoleService{
 		return roleDao.findRoleDetailsByRoleId(roleId, dataSource);
 	}
 
+	@Override
+	public List<Object> findRoleMaster(MeDataSource dataSource) {
+		
+		return roleDao.findRoleMaster(dataSource);
+	}
+
 }

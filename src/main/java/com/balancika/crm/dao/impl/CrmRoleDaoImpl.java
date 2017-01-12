@@ -174,4 +174,25 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> findRoleMaster(MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crm_list_role_master()");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+	
+	
 }

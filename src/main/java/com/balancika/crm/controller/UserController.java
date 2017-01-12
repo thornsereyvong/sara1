@@ -13,9 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.balancika.crm.model.CrmRole;
 import com.balancika.crm.model.CrmUser;
+import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.CrmUserLogin;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.services.CrmCaseArticleService;
+import com.balancika.crm.services.CrmMessageService;
+import com.balancika.crm.services.CrmRoleService;
+import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 
 @RestController
@@ -24,6 +30,19 @@ public class UserController {
 
 	@Autowired
 	private CrmUserService userService; 
+	
+	@Autowired
+	private CrmRoleService roleService;
+	
+	@Autowired
+	private CrmMessageService messageService;
+	
+	
+	@Autowired
+	private CrmUserActivityService activityService;
+	
+	@Autowired
+	private CrmUserActivity activity;
 	
 	@RequestMapping(value="/list_all", method = RequestMethod.POST, produces="application/json")
 	public ResponseEntity<Map<String, Object>> listAllUsers(@RequestBody MeDataSource dataSource){
@@ -39,6 +58,27 @@ public class UserController {
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	@RequestMapping(value="/startup/list_all", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> listStartup(@RequestBody MeDataSource dataSource){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<CrmUser> arrUser = userService.listAllUsers(dataSource);
+		List<Object> roleList = roleService.findRoleMaster(dataSource);
+		
+		if(arrUser != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", arrUser);
+			map.put("ROLE", roleList);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		map.put("DATA", null);
+		map.put("ROLE", roleList);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -133,11 +173,16 @@ public class UserController {
 		if(userService.isInserted(user) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			
+			activityService.addUserActivity(activity.getActivity(user.getDataSource(), "Create", "User", user.getUserID()));
+			map.put("MSG", messageService.getMessage("1000", "user", user.getUserID(), user.getDataSource()));
+			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1003", "user", "", user.getDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -148,11 +193,14 @@ public class UserController {
 		if(userService.isUpdated(user) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1001", "user", user.getUserID(), user.getDataSource()));
+			activityService.addUserActivity(activity.getActivity(user.getDataSource(), "Update", "User", user.getUserID()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "user", user.getUserID(), user.getDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -161,13 +209,16 @@ public class UserController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(userService.isDeleted(user) == true){
+			activityService.addUserActivity(activity.getActivity(user.getDataSource(), "Delete", "User", user.getUserID()));
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", messageService.getMessage("1002", "user", user.getUserID(), user.getDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", messageService.getMessage("1004", "user", user.getUserID(), user.getDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

@@ -13,4 +13,5 @@ public interface CrmRoleDao{
 	List<Object> findRoleDetailsByRoleId(String roleId, MeDataSource dataSource);
 	List<CrmRole> listAllRoles(MeDataSource dataSource);
 	CrmRole findRoleByUsername(String username, MeDataSource dataSource);
+	List<Object> findRoleMaster(MeDataSource dataSource);
 }
