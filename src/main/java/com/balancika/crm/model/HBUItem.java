@@ -34,7 +34,7 @@ public class HBUItem implements Serializable{
 	private String itemName;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@Fetch(FetchMode.JOIN)
+	@Fetch(FetchMode.SUBSELECT)
 	@JoinTable(name = "hbu_competitor_item", 
 		joinColumns = {@JoinColumn(name = "ItemID")},
 		inverseJoinColumns = {@JoinColumn(name="COM_ID")})
@@ -90,5 +90,4 @@ public class HBUItem implements Serializable{
 	public void setCustomers(List<HBUCustomer> customers) {
 		this.customers = customers;
 	}
-	
 }

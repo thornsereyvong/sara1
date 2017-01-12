@@ -2,11 +2,11 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -20,8 +20,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
+import org.hibernate.annotations.Type;
 
 @Entity(name="HBUMarketSurvey")
 @Table(name = "hbu_market_survey")
@@ -35,12 +34,9 @@ public class HBUMarketSurvey implements Serializable{
 	@Column(name = "MS_ID")
 	private String msId;
 	
-	@Convert(converter = LocalDateTimePersistenceConverter.class)
+	@Type(type = "date")
 	@Column(name="MS_Date", updatable = false)
-	private LocalDateTime msDate;
-	
-	@Transient
-	private String convertMsDate;
+	private Date msDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Fetch(FetchMode.JOIN)
@@ -56,7 +52,7 @@ public class HBUMarketSurvey implements Serializable{
 	@Column(name="MS_ModifiedDate")
 	private LocalDateTime msModifiedDate;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="MarketSurveyID")
 	private List<HBUMarketSurveyDetails> details;
@@ -75,20 +71,12 @@ public class HBUMarketSurvey implements Serializable{
 		this.msId = msId;
 	}
 
-	public LocalDateTime getMsDate() {
+	public Date getMsDate() {
 		return msDate;
 	}
 
-	public void setMsDate(LocalDateTime msDate) {
+	public void setMsDate(Date msDate) {
 		this.msDate = msDate;
-	}
-
-	public String getConvertMsDate() {
-		return convertMsDate;
-	}
-
-	public void setConvertMsDate(String convertMsDate) {
-		this.convertMsDate = convertMsDate;
 	}
 
 	public AmeItem getItem() {

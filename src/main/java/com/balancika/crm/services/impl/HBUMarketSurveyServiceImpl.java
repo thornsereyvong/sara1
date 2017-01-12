@@ -1,5 +1,6 @@
 package com.balancika.crm.services.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -47,6 +48,16 @@ public class HBUMarketSurveyServiceImpl implements HBUMarketSurveyService{
 	@Override
 	public Map<String, Object> updateMaketSurveyStartup(String msId, MeDataSource dataSource) {
 		return surveyDao.updateMaketSurveyStartup(msId, dataSource);
+	}
+
+	@Override
+	public List<HBUMarketSurvey> listMarketSurveys(MeDataSource dataSource) {
+		return surveyDao.listMarketSurveys(dataSource);
+	}
+
+	@Override
+	public HBUMarketSurvey findMarketSurveyByItemID(String itemId, MeDataSource dataSource) {
+		return surveyDao.findMarketSurveyByItemID(itemId, dataSource);
 	}
 
 }

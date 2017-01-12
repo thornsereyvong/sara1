@@ -142,13 +142,13 @@ public class CallController {
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
 			map.put("MSG", messageService.getMessage("1000", "call", call.getCallId(), call.getMeDataSource()));
+			activityService.addUserActivity(activity.getActivity(call.getMeDataSource(), "Create", "Call", call.getCallId()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		map.put("MSG", messageService.getMessage("1003", "call", "", call.getMeDataSource()));
-		activityService.addUserActivity(activity.getActivity(call.getMeDataSource(), "Create", "Call", call.getCallId()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
