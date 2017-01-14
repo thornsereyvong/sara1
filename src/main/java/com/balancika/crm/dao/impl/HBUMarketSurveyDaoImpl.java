@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -38,12 +39,6 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			/*if(survey.getMsId() == null){
-				survey.setMsId(IdAutoGenerator("MS", survey.getMeDataSource()));
-			}*/
-			/*SQLQuery query  = session.createSQLQuery("DELETE FROM hbu_market_survey_details WHERE MarketSurveyID = :msId ;");
-			query.setParameter("msId", survey.getMsId());
-			query.executeUpdate();*/
 			survey.setMsId(IdAutoGenerator("MS", survey.getMeDataSource()));
 			session.save(survey);
 			session.getTransaction().commit();
@@ -83,6 +78,9 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			SQLQuery query  = session.createSQLQuery("DELETE FROM hbu_market_survey_details WHERE MarketSurveyID = :msId ;");
+			query.setParameter("msId", survey.getMsId());
+			query.executeUpdate();
 			session.delete(survey);
 			session.getTransaction().commit();
 			return true;

@@ -26,9 +26,6 @@ public class HBUMarketSurveyDetails implements Serializable{
 	@Column(name="MS_DetailID")
 	private int msDetailId;
 	
-	@Column(name="MarketSurveyID")
-	private String marketSurveyId;
-	
 	@Column(name="CustID")
 	private String custId;
 	
@@ -47,14 +44,6 @@ public class HBUMarketSurveyDetails implements Serializable{
 
 	public void setMsDetailId(int msDetailId) {
 		this.msDetailId = msDetailId;
-	}
-
-	public String getMarketSurveyId() {
-		return marketSurveyId;
-	}
-
-	public void setMarketSurveyId(String marketSurveyId) {
-		this.marketSurveyId = marketSurveyId;
 	}
 
 	public String getCustId() {

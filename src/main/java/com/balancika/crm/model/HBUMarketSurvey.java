@@ -41,7 +41,7 @@ public class HBUMarketSurvey implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "MS_ItemID")
-	private AmeItem item;
+	private HBUItem item;
 	
 	@Column(name="MS_CreateBy", updatable = false)
 	private String msCreateBy;
@@ -79,11 +79,11 @@ public class HBUMarketSurvey implements Serializable{
 		this.msDate = msDate;
 	}
 
-	public AmeItem getItem() {
+	public HBUItem getItem() {
 		return item;
 	}
 
-	public void setItem(AmeItem item) {
+	public void setItem(HBUItem item) {
 		this.item = item;
 	}
 
