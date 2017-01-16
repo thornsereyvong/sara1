@@ -1,11 +1,13 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -20,6 +22,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
 @Table(name = "crm_role")
@@ -47,17 +51,16 @@ public class CrmRole implements Serializable{
 	@Column(name="RM_CBy", updatable = false)
 	private String createBy;
 	
-	@Type(type="date")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="RM_CDate", updatable  = false)
-	private Date createDate;
+	private LocalDateTime createDate;
 	
 	@Column(name="RM_MBy")
 	private String modifyBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Type(type="date")
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="RM_MDate", updatable = false, insertable = false)
-	private Date modifyDate;
+	private LocalDateTime modifyDate;
 	
 	@Column(name="RM_Status", nullable = false)
 	private int roleStatus;
@@ -97,11 +100,11 @@ public class CrmRole implements Serializable{
 		this.createBy = createBy;
 	}
 
-	public Date getCreateDate() {
+	public LocalDateTime getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
 	}
 
@@ -113,11 +116,11 @@ public class CrmRole implements Serializable{
 		this.modifyBy = modifyBy;
 	}
 
-	public Date getModifyDate() {
+	public LocalDateTime getModifyDate() {
 		return modifyDate;
 	}
 
-	public void setModifyDate(Date modifyDate) {
+	public void setModifyDate(LocalDateTime modifyDate) {
 		this.modifyDate = modifyDate;
 	}
 

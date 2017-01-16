@@ -1,5 +1,8 @@
 package com.balancika.crm.dao.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -39,6 +42,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 			session.beginTransaction();
 			role.setRoleId(IdAutoGenerator("RM",role.getMeDataSource()));
 			role.setRoleName(role.getRoleName().toUpperCase());
+			role.setCreateDate(LocalDateTime.now());
 			session.save(role);
 			session.getTransaction().commit();
 			return true;
