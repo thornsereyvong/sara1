@@ -59,6 +59,9 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			SQLQuery query  = session.createSQLQuery("DELETE FROM hbu_market_survey_details WHERE MarketSurveyID = :msId ;");
+			query.setParameter("msId", survey.getMsId());
+			query.executeUpdate();
 			session.update(survey);
 			session.getTransaction().commit();
 			return true;

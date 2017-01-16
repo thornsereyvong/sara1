@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.balancika.crm.model.CrmRole;
 import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.CrmUserLogin;
 import com.balancika.crm.model.MeDataSource;
-import com.balancika.crm.services.CrmCaseArticleService;
 import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmRoleService;
 import com.balancika.crm.services.CrmUserActivityService;
