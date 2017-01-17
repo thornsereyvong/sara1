@@ -1,6 +1,5 @@
 package com.balancika.crm.dao.impl;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmDashboardDao;
 import com.balancika.crm.model.MeDataSource;
-import com.mysql.jdbc.CallableStatement;
 
 @Repository
 public class CrmDashboardDaoImpl implements CrmDashboardDao{
@@ -30,9 +28,6 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		this.sessionFactory = sessionFactory;
 	}
 
-	private CallableStatement callableStatement = null;
-	private ResultSet resultSet = null;
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object viewDashboard(String username, MeDataSource dataSource) {
@@ -54,9 +49,11 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 			List<Map<String, Object>> leadList = new ArrayList<Map<String,Object>>();
 			List<Map<String, Object>> campaignList = new ArrayList<Map<String,Object>>();
 			List<Map<String, Object>> caseList = new ArrayList<Map<String,Object>>();
-			
-			
-			
+			List<Map<String, Object>> customerList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> contactList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> opportunityList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> quotationList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> saleOrderList = new ArrayList<Map<String,Object>>();
 			for(Map<String, Object> map : maps){
 				switch (map.get("KEY").toString()) {
 					case "MEETING":
@@ -86,6 +83,21 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 					case "CASE":
 						caseList.add(generateCaseMap(map.get("VAL").toString()));
 						break;
+					case "CUSTOMER":
+						customerList.add(generateCustomerMap(map.get("VAL").toString()));
+						break;
+					case "CONTACT":
+						contactList.add(generateContactMap(map.get("VAL").toString()));
+						break;
+					case "OPPORTUNITY":
+						opportunityList.add(generateOpportunityMap(map.get("VAL").toString()));
+						break;
+					case "QUOTATION":
+						quotationList.add(generateQuotationMap(map.get("VAL").toString()));
+						break;
+					case "SALEORDER":
+						saleOrderList.add(generateSaleOrderMap(map.get("VAL").toString()));
+						break;
 					default:
 						break;
 				}
@@ -101,6 +113,11 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 			objMap.put("LEADS", leadList);
 			objMap.put("CAMPAIGNS", campaignList);
 			objMap.put("CASES", caseList);
+			objMap.put("CUSTOMERS", customerList);
+			objMap.put("CONTACTS", contactList);
+			objMap.put("OPPORTUNITIES", opportunityList);
+			objMap.put("QUOTATIONS", quotationList);
+			objMap.put("SALEORDERS", saleOrderList);
 			
 			return objMap;
 		} catch (Exception e) {
@@ -112,24 +129,6 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		}
 		return null;
 	}
-	
-	private Map<String, Object> dashboardData(String username, MeDataSource dataSource){
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
-		Session session = getSessionFactory().openSession();
-		try {
-			
-			
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			session.clear();
-			session.close();
-			sessionFactory.close();
-		}
-		return null;
-	}
-	
 	
 	
 	private Map<String, Object> generateMeetingMap(String meetings){
@@ -253,6 +252,71 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		map.put("caseCustomer", str[6]);
 		map.put("conId", str[7]);
 		map.put("caseContact", str[8]);
+		return map;
+	}
+	
+	private Map<String, Object> generateCustomerMap(String customer){
+		String[] str = customer.split(" ,");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("custId", str[0]);
+		map.put("custName", str[1]);
+		map.put("custPhone", str[2]);
+		map.put("custEmail", str[3]);
+		map.put("custIndustry", str[4]);
+		map.put("custLeadSource", str[5]);
+		return map;
+	}
+	private Map<String, Object> generateOpportunityMap(String opportunity){
+		String[] str = opportunity.split(" ,");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("opId", str[0]);
+		map.put("opName", str[1]);
+		map.put("opAmount", str[2]);
+		map.put("opCampId", str[3]);
+		map.put("opCampName", str[4]);
+		map.put("opLeadSource", str[5]);
+		map.put("opCustId", str[6]);
+		map.put("opCustName", str[7]);
+		return map;
+	}
+	
+	private Map<String, Object> generateContactMap(String contact){
+		String[] str = contact.split(" ,");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("conId", str[0]);
+		map.put("conName", str[1]);
+		map.put("custId", str[2]);
+		map.put("custName", str[3]);
+		map.put("leadSource", str[4]);
+		map.put("conPhone", str[5]);
+		map.put("conEmail", str[6]);
+		return map;
+	}
+	
+	private Map<String, Object> generateQuotationMap(String quotation){
+		String[] str = quotation.split(" ,");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("quoteId", str[0]);
+		map.put("custId", str[1]);
+		map.put("custName", str[2]);
+		map.put("empId", str[3]);
+		map.put("empName", str[4]);
+		map.put("startDate", str[5]);
+		map.put("expireDate", str[6]);
+		map.put("quoteDate", str[7]);
+		return map;
+	}
+	
+	private Map<String, Object> generateSaleOrderMap(String saleOrder){
+		String[] str = saleOrder.split(" ,");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("saleId", str[0]);
+		map.put("custId", str[1]);
+		map.put("custName", str[2]);
+		map.put("empId", str[3]);
+		map.put("empName", str[4]);
+		map.put("saleDate", str[5]);
+		map.put("dueDate", str[6]);
 		return map;
 	}
 }
