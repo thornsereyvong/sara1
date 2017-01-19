@@ -16,9 +16,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 @Entity(name="CrmCustomer")
 @Table(name="tblcustomer")
 public class CrmCustomer implements Serializable{
