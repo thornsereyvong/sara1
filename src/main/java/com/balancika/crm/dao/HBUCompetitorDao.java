@@ -12,4 +12,5 @@ public interface HBUCompetitorDao {
 	boolean deleteCompetitor(HBUCompetitor competitor);
 	HBUCompetitor findCompetitorById(String comId, MeDataSource dataSource);
 	List<HBUCompetitor> listCompetitors(MeDataSource dataSource);
+	List<Object> listItem(MeDataSource dataSource);
 }

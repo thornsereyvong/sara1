@@ -1,5 +1,7 @@
 package com.balancika.crm.utilities;
 
+import java.util.Map;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -52,4 +54,6 @@ public class CrmIdGenerator {
 		}
 		return null;
 	}
+
+	
 }

@@ -73,7 +73,7 @@ public class HBUCompetitorController {
 	@RequestMapping(value = "/startup", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> startupAddCompetitor(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ITEMS", itemService.listItems(dataSource));
+		map.put("ITEMS", competitorService.listItem(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -114,6 +115,24 @@ public class HBUCompetitorDaoImpl extends CrmIdGenerator implements HBUCompetito
 			Criteria criteria  = session.createCriteria(HBUCompetitor.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Object> listItem(MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crm_item_list()");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

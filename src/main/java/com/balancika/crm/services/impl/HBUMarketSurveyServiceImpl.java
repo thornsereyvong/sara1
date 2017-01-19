@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.HBUMarketSurveyDao;
+import com.balancika.crm.model.HBUCustomer;
 import com.balancika.crm.model.HBUMarketSurvey;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.HBUMarketSurveyService;
@@ -60,4 +61,17 @@ public class HBUMarketSurveyServiceImpl implements HBUMarketSurveyService{
 		return surveyDao.findMarketSurveyByItemID(itemId, dataSource);
 	}
 
+	@Override
+	public List<HBUCustomer> listCustomer(MeDataSource dataSource) {
+		return surveyDao.listCustomer(dataSource);
+	}
+
+	@Override
+	public List<Object> findMarketShare(String msId, MeDataSource dataSource) {
+		return surveyDao.findMarketShare(msId, dataSource);
+	}
+    
+	
+
+	
 }

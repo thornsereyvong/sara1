@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmUserActivity;
+import com.balancika.crm.model.HBUCustomer;
 import com.balancika.crm.model.HBUMarketSurvey;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMessageService;
@@ -103,6 +104,23 @@ public class HBUMarketSurveyController {
 	public ResponseEntity<Map<String, Object>> findMarketSurveyById(@RequestBody MeDataSource dataSource, @PathVariable("msId") String msId){
 		Map<String, Object> map = new HashMap<String, Object>();
 		HBUMarketSurvey survey = surveyService.findMarketSurveyById(msId, dataSource);
+		List<HBUCustomer> cust = surveyService.listCustomer(dataSource);
+		if(survey != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("SURVEY", survey);
+			map.put("CUSTOMERS", cust);
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		map.put("MESSAGE", "NOT_FOUNT");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/view/data/{msId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> data(@RequestBody MeDataSource dataSource, @PathVariable("msId") String msId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Object> survey = surveyService.findMarketShare(msId, dataSource);
 		if(survey != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK.value());
@@ -111,8 +129,10 @@ public class HBUMarketSurveyController {
 		}
 		map.put("MESSAGE", "NOT_FOUNT");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		map.put("SURVEY", null);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
+	
 	
 	@RequestMapping(value = "/find/item/{itemId}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> findMarketSurveyByItemId(@RequestBody MeDataSource dataSource, @PathVariable("itemId") String itemId){

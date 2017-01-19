@@ -3,6 +3,7 @@ package com.balancika.crm.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.balancika.crm.model.HBUCustomer;
 import com.balancika.crm.model.HBUMarketSurvey;
 import com.balancika.crm.model.MeDataSource;
 
@@ -15,4 +16,6 @@ public interface HBUMarketSurveyDao {
 	Map<String, Object> updateMaketSurveyStartup(String msId, MeDataSource dataSource);
 	List<HBUMarketSurvey> listMarketSurveys(MeDataSource dataSource);
 	HBUMarketSurvey findMarketSurveyByItemID(String itemId, MeDataSource dataSource);
+	List<HBUCustomer> listCustomer(MeDataSource dataSource);
+	List<Object> findMarketShare(String msId,MeDataSource dataSource);
 }

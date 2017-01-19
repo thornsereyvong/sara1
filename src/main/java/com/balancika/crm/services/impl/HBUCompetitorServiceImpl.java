@@ -44,4 +44,9 @@ public class HBUCompetitorServiceImpl implements HBUCompetitorService{
 		return competitorDao.listCompetitors(dataSource);
 	}
 
+	@Override
+	public List<Object> listItem(MeDataSource dataSource) {
+		return competitorDao.listItem(dataSource);
+	}
+
 }

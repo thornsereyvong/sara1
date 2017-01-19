@@ -128,6 +128,12 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 			return map;
 	}
 	
+	@Override
+	public List<HBUCustomer> listCustomer(MeDataSource dataSource) {
+		List<HBUCustomer> customers = listCustomers(dataSource);
+		return customers;
+	}
+	
 	@Transactional(readOnly = true)
 	@SuppressWarnings("unchecked")
 	private List<HBUCustomer> listCustomers(MeDataSource dataSource){
@@ -214,6 +220,25 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 			session.getTransaction().commit();
 			HBUMarketSurvey survey = (HBUMarketSurvey)criteria.uniqueResult();
 			return survey;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Object> findMarketShare(String msId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crm_hbu_market_share_frm(:msId)");
+			query.setParameter("msId", msId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
