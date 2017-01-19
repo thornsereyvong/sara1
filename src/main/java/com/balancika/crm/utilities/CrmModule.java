@@ -85,12 +85,12 @@ public class CrmModule {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Object> listRoleByUserByModule(MeDataSource dataSource,String moduleId,String username){
+	public List<Object> listRoleByUserByModule(MeDataSource dataSource,String moduleId,String userId){
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
-			SQLQuery query = session.createSQLQuery("CALL crm_listSystemModuleByUser(:username, :moduleId)");
-			query.setParameter("username", username);
+			SQLQuery query = session.createSQLQuery("CALL crm_listSystemModuleByUser(:userId, :moduleId)");
+			query.setParameter("userId", userId);
 			query.setParameter("moduleId", moduleId);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return query.list();

@@ -1,8 +1,6 @@
 package com.balancika.crm.dao.impl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -145,7 +143,7 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		session = getSessionFactory().openSession();
 		try {
 			Criteria criteria = session.createCriteria(CrmUser.class);
-			criteria.add(Restrictions.eq("username", username));
+			criteria.add(Restrictions.eq("userID", username));
 			CrmUser user = (CrmUser)criteria.uniqueResult();
 			CrmRole role = findRoleById(user.getRole().getRoleId(), dataSource);
 			return role;

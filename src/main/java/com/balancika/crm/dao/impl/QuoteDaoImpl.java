@@ -60,7 +60,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 			SQLQuery uom = session.createSQLQuery("SELECT UomID,Des AS UomName FROM tbluom;");
 			SQLQuery priceCode = session.createSQLQuery("SELECT PriceCode,Description FROM tblpricecode;");
 			SQLQuery shipTo = session.createSQLQuery("SELECT moduleid 'moduleId', docid 'docId', shipid 'shipId', shipname 'shipName', inactive 'inactive' FROM tblshipaddress WHERE inactive = 0");
-			SQLQuery empWithEmp = session.createSQLQuery("SELECT ue.EmpID from tbluser u JOIN tbluseremployee ue on u.UID=ue.UID WHERE u.UName = '"+dataSource.getUserid()+"'");
+			SQLQuery empWithEmp = session.createSQLQuery("SELECT ue.EmpID from tbluseremployee ue WHERE ue.UID = '"+dataSource.getUserid()+"'");
 			
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			emp.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
