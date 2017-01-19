@@ -58,10 +58,12 @@ public class HBUItemController {
 		if(itemService.addCompetitorsToItem(itemCompetitor) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			map.put("MSG", "");
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", "");
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -71,10 +73,12 @@ public class HBUItemController {
 		if(itemService.addCustomerOfItem(itemCustomer) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
+			map.put("MSG", "");
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", "");
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
@@ -84,10 +88,12 @@ public class HBUItemController {
 		if(itemService.addCompetitorsToItem(itemCompetitor) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
+			map.put("MSG", "");
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		map.put("MSG", "");
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
