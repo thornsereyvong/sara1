@@ -277,6 +277,7 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		map.put("opLeadSource", str[5]);
 		map.put("opCustId", str[6]);
 		map.put("opCustName", str[7]);
+		map.put("opStage", str[8]);
 		return map;
 	}
 	
