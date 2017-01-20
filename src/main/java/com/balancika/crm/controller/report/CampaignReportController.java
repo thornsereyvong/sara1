@@ -35,4 +35,11 @@ public class CampaignReportController {
 		map.put("TOP_CAMPAIGN", campaignReportSevice.reportTopCampaign(campaingReport));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/lead-by-campaign", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> leadByCampaign(@RequestBody MeDataSource dataSource){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("LEAD_BY_CAMPAIGN", campaignReportSevice.reportLeadByCampaing(dataSource));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
 }

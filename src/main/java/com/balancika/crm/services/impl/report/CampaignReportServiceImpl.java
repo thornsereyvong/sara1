@@ -29,4 +29,9 @@ public class CampaignReportServiceImpl implements CampaignReportSevice{
 		return campaignReportDao.reportTopCampaign(campaingReport);
 	}
 
+	@Override
+	public List<Map<String, Object>> reportLeadByCampaing(MeDataSource dataSource) {
+		return campaignReportDao.reportLeadByCampaing(dataSource);
+	}
+
 }

@@ -90,34 +90,26 @@ public class CampaignReportDaoImpl implements CampaignReportDao{
 			}
 			
 			if(!campaingReport.getEndDate().equals("") && !campaingReport.getStartDate().equals("")){
-				sDate = "(DATE_FORMAT(c.CA_SDate,'%d/%m/%Y') BETWEEN'"+campaingReport.getStartDate()+"' AND '"+campaingReport.getEndDate()+"')";
-				eDate = "OR (DATE_FORMAT(c.CA_EDate,'%d/%m/%Y') BETWEEN '"+campaingReport.getStartDate()+"' AND '"+campaingReport.getEndDate()+"')";
+				sDate = "((DATE_FORMAT(c.CA_SDate,'%d/%m/%Y') BETWEEN'"+campaingReport.getStartDate()+"' AND '"+campaingReport.getEndDate()+"')";
+				eDate = "OR (DATE_FORMAT(c.CA_EDate,'%d/%m/%Y') BETWEEN '"+campaingReport.getStartDate()+"' AND '"+campaingReport.getEndDate()+"'))";
 			}else if(!campaingReport.getEndDate().equals("")){
 				eDate = "DATE_FORMAT(c.CA_EDate,'%d/%m/%Y') ='"+campaingReport.getEndDate()+"'";
 			}
 			
-			if(campaingReport.getStatusId() != 0 && !campaingReport.getEndDate().equals("")){
+			if(campaingReport.getStatusId() != 0){
 				 status = "AND c.CA_StatusID ="+campaingReport.getStatusId();
-			}else if(campaingReport.getStatusId() != 0){
-				status = "c.CA_StatusID ="+campaingReport.getStatusId();
 			}
 			
-			if(campaingReport.getTypeId() != 0 && campaingReport.getStatusId() != 0){
+			if(campaingReport.getTypeId() != 0){
 				type = "AND c.CA_TypeID ="+campaingReport.getTypeId();
-			}else if(campaingReport.getTypeId() != 0){
-				type = "c.CA_TypeID ="+campaingReport.getTypeId();
 			}
 			
-			if(  campaingReport.getCampParentId() != null && !campaingReport.getCampParentId().equals("") && campaingReport.getTypeId() != 0){
+			if(  campaingReport.getCampParentId() != null && !campaingReport.getCampParentId().equals("")){
 				campaign = "AND c.CA_ParentID ='"+campaingReport.getCampParentId()+"'";
-			}else if(campaingReport.getCampParentId() != null && !campaingReport.getCampParentId().equals("")){
-				campaign = "c.CA_ParentID ='"+campaingReport.getCampParentId()+"'";
 			}
 			
-			if(campaingReport.getUserId() != null && !campaingReport.getUserId().equals("") && campaingReport.getCampParentId() != null && !campaingReport.getCampParentId().equals("")){
+			if(campaingReport.getUserId() != null && !campaingReport.getUserId().equals("")){
 				user = "AND c.CA_ATo ='"+campaingReport.getUserId()+"'";
-			}else if(campaingReport.getUserId() != null && !campaingReport.getUserId().equals("")){
-				user = "c.CA_ATo ='"+campaingReport.getUserId()+"'";
 			}
 			
 			SQLQuery query = session.createSQLQuery(""
@@ -154,7 +146,34 @@ public class CampaignReportDaoImpl implements CampaignReportDao{
 		
 		return new ArrayList<Map<String,Object>>();
 	}
-	
-	
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> reportLeadByCampaing(MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = sessionFactory.openSession();
+		try {
+			SQLQuery query = session.createSQLQuery(""
+					+ "SELECT "
+						+ "ca.CA_ID AS campId,"
+						+ "ca.CA_Name AS campName,"
+						+ "le.LA_ID AS leadId,"
+						+ "CONCAT(le.LA_Salutation,' ',le.LA_FirstName,' ',le.LA_LastName) leadName,"
+						+ "le.LA_AccountName AS leadCompany,"
+						+ "le.LA_Email AS leadEmail,"
+						+ "le.LA_SourceID AS leadSourceId,"
+						+ "COALESCE(SELECT LS_Name FROM crm_lead_source WHERE LS_ID = le.LA_SourceID, '') AS leadSourceName,"
+						+ "le.LA_CBy AS leadCreateBy,"
+						+ "(SELECT em.EmpName FROM tblemployee em WHERE em.EmpID = (SELECT ue.EmpID FROM tbluseremployee ue WHERE ue.UID = le.LA_CBy)) AS leadOwner,"
+						+ "(SELECT COUNT(lea.LA_ID) FROM crm_lead lea WHERE lea.LA_CA_ID = le.LA_CA_ID) AS numOfLeadPerCamp"
+						+ " FROM"
+							+ "	crm_camp ca "
+						+ "INNER JOIN crm_lead le ON ca.CA_ID = le.LA_CA_ID;");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return (List<Map<String, Object>>)query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Map<String,Object>>();
+	}
 }
