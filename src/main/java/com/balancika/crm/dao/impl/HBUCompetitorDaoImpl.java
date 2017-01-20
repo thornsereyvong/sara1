@@ -124,7 +124,8 @@ public class HBUCompetitorDaoImpl extends CrmIdGenerator implements HBUCompetito
 		}
 		return null;
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> listItem(MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
