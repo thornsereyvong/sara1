@@ -1,7 +1,5 @@
 package com.balancika.crm.utilities;
 
-import java.util.Map;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,7 +25,6 @@ public class CrmIdGenerator {
 		try {
 			Query query = session.createSQLQuery("SELECT generateAutoId(:moduleId)");
 			query.setParameter("moduleId", moduleId);
-			
 			return (String)query.uniqueResult();
 		} catch (Exception e) {
 			e.printStackTrace();
