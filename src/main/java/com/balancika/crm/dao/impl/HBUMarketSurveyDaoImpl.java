@@ -230,6 +230,7 @@ public class HBUMarketSurveyDaoImpl extends CrmIdGenerator implements HBUMarketS
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> findMarketShare(String msId, MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
