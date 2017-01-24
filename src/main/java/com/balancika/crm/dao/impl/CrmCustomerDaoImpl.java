@@ -1,5 +1,7 @@
 package com.balancika.crm.dao.impl;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -357,6 +359,66 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return criteria.list();
 		} catch (HibernateException e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> creditInfo(String custId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL spLoad_Credit_Limit(:custId,'',now())");
+			query.setParameter("custId", custId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
+	
+	
+	@Override
+	public Map<String, Object> creditInfoByCustomer(String custId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			
+			System.out.println(custId+"--------------------------");
+			
+			Map<String, Object> map = new HashMap<>();
+			SQLQuery query1 = session.createSQLQuery("CALL crm_customer_creditLimit_1(:custId,'')");
+			query1.setParameter("custId", custId);
+			query1.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			map.put("CREDIT_LIMIT", query1.list());
+			
+			SQLQuery query2 = session.createSQLQuery("CALL crm_customer_creditLimit_2(:custId,'')");
+			query2.setParameter("custId", custId);
+			query2.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			map.put("OUT_STAND", query2.list());
+			
+			SQLQuery query3 = session.createSQLQuery("CALL crm_customer_creditLimit_3(:custId,'')");
+			query3.setParameter("custId", custId);
+			query3.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			map.put("TEMP_CREDIT", query3.list());
+			
+			SQLQuery query4 = session.createSQLQuery("CALL crm_customer_creditLimit_4(:custId,'')");
+			query4.setParameter("custId", custId);
+			query4.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			map.put("INVOICE", query4.list());
+			
+			return map;
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			session.clear();

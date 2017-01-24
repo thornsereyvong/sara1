@@ -1,6 +1,7 @@
 package com.balancika.crm.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.balancika.crm.model.AmeClass;
 import com.balancika.crm.model.CrmCustomer;
@@ -18,4 +19,6 @@ public interface CrmCustomerDao {
 	List<PriceCode> listPriceCode(MeDataSource dataSource);
 	List<AmeClass> listAmeClasses(MeDataSource dataSource);
 	CrmCustomer viewCustomerDetails(String custId, MeDataSource dataSource);
+	List<Object> creditInfo(String custId, MeDataSource dataSource);
+	Map<String, Object> creditInfoByCustomer(String custId, MeDataSource dataSource);
 }

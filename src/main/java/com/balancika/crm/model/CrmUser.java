@@ -1,6 +1,7 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
+
 
 @Entity(name="CrmUser")
 @Table(name = "tbluser")
@@ -58,12 +60,25 @@ public class CrmUser implements Serializable{
 		
 	@Transient
 	private MeDataSource dataSource;
-
+	
+	@Transient
+	private List<CrmConfDashboard> confDashboard;
+	
+	
 	public CrmUser(){
 		
 	}
 	
-	
+	public List<CrmConfDashboard> getConfDashboard() {
+		return confDashboard;
+	}
+
+	public void setConfDashboard(List<CrmConfDashboard> confDashboard) {
+		this.confDashboard = confDashboard;
+	}
+
+
+
 	public UserApp getUserApp() {
 		return userApp;
 	}

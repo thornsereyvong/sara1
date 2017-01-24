@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -64,6 +65,16 @@ public class CrmCustomerServiceImpl implements CrmCustomerService{
 	@Override
 	public List<AmeClass> listAmeClasses(MeDataSource dataSource) {
 		return customerDao.listAmeClasses(dataSource);
+	}
+
+	@Override
+	public List<Object> creditInfo(String custId, MeDataSource dataSource) {		
+		return customerDao.creditInfo(custId, dataSource);
+	}
+
+	@Override
+	public Map<String, Object> creditInfoByCustomer(String custId, MeDataSource dataSource) {
+		return customerDao.creditInfoByCustomer(custId, dataSource);
 	}
 
 }

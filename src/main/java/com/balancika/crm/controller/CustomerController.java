@@ -175,7 +175,24 @@ public class CustomerController {
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
-	
+	@RequestMapping(value="/credit-info/{custID}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> creditInfo(@PathVariable("custID") String custID, @RequestBody MeDataSource dataSource){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> mapdata = customerService.creditInfoByCustomer(custID, dataSource);
+		
+		if(mapdata != null){
+			map.put("MESSAGE", "FOUND");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", mapdata);
+			
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
 	@RequestMapping(value="/add/startup", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addStartupPage(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
