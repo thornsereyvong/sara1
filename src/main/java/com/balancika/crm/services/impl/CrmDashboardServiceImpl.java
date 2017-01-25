@@ -1,16 +1,12 @@
 package com.balancika.crm.services.impl;
 
-import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmDashboardDao;
-import com.balancika.crm.model.CrmConfDashboard;
 import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmDashboardService;
