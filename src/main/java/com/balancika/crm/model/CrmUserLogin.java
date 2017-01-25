@@ -2,22 +2,19 @@ package com.balancika.crm.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity(name="CrmUserLogin")
 @Table(name = "tbluser")
+@SecondaryTable(name="tbluserapp", pkJoinColumns = @PrimaryKeyJoinColumn(name="UID"))
 public class CrmUserLogin implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -41,24 +38,19 @@ public class CrmUserLogin implements Serializable{
 	@Column(name="UParentID")
 	private String parentID;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name="UID", nullable = false, insertable = false, updatable = false)
-	private UserApp userApp;
+	@Column(table="tbluserapp", name="AppID")
+	private String appId;
 		
 	@Transient
 	private MeDataSource dataSource;
-
 	
-	public UserApp getUserApp() {
-		return userApp;
+	public String getAppId() {
+		return appId;
 	}
 
-
-	public void setUserApp(UserApp userApp) {
-		this.userApp = userApp;
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
-
 
 	public String getUserID() {
 		return userID;
