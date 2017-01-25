@@ -1,25 +1,18 @@
 package com.balancika.crm.dao.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
-import com.balancika.crm.dao.CrmCallDao;
 import com.balancika.crm.dao.CrmConfDashboardDao;
-import com.balancika.crm.model.CrmCall;
 import com.balancika.crm.model.CrmConfDashboard;
 import com.balancika.crm.model.MeDataSource;
-import com.balancika.crm.utilities.DateTimeOperation;
 import com.balancika.crm.utilities.CrmIdGenerator;
 
 @Repository
