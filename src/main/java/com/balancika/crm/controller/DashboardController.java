@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmDashboardService;
 
@@ -28,4 +29,23 @@ public class DashboardController {
 		map.put("DASHBOARD", dashboardService.viewDashboard(username, dataSource));
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
+	
+	@RequestMapping(value ="/conf", method = RequestMethod.POST)
+	private ResponseEntity<Map<String, Object>> viewDashboard(@RequestBody CrmUser user){
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(dashboardService.confDashboard(user) == true){
+			map.put("MESSAGE", "INSERTED");
+			map.put("STATUS", HttpStatus.CREATED.value());
+			
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.CREATED);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		
+	}
+	
 }

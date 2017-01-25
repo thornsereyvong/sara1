@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmCallDao;
+import com.balancika.crm.dao.CrmConfDashboardDao;
 import com.balancika.crm.model.CrmCall;
 import com.balancika.crm.model.CrmConfDashboard;
 import com.balancika.crm.model.MeDataSource;
@@ -19,9 +20,7 @@ import com.balancika.crm.services.CrmConfDashboardService;
 public class CrmConfDashboardServiceImpl implements CrmConfDashboardService{
 
 	@Autowired
-	private CrmCallDao callDao;
-
-	
+	private CrmConfDashboardDao confdao;
 
 	@Override
 	public List<CrmConfDashboard> listConf(MeDataSource dataSource) {
@@ -37,8 +36,7 @@ public class CrmConfDashboardServiceImpl implements CrmConfDashboardService{
 
 	@Override
 	public boolean insertConf(CrmConfDashboard conf) {
-		// TODO Auto-generated method stub
-		return false;
+		return confdao.insertConf(conf); 
 	}
 
 	@Override
