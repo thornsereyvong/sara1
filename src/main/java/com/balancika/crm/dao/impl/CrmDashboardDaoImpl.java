@@ -9,11 +9,15 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmDashboardDao;
+import com.balancika.crm.model.CrmConfDashboard;
+import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.services.CrmConfDashboardService;
 
 @Repository
 public class CrmDashboardDaoImpl implements CrmDashboardDao{
@@ -27,6 +31,9 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 	public final void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
+	
+	@Autowired
+	private CrmConfDashboardService confService;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -54,6 +61,7 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 			List<Map<String, Object>> opportunityList = new ArrayList<Map<String,Object>>();
 			List<Map<String, Object>> quotationList = new ArrayList<Map<String,Object>>();
 			List<Map<String, Object>> saleOrderList = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> confDash = new ArrayList<Map<String,Object>>();
 			for(Map<String, Object> map : maps){
 				switch (map.get("KEY").toString()) {
 					case "MEETING":
@@ -98,6 +106,9 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 					case "SALEORDER":
 						saleOrderList.add(generateSaleOrderMap(map.get("VAL").toString()));
 						break;
+					case "CONF_DASH":
+						confDash.add(generateConfMap(map.get("VAL").toString()));
+						break;
 					default:
 						break;
 				}
@@ -118,6 +129,7 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 			objMap.put("OPPORTUNITIES", opportunityList);
 			objMap.put("QUOTATIONS", quotationList);
 			objMap.put("SALEORDERS", saleOrderList);
+			objMap.put("CONF_DASH", confDash);
 			
 			return objMap;
 		} catch (Exception e) {
@@ -319,5 +331,48 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		map.put("saleDate", str[5]);
 		map.put("dueDate", str[6]);
 		return map;
+	}
+
+	private Map<String, Object> generateConfMap(String conf){
+		String[] str = conf.split(" ,");
+		Map<String, Object> map = new HashMap<String, Object>();
+		boolean  ck = false;
+		if(str[2].equals("1")) ck=true;
+		map.put("moduleId", str[0]);
+		map.put("moduleName", str[1]);
+		map.put("status", ck);
+		map.put("orderBy", Integer.parseInt(str[3]));
+		return map;
+	}
+	
+	@Override
+	public boolean confDashboard(CrmUser user) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(user.getDataSource()));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			
+			SQLQuery query = session.createSQLQuery("CALL crm_delete_config_dashboard(:username)");
+			query.setParameter("username", user.getDataSource().getUserid());
+			query.executeUpdate();					
+			CrmConfDashboard conf = null;
+			for (int i = 0; i < user.getConfDashboard().size(); i++) {
+				conf = new CrmConfDashboard();
+				conf = user.getConfDashboard().get(i);
+				conf.setUserId(user.getDataSource().getUserid());
+				conf.setMeDataSource(user.getDataSource());
+				session.save(conf);			
+			}
+			session.getTransaction().commit();			
+			return true;
+		} catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}	
+		return false;
 	}
 }
