@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.balancika.crm.dao.report.LeadReportDao;
 import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.model.report.LeadReport;
 import com.balancika.crm.services.report.LeadReportService;
 
 @Service
@@ -69,6 +70,21 @@ public class leadReportServiceImpl implements LeadReportService{
 	@Override
 	public List<CrmLead> reportMarketingLeadByConverted(MeDataSource dataSource) {
 		return reportDao.reportMarketingLeadByConverted(dataSource);
+	}
+
+	@Override
+	public List<Map<String, Object>> reportLead(LeadReport leadReport) {
+		return reportDao.reportLead(leadReport);	
+	}
+
+	@Override
+	public Map<String, Object> startupReportLead(MeDataSource dataSource) {
+		return reportDao.startupReportLead(dataSource);
+	}
+
+	@Override
+	public List<Map<String, Object>> startupDate(String dateType, MeDataSource dataSource) {
+		return reportDao.startupDate(dateType, dataSource);
 	}
 
 }

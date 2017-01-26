@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.model.report.LeadReport;
 
 public interface LeadReportDao {
 	List<CrmLead> reportLeadsConvertedAllTime(MeDataSource dataSource);
@@ -17,4 +18,7 @@ public interface LeadReportDao {
 	List<CrmLead> reportMarketingLeadByIndustry(MeDataSource dataSource);
 	List<CrmLead> reportMarketingLeadBySource(MeDataSource dataSource);
 	List<CrmLead> reportMarketingLeadByConverted(MeDataSource dataSource);
+	List<Map<String, Object>> reportLead(LeadReport leadReport);
+	Map<String, Object> startupReportLead(MeDataSource dataSource);
+	List<Map<String, Object>> startupDate(String dateType, MeDataSource dataSource);
 }
