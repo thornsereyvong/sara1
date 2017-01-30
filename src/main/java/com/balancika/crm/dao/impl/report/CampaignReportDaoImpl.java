@@ -62,7 +62,7 @@ public class CampaignReportDaoImpl implements CampaignReportDao{
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = sessionFactory.openSession();
 		try {
-			SQLQuery query = session.createSQLQuery("SELECT DATE_FORMAT(MIN(CA_SDate),'%d/%m/%Y') AS startDate,DATE_FORMAT(MAX(CA_EDate),'%d/%m/%Y') AS endDate FROM  crm_camp; ");
+			SQLQuery query = session.createSQLQuery("SELECT DATE_FORMAT(MIN(CA_SDate),'%Y-%m-%d') AS startDate,DATE_FORMAT(MAX(CA_EDate),'%Y-%m-%d') AS endDate FROM  crm_camp; ");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return (Map<String, String>)query.uniqueResult();
 		} catch (Exception e) {
@@ -86,14 +86,14 @@ public class CampaignReportDaoImpl implements CampaignReportDao{
 			String user = "";
 			
 			if(!campaingReport.getStartDate().equals("")){
-				sDate = "DATE_FORMAT(c.CA_SDate,'%d/%m/%Y') ='"+campaingReport.getStartDate()+"'";
+				sDate = "DATE(c.CA_SDate) ='"+campaingReport.getStartDate()+"'";
 			}
 			
 			if(!campaingReport.getEndDate().equals("") && !campaingReport.getStartDate().equals("")){
-				sDate = "((DATE_FORMAT(c.CA_SDate,'%d/%m/%Y') BETWEEN'"+campaingReport.getStartDate()+"' AND '"+campaingReport.getEndDate()+"')";
-				eDate = "OR (DATE_FORMAT(c.CA_EDate,'%d/%m/%Y') BETWEEN '"+campaingReport.getStartDate()+"' AND '"+campaingReport.getEndDate()+"'))";
+				sDate = "((DATE(c.CA_SDate) BETWEEN'"+campaingReport.getStartDate()+"' AND '"+campaingReport.getEndDate()+"')";
+				eDate = "OR (DATE(c.CA_EDate) BETWEEN '"+campaingReport.getStartDate()+"' AND '"+campaingReport.getEndDate()+"'))";
 			}else if(!campaingReport.getEndDate().equals("")){
-				eDate = "DATE_FORMAT(c.CA_EDate,'%d/%m/%Y') ='"+campaingReport.getEndDate()+"'";
+				eDate = "DATE(c.CA_EDate) ='"+campaingReport.getEndDate()+"'";
 			}
 			
 			if(campaingReport.getStatusId() != 0){

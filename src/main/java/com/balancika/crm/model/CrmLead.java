@@ -1,9 +1,11 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -20,6 +22,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity
 @Table(name="crm_lead")
@@ -124,8 +128,11 @@ public class CrmLead implements Serializable{
 	private String createBy;
 	
 	@Column(name="LA_CDate", updatable = false)
-	@Type(type="date")
-	private Date createDate;
+	@Convert(converter = LocalDateTimePersistenceConverter.class)
+	private LocalDateTime createDate;
+	
+	@Transient
+	private String convertCreateDate;
 	
 	@Column(name="LA_MDate", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -325,12 +332,20 @@ public class CrmLead implements Serializable{
 		this.createBy = createBy;
 	}
 
-	public Date getCreateDate() {
+	public LocalDateTime getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
+	}
+
+	public String getConvertCreateDate() {
+		return convertCreateDate;
+	}
+
+	public void setConvertCreateDate(String convertCreateDate) {
+		this.convertCreateDate = convertCreateDate;
 	}
 
 	public Date getModifyDate() {

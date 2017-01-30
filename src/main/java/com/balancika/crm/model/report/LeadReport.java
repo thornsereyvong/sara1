@@ -8,6 +8,7 @@ public class LeadReport {
 	private String dateType;
 	private String status;
 	private String source;
+	private String assignTo;
 	private MeDataSource dataSource;
 	
 	public String getStartDate() {
@@ -45,6 +46,12 @@ public class LeadReport {
 	}
 	public void setDataSource(MeDataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+	public String getAssignTo() {
+		return assignTo;
+	}
+	public void setAssignTo(String assignTo) {
+		this.assignTo = assignTo;
 	}
 	
 }

@@ -1,10 +1,10 @@
 package com.balancika.crm.dao.impl.report;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.dbunit.dataset.datatype.DataType;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -159,6 +159,7 @@ public class LeadReportDaoImpl implements LeadReportDao{
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Map<String, Object>> reportLead(LeadReport leadReport) {
 		
@@ -166,6 +167,31 @@ public class LeadReportDaoImpl implements LeadReportDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			String createdDate = "";
+			String convertedDate = "";
+			String status = "";
+			String source = "";
+			String assignTo = "";
+			
+			if(leadReport.getDateType().equals("createdDate")){
+				createdDate = "DATE(LA_CDate) BETWEEN '"+leadReport.getStartDate()+"' AND '"+leadReport.getEndDate()+"'";
+			}
+			
+			if(leadReport.getDateType().equalsIgnoreCase("convertedDate")){
+				convertedDate = "DATE(LA_ConvertedDate) BETWEEN '"+leadReport.getStartDate()+"' AND '"+leadReport.getEndDate()+"'";
+			}
+			if(leadReport.getStatus() != null && !leadReport.getStatus().equals("")){
+				status = " AND LA_StatusID = "+leadReport.getStatus();
+			}
+			
+			if(leadReport.getSource() !=null && !leadReport.getSource().equals("")){
+				source = " AND LA_SourceID = "+leadReport.getSource();
+			}
+			
+			if(leadReport.getAssignTo()!=null && !leadReport.getAssignTo().equals("")){
+				assignTo = " AND LA_ATo = '"+leadReport.getAssignTo()+"'";
+			}
+			
 			SQLQuery query = session.createSQLQuery(""
 					+ "SELECT "
 						+ "LA_ID leadId, "
@@ -175,9 +201,8 @@ public class LeadReportDaoImpl implements LeadReportDao{
 						+ "(SELECT LS_Name FROM crm_lead_source WHERE LS_ID = LA_SourceID) sourceName,"
 						+ "LA_StatusID statusId,"
 						+ "(SELECT LST_Name FROM crm_lead_status WHERE LST_ID = LA_StatusID) statusName,"
-						+ "LA_CDate createDate,"
-						+ "LA_MDate modifiedDate,"
-						+ "LA_ConvertedDate convertedDate,"
+						+ "DATE_FORMAT(LA_CDate,'%Y-%m-%d') createdDate,"
+						+ "DATE_FORMAT(LA_ConvertedDate,'%Y-%m-%d') convertedDate,"
 						+ "LA_OPID opId,"
 						+ "op.OP_Amt opAmount,"
 						+ "op.OP_Name opName,"
@@ -186,13 +211,15 @@ public class LeadReportDaoImpl implements LeadReportDao{
 						+ "crm_lead "
 					+ "LEFT OUTER JOIN "
 						+ "crm_opportunity op "
-							+ "ON op.OP_ID = LA_OPID;"
-					+ "WHERE ");
+							+ "ON op.OP_ID = LA_OPID "
+					+ "WHERE "+createdDate+""+convertedDate+""+status+""+source+""+assignTo+";");
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return new ArrayList<Map<String,Object>>();
 	}
 
 	@Override
@@ -214,9 +241,9 @@ public class LeadReportDaoImpl implements LeadReportDao{
 			session.beginTransaction();
 			String sql = "";
 			if(dateType.equals("createdDate")){
-				sql = "SELECT MIN(DATE_FORMAT(LA_CDate,'%d/%m/%Y')) startDate, MAX(DATE_FORMAT(LA_CDate,'%d/%m/%Y')) endDate FROM crm_lead; ";
+				sql = "SELECT MIN(DATE_FORMAT(LA_CDate,'%Y-%m-%d')) startDate, MAX(DATE_FORMAT(LA_CDate,'%Y-%m-%d')) endDate FROM crm_lead; ";
 			}else if(dateType.equals("convertedDate")){
-				sql = "SELECT MIN(DATE_FORMAT(LA_ConvertedDate,'%d/%m/%Y')) startDate, MAX(DATE_FORMAT(LA_ConvertedDate,'%d/%m/%Y')) endDate FROM crm_lead; ";
+				sql = "SELECT MIN(DATE_FORMAT(LA_ConvertedDate,'%Y-%m-%d')) startDate, MAX(DATE_FORMAT(LA_ConvertedDate,'%Y-%m-%d')) endDate FROM crm_lead; ";
 			}
 			SQLQuery query = session.createSQLQuery(sql);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);

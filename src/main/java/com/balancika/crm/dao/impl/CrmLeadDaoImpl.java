@@ -1,6 +1,6 @@
 package com.balancika.crm.dao.impl;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +60,7 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		try {
 			session.beginTransaction();
 			lead.setLeadID(IdAutoGenerator("LE", lead.getMeDataSource()));
-			lead.setCreateDate(new Date());
+			lead.setCreateDate(LocalDateTime.now());
 			session.save(lead);
 			session.getTransaction().commit();
 			return true;
