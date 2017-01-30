@@ -16,7 +16,7 @@ import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.report.LeadReportService;
 
 @RestController
-@RequestMapping("/api/lead/report")
+@RequestMapping("/api/report/lead")
 public class LeadReportController {
 	
 	@Autowired

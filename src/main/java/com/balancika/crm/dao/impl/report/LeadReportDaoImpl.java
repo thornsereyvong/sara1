@@ -201,13 +201,13 @@ public class LeadReportDaoImpl implements LeadReportDao{
 		map.put("STATUS", statusDao.getAllLeadStatus(dataSource));
 		map.put("SOURCE", sourceDao.getAllLeadSource(dataSource));
 		map.put("ASSIGN_TO", userDao.listSubordinateUserByUsername(dataSource.getUserid(), dataSource));
-		map.put("STRATUP_DATE", startupDate("createdDate", dataSource));
+		map.put("STARTUP_DATE", startupDate("createdDate", dataSource));
 		return map;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Map<String, Object>> startupDate(String dateType, MeDataSource dataSource) {
+	public Map<String, Object> startupDate(String dateType, MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
@@ -220,7 +220,7 @@ public class LeadReportDaoImpl implements LeadReportDao{
 			}
 			SQLQuery query = session.createSQLQuery(sql);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return (List<Map<String, Object>>)query.list();
+			return (Map<String, Object>)query.uniqueResult();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

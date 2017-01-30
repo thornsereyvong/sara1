@@ -83,7 +83,7 @@ public class leadReportServiceImpl implements LeadReportService{
 	}
 
 	@Override
-	public List<Map<String, Object>> startupDate(String dateType, MeDataSource dataSource) {
+	public Map<String, Object> startupDate(String dateType, MeDataSource dataSource) {
 		return reportDao.startupDate(dateType, dataSource);
 	}
 

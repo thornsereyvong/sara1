@@ -20,5 +20,5 @@ public interface LeadReportDao {
 	List<CrmLead> reportMarketingLeadByConverted(MeDataSource dataSource);
 	List<Map<String, Object>> reportLead(LeadReport leadReport);
 	Map<String, Object> startupReportLead(MeDataSource dataSource);
-	List<Map<String, Object>> startupDate(String dateType, MeDataSource dataSource);
+	Map<String, Object> startupDate(String dateType, MeDataSource dataSource);
 }
