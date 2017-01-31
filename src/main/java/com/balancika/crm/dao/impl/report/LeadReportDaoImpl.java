@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
+import com.balancika.crm.dao.CrmIndustryDao;
 import com.balancika.crm.dao.CrmLeadSourceDao;
 import com.balancika.crm.dao.CrmLeadStatusDao;
 import com.balancika.crm.dao.CrmUserDao;
@@ -32,6 +33,9 @@ public class LeadReportDaoImpl implements LeadReportDao{
 	
 	@Autowired
 	private CrmUserDao userDao;
+	
+	@Autowired
+	private CrmIndustryDao industryDao;
 	
 	private SessionFactory sessionFactory;
 	
@@ -172,6 +176,7 @@ public class LeadReportDaoImpl implements LeadReportDao{
 			String status = "";
 			String source = "";
 			String assignTo = "";
+			String industry = "";
 			
 			if(leadReport.getDateType().equals("createdDate")){
 				createdDate = "DATE(LA_CDate) BETWEEN '"+leadReport.getStartDate()+"' AND '"+leadReport.getEndDate()+"'";
@@ -192,6 +197,9 @@ public class LeadReportDaoImpl implements LeadReportDao{
 				assignTo = " AND LA_ATo = '"+leadReport.getAssignTo()+"'";
 			}
 			
+			if(leadReport.getIndustry() != null && !leadReport.getIndustry().equals(""))
+				industry = " AND LA_IndustID = "+leadReport.getIndustry();
+			
 			SQLQuery query = session.createSQLQuery(""
 					+ "SELECT "
 						+ "LA_ID leadId, "
@@ -201,18 +209,20 @@ public class LeadReportDaoImpl implements LeadReportDao{
 						+ "(SELECT LS_Name FROM crm_lead_source WHERE LS_ID = LA_SourceID) sourceName,"
 						+ "LA_StatusID statusId,"
 						+ "(SELECT LST_Name FROM crm_lead_status WHERE LST_ID = LA_StatusID) statusName,"
-						+ "DATE_FORMAT(LA_CDate,'%Y-%m-%d') createdDate,"
-						+ "DATE_FORMAT(LA_ConvertedDate,'%Y-%m-%d') convertedDate,"
+						+ "DATE_FORMAT(LA_CDate,'%d/%m/%Y') createdDate,"
+						+ "DATE_FORMAT(LA_ConvertedDate,'%d/%m/%Y') convertedDate,"
 						+ "LA_OPID opId,"
 						+ "op.OP_Amt opAmount,"
 						+ "op.OP_Name opName,"
-						+ "(SELECT UName FROM tbluser WHERE UID = op.OP_CBy) opOwner"
+						+ "(SELECT UName FROM tbluser WHERE UID = op.OP_CBy) opOwner,"
+						+ "LA_IndustID industId,"
+						+ "(SELECT I_Name FROM crm_industry WHERE I_ID = LA_IndustID) industName"
 					+ " FROM "
 						+ "crm_lead "
 					+ "LEFT OUTER JOIN "
 						+ "crm_opportunity op "
 							+ "ON op.OP_ID = LA_OPID "
-					+ "WHERE "+createdDate+""+convertedDate+""+status+""+source+""+assignTo+";");
+					+ "WHERE "+createdDate+""+convertedDate+""+status+""+source+""+assignTo+""+industry+";");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return query.list();
 		} catch (Exception e) {
@@ -229,6 +239,7 @@ public class LeadReportDaoImpl implements LeadReportDao{
 		map.put("SOURCE", sourceDao.getAllLeadSource(dataSource));
 		map.put("ASSIGN_TO", userDao.listSubordinateUserByUsername(dataSource.getUserid(), dataSource));
 		map.put("STARTUP_DATE", startupDate("createdDate", dataSource));
+		map.put("INDUSTRIES", industryDao.listIndustries(dataSource));
 		return map;
 	}
 

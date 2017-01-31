@@ -9,6 +9,7 @@ public class LeadReport {
 	private String status;
 	private String source;
 	private String assignTo;
+	private String industry;
 	private MeDataSource dataSource;
 	
 	public String getStartDate() {
@@ -53,5 +54,10 @@ public class LeadReport {
 	public void setAssignTo(String assignTo) {
 		this.assignTo = assignTo;
 	}
-	
+	public String getIndustry() {
+		return industry;
+	}
+	public void setIndustry(String industry) {
+		this.industry = industry;
+	}
 }
