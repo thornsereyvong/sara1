@@ -98,7 +98,7 @@ public class CrmCase implements Serializable{
 	@Column(name="CS_MDate", insertable = false, updatable = false)
 	private Date modifyDate;
 	
-	@Column(name="CS_RosolvedBy", updatable = false)
+	@Column(name="CS_ResolvedBy", updatable = false)
 	private String resolvedBy;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
