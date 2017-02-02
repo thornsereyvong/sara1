@@ -1,6 +1,8 @@
 package com.balancika.crm.dao.impl.report;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
@@ -19,6 +21,7 @@ import com.balancika.crm.dao.CrmOpportunityTypeDao;
 import com.balancika.crm.dao.CrmUserDao;
 import com.balancika.crm.dao.report.OpportunityReportDao;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.model.report.OpportunityReport;
 
 @Repository
 public class OpportunityReportDaoImpl implements OpportunityReportDao{
@@ -86,10 +89,73 @@ public class OpportunityReportDaoImpl implements OpportunityReportDao{
 		return new HashMap<String, Object>();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> opportunityReport(OpportunityReportDao filter) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Map<String, Object>> opportunityReport(OpportunityReport filter) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(filter.getDataSource()));
+		Session session  = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			String createdDate = "";
+			String closedDate = "";
+			String stage = "";
+			String type = "";
+			String source = "";
+			String campaign = "";
+			String customer = "";
+			String assignTo = "";
+			
+			if(filter.getDateType().equals("createdDate"))
+				createdDate = "(DATE(OP_CDate) BETWEEN '"+filter.getStartDate()+"' AND '"+filter.getEndDate()+"')";
+			else if(filter.getDateType().equals("closedDate"))
+				closedDate = "(DATE(OP_CloseDate) BETWEEN '"+filter.getStartDate()+"' AND '"+filter.getEndDate()+"')";
+			
+			if(filter.getStage() != null && !filter.getStage().equals(""))
+				stage = " AND OP_StageID = "+filter.getStage();
+			
+			if(filter.getType() != null && !filter.getType().equals(""))
+				type = " AND OP_TypeID = "+filter.getType();
+			
+			if(filter.getSource() != null && !filter.getSource().equals(""))
+				source = " AND OP_LeadSourceID = "+filter.getSource();
+			
+			if(filter.getCampaign() != null && !filter.getCampaign().equals(""))
+				campaign = " AND OP_CampID = '"+filter.getCampaign()+"'";
+			
+			if(filter.getCustomer() != null && !filter.getCustomer().equals(""))
+				customer = " AND OP_CustID = '"+filter.getCustomer()+"'";
+			
+			if(filter.getAssignTo() != null && !filter.getAssignTo().equals(""))
+				assignTo = " AND OP_ATo = '"+filter.getAssignTo()+"'";
+			
+			String sql = "SELECT "
+							+ "OP_ID opId,"
+							+ "OP_Name opName,"
+							+ "OP_StageID stageId,"
+							+ "(SELECT OS_Name FROM crm_opportunity_stage WHERE OS_ID = OP_StageID) stageName,"
+							+ "OP_TypeID typeId,"
+							+ "(SELECT OT_Name FROM crm_opportunity_type WHERE OT_ID = OP_TypeID) typeName,"
+							+ "CONCAT('$',OP_Amt) opAmount,"
+							+ "CONCAT(OP_Probability,'%') opProbability,"
+							+ "DATE_FORMAT(OP_CDate,'%d/%m/%Y') opCreatedDate,"
+							+ "DATE_FORMAT(OP_CloseDate,'%d/%m/%Y') opClosedDate,"
+							+ "OP_CustID custId,"
+							+ "(SELECT CustName FROM tblcustomer WHERE CustID = OP_CustID) custName,"
+							+ "OP_CampID campaignId,"
+							+ "(SELECT CA_Name FROM crm_camp WHERE CA_ID = OP_CampID) campaignName,"
+							+ "OP_LeadSourceID sourceId,"
+							+ "(SELECT LS_Name FROM crm_lead_source WHERE LS_ID = OP_LeadSourceID) sourceName "
+						+ "FROM "
+							+ "crm_opportunity "
+						+ "WHERE "
+							+createdDate+""+closedDate+""+stage+""+type+""+source+""+campaign+""+customer+""+assignTo+";";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Map<String,Object>>();
 	}
 
 }
