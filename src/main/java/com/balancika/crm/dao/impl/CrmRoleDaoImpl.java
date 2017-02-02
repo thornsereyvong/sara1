@@ -82,21 +82,21 @@ public class CrmRoleDaoImpl extends CrmIdGenerator implements CrmRoleDao{
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(role.getMeDataSource()));
 		session = getSessionFactory().openSession();
 		try {
-			
 			SQLQuery query = session.createSQLQuery("CALL crm_delete_role_by_id(:roleId)");
-			query.setParameter(":roleId", role.getRoleId());
+			query.setParameter("roleId", role.getRoleId());
 			query.executeUpdate();
 	
 			return true;
 		} catch (Exception e) {
 			//session.getTransaction().rollback();
-			//return false;
+			e.printStackTrace();
+			return false;
 		} finally {
 			session.clear();
 			session.close();
 			sessionFactory.close();
 		}
-		return false;
+		
 	}
 
 	@Override
