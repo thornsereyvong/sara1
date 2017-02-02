@@ -1,5 +1,6 @@
 package com.balancika.crm.services.impl.report;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.report.OpportunityReportDao;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.model.report.OpportunityReport;
 import com.balancika.crm.services.report.OpportunityReportService;
 
 @Service
@@ -29,7 +31,7 @@ public class OpportunityReportServiceImpl implements OpportunityReportService{
 	}
 
 	@Override
-	public Map<String, Object> opportunityReport(OpportunityReportDao filter) {
+	public List<Map<String, Object>> opportunityReport(OpportunityReport filter) {
 		return reportDao.opportunityReport(filter);
 	}
 

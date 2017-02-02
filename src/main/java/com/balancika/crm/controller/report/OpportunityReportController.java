@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.model.report.OpportunityReport;
 import com.balancika.crm.services.report.OpportunityReportService;
 
 @RestController
@@ -31,6 +32,13 @@ public class OpportunityReportController {
 	public ResponseEntity<Map<String, Object>> startupDate(@PathVariable("dateType") String dateType, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("STARTUP_DATE", reportService.startupDateReport(dateType, dataSource));
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/opportunity-report", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> opportunityReport(@RequestBody OpportunityReport filter){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("REPORT", reportService.opportunityReport(filter));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
