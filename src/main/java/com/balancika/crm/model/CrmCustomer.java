@@ -64,7 +64,7 @@ public class CrmCustomer implements Serializable{
 	@Column(name="AID")
 	private String aId;
 	
-	@Column(name = "CreateFrom")
+	@Column(name = "CreateFrom", updatable = false)
 	private String createFrom;
 	
 	
