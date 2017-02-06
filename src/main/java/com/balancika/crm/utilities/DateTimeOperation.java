@@ -1,7 +1,10 @@
 package com.balancika.crm.utilities;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class DateTimeOperation {
 
@@ -30,5 +33,16 @@ public class DateTimeOperation {
 		}
 		String reverseDate = date.format(formatter);
 		return reverseDate;
+	}
+	
+	public Date convertStringToDate(String date){
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+		try {
+			Date convertDate = dateFormat.parse(date);
+			return convertDate;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

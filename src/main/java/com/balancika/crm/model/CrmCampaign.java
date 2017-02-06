@@ -17,21 +17,18 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.NotEmpty;
 
-@Entity
+@Entity(name="CrmCampaign")
 @Table(name = "crm_camp")
 public class CrmCampaign implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "CA_ID", unique = true, nullable = false)
-	@NotEmpty
+	@Column(name = "CA_ID")
 	private String campID;
 
-	@Column(name = "CA_Name", unique = true, nullable = false)
-	@NotEmpty
+	@Column(name = "CA_Name")
 	private String campName;
 
 	@Column(name = "CA_SDate")
