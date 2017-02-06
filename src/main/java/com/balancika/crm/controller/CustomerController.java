@@ -239,6 +239,10 @@ public class CustomerController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		for(int i=0; i<customer.getShipAddresses().size(); i++){
+			System.out.println(customer.getShipAddresses().get(i).getShipId());
+		}		
+		
 		if(customerService.updateCustomer(customer) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
