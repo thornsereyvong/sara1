@@ -38,18 +38,18 @@ public class OpportunityModel implements Serializable{
 
 	@JoinColumn(name="OP_TypeID")
 	@ManyToOne(optional = true, targetEntity = CrmOpportunityType.class)
-	private CrmOpportunityType opTypeID;
+	private CrmOpportunityType type;
 	
 	@JoinColumn(name = "OP_StageID", nullable = false)
 	@ManyToOne(optional = false, targetEntity = CrmOpportunityStage.class)
-	private CrmOpportunityStage opStageId;
+	private CrmOpportunityStage stage;
 	
 	@Column(name = "OP_Probability")
 	private int opProbability;
 	
 	@JoinColumn(name = "OP_LeadSourceID")
 	@ManyToOne( optional = true, targetEntity = CrmLeadSource.class)
-	private CrmLeadSource opLeadSourceID;
+	private CrmLeadSource leadSource;
 	
 	@Column( name = "OP_NextStep")
 	private String opNextStep;
@@ -90,36 +90,12 @@ public class OpportunityModel implements Serializable{
 		this.opCloseDate = opCloseDate;
 	}
 
-	public CrmOpportunityType getOpTypeID() {
-		return opTypeID;
-	}
-
-	public void setOpTypeID(CrmOpportunityType opTypeID) {
-		this.opTypeID = opTypeID;
-	}
-
-	public CrmOpportunityStage getOpStageId() {
-		return opStageId;
-	}
-
-	public void setOpStageId(CrmOpportunityStage opStageId) {
-		this.opStageId = opStageId;
-	}
-
 	public int getOpProbability() {
 		return opProbability;
 	}
 
 	public void setOpProbability(int opProbability) {
 		this.opProbability = opProbability;
-	}
-
-	public CrmLeadSource getOpLeadSourceID() {
-		return opLeadSourceID;
-	}
-
-	public void setOpLeadSourceID(CrmLeadSource opLeadSourceID) {
-		this.opLeadSourceID = opLeadSourceID;
 	}
 
 	public String getOpNextStep() {
@@ -136,6 +112,30 @@ public class OpportunityModel implements Serializable{
 
 	public void setOpCreatedDate(Date opCreatedDate) {
 		this.opCreatedDate = opCreatedDate;
+	}
+
+	public CrmOpportunityType getType() {
+		return type;
+	}
+
+	public void setType(CrmOpportunityType type) {
+		this.type = type;
+	}
+
+	public CrmOpportunityStage getStage() {
+		return stage;
+	}
+
+	public void setStage(CrmOpportunityStage stage) {
+		this.stage = stage;
+	}
+
+	public CrmLeadSource getLeadSource() {
+		return leadSource;
+	}
+
+	public void setLeadSource(CrmLeadSource leadSource) {
+		this.leadSource = leadSource;
 	}
 
 }
