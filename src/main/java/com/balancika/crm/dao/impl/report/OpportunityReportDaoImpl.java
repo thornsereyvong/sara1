@@ -85,6 +85,10 @@ public class OpportunityReportDaoImpl implements OpportunityReportDao{
 			return (Map<String, Object>) query.uniqueResult();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
 		return new HashMap<String, Object>();
 	}
@@ -154,6 +158,10 @@ public class OpportunityReportDaoImpl implements OpportunityReportDao{
 			return query.list();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
 		return new ArrayList<Map<String,Object>>();
 	}

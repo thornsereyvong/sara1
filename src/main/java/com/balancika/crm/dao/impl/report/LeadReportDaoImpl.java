@@ -227,6 +227,10 @@ public class LeadReportDaoImpl implements LeadReportDao{
 			return query.list();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
 		
 		return new ArrayList<Map<String,Object>>();

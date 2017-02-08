@@ -132,7 +132,7 @@ public class CallController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		map.put("DATA", call);
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
@@ -149,7 +149,7 @@ public class CallController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		map.put("MSG", messageService.getMessage("1003", "call", "", call.getMeDataSource()));
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = "application/json")
@@ -166,7 +166,7 @@ public class CallController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		map.put("MSG", messageService.getMessage("1004", "call", call.getCallId(), call.getMeDataSource()));
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/remove", method = RequestMethod.POST, produces = "application/json")
@@ -185,6 +185,6 @@ public class CallController {
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		map.put("MSG", messageService.getMessage("1005", "call", call.getCallId(), call.getMeDataSource()));
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }

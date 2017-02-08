@@ -19,6 +19,7 @@ import com.balancika.crm.dao.CrmCampaignTypeDao;
 import com.balancika.crm.dao.CrmUserDao;
 import com.balancika.crm.dao.report.CampaignReportDao;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.model.report.CampaignReportModel;
 import com.balancika.crm.model.report.CampaingReport;
 
 @Repository
@@ -67,6 +68,10 @@ public class CampaignReportDaoImpl implements CampaignReportDao{
 			return (Map<String, String>)query.uniqueResult();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
 		return null;
 	}
@@ -142,6 +147,10 @@ public class CampaignReportDaoImpl implements CampaignReportDao{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
 		
 		return new ArrayList<Map<String,Object>>();
@@ -149,32 +158,21 @@ public class CampaignReportDaoImpl implements CampaignReportDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Map<String, Object>> reportLeadByCampaing(MeDataSource dataSource) {
+	public List<CampaignReportModel> reportLeadByCampaing(MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = sessionFactory.openSession();
 		try {
-			SQLQuery query = session.createSQLQuery(""
-					+ "SELECT "
-						+ "ca.CA_ID AS campId,"
-						+ "ca.CA_Name AS campName,"
-						+ "le.LA_ID AS leadId,"
-						+ "CONCAT(le.LA_Salutation,' ',le.LA_FirstName,' ',le.LA_LastName) leadName,"
-						+ "le.LA_AccountName AS leadCompany,"
-						+ "le.LA_Email AS leadEmail,"
-						+ "le.LA_StatusID AS leadStatusId,"
-						+ "COALESCE((SELECT LST_Name FROM crm_lead_status WHERE LST_ID = le.LA_StatusID), '') AS leadStatus,"
-						+ "DATE_FORMAT(le.LA_CDate,'%d/%m/%Y') AS leadCreatedDate,"
-						+ "le.LA_CBy AS leadCreateBy,"
-						+ "(SELECT em.EmpName FROM tblemployee em WHERE em.EmpID = (SELECT ue.EmpID FROM tbluseremployee ue WHERE ue.UID = le.LA_CBy)) AS leadOwner,"
-						+ "(SELECT COUNT(lea.LA_ID) FROM crm_lead lea WHERE lea.LA_CA_ID = le.LA_CA_ID) AS numOfLeadPerCamp"
-						+ " FROM"
-							+ "	crm_camp ca "
-						+ "INNER JOIN crm_lead le ON ca.CA_ID = le.LA_CA_ID;");
-			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return (List<Map<String, Object>>)query.list();
+			Criteria criteria = session.createCriteria(CampaignReportModel.class, "ca");
+			criteria.createAlias("ca.leads", "la");
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			return criteria.list();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
-		return new ArrayList<Map<String,Object>>();
+		return new ArrayList<CampaignReportModel>();
 	}
 }
