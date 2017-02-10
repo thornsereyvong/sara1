@@ -1,18 +1,17 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
-import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
 @Entity(name="CrmLeadProject")
 @Table(name="crm_lead_project")
@@ -64,8 +63,8 @@ public class CrmLeadProject implements Serializable{
 	@Column(name="LP_Construction")
 	private String construction;
 	
-	@Column(name="LP_MainConstructor")
-	private String mainConstructor;
+	@Column(name="LP_MainConstruction")
+	private String mainConstruction;
 	
 	@Column(name="LP_SubConstructor")
 	private String subConstructor;
@@ -73,13 +72,15 @@ public class CrmLeadProject implements Serializable{
 	@Column(name="LP_Remark")
 	private String remark;
 	
-	@Column(name="LP_StartDate")
-	@Convert(converter = LocalDateTimePersistenceConverter.class)
-	private LocalDateTime startDate;
+	@Column(name="LP_StartDate", columnDefinition="DATETIME")
+	//@Convert(converter = LocalDateTimePersistenceConverter.class)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date startDate;
 	
-	@Column(name="LP_endDate")
-	@Convert(converter = LocalDateTimePersistenceConverter.class)
-	private LocalDateTime endDate;
+	@Column(name="LP_endDate", columnDefinition="DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
+	//@Convert(converter = LocalDateTimePersistenceConverter.class)
+	private Date endDate;
 	
 	@Transient
 	private MeDataSource dataSource;
@@ -194,14 +195,14 @@ public class CrmLeadProject implements Serializable{
 
 	public void setConstruction(String construction) {
 		this.construction = construction;
+	} 
+
+	public String getMainConstruction() {
+		return mainConstruction;
 	}
 
-	public String getMainConstructor() {
-		return mainConstructor;
-	}
-
-	public void setMainConstructor(String mainConstructor) {
-		this.mainConstructor = mainConstructor;
+	public void setMainConstruction(String mainConstruction) {
+		this.mainConstruction = mainConstruction;
 	}
 
 	public String getSubConstructor() {
@@ -220,22 +221,6 @@ public class CrmLeadProject implements Serializable{
 		this.remark = remark;
 	}
 
-	public LocalDateTime getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(LocalDateTime startDate) {
-		this.startDate = startDate;
-	}
-
-	public LocalDateTime getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(LocalDateTime endDate) {
-		this.endDate = endDate;
-	}
-
 	public MeDataSource getDataSource() {
 		return dataSource;
 	}
@@ -243,5 +228,20 @@ public class CrmLeadProject implements Serializable{
 	public void setDataSource(MeDataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 }
