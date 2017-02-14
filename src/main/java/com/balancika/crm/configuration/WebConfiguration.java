@@ -73,6 +73,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
 		prop.put("mail.smtp.auth", "true");
 		prop.put("mail.smtp.starttls.enable", "true");
 		prop.put("mail.debug", "true");
+		mailSender.setJavaMailProperties(prop);
 		return mailSender;
 	}
 }
