@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.balancika.crm.dao.report.CampaignReportDao;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.model.report.CampaignReportModel;
 import com.balancika.crm.model.report.CampaingReport;
 import com.balancika.crm.services.report.CampaignReportSevice;
 
@@ -30,7 +31,7 @@ public class CampaignReportServiceImpl implements CampaignReportSevice{
 	}
 
 	@Override
-	public List<Map<String, Object>> reportLeadByCampaing(MeDataSource dataSource) {
+	public List<CampaignReportModel> reportLeadByCampaing(MeDataSource dataSource) {
 		return campaignReportDao.reportLeadByCampaing(dataSource);
 	}
 
