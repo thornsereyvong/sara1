@@ -342,6 +342,7 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		map.put("moduleName", str[1]);
 		map.put("status", ck);
 		map.put("orderBy", Integer.parseInt(str[3]));
+		map.put("groupType", str[4]);
 		return map;
 	}
 	
