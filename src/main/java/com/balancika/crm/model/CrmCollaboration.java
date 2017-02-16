@@ -39,7 +39,7 @@ public class CrmCollaboration implements Serializable{
 	@Column(name = "CB_Des", nullable = false)
 	private String colDes;
 	
-	@Column(name="CB_UName", nullable = false)
+	@Column(name="CB_UID", nullable = false)
 	private String colUser;
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

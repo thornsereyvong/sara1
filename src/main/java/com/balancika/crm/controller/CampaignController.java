@@ -26,6 +26,7 @@ import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmEventLocationService;
 import com.balancika.crm.services.CrmEventService;
+import com.balancika.crm.services.CrmLeadProjectService;
 import com.balancika.crm.services.CrmMeetingService;
 import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmMessageService;
@@ -92,7 +93,10 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmUserActivity activity;
-
+	
+	@Autowired
+	private CrmLeadProjectService projectService;
+	
 	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> allCampaign(@RequestBody MeDataSource dataSource){
 	
@@ -163,6 +167,7 @@ public class CampaignController {
 		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
 		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
 		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
+		map.put("PROJECT",projectService.listLeadProjects(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

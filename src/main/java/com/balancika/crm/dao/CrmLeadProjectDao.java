@@ -12,4 +12,5 @@ public interface CrmLeadProjectDao {
 	boolean deleteLeadProject(CrmLeadProject leadProject);
 	CrmLeadProject findLeadProjectById(int id, MeDataSource dataSource);
 	List<CrmLeadProject> listLeadProjects(MeDataSource dataSource);
+	List<CrmLeadProject> listCustomFieldLeadProject(MeDataSource dataSource);
 }

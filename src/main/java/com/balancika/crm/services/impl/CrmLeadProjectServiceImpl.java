@@ -42,6 +42,11 @@ public class CrmLeadProjectServiceImpl implements CrmLeadProjectService{
 	public List<CrmLeadProject> listLeadProjects(MeDataSource dataSource) {
 		return projectDao.listLeadProjects(dataSource);
 	}
+
+	@Override
+	public List<CrmLeadProject> listCustomFieldLeadProject(MeDataSource dataSource) {
+		return projectDao.listCustomFieldLeadProject(dataSource);
+	}
 	
 
 }

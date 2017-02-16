@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -112,6 +113,30 @@ public class CrmLeadProjectDaoImpl implements CrmLeadProjectDao{
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmLeadProject.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			session.getTransaction().commit();
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return new ArrayList<CrmLeadProject>();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CrmLeadProject> listCustomFieldLeadProject(MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmLeadProject.class);
+			criteria.setProjection(Projections.projectionList()
+					.add(Projections.property("id"))
+					.add(Projections.property("name")));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			session.getTransaction().commit();
 			return criteria.list();
