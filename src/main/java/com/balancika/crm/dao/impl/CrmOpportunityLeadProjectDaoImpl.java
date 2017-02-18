@@ -34,12 +34,15 @@ public class CrmOpportunityLeadProjectDaoImpl implements CrmOpportunityLeadProje
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("INSERT INTO crm_opportunity_lead_project (OPID, LPID) VALUES(:opId, :lpId); ");
+			String sql = "INSERT INTO crm_opportunity_lead_project VALUES(:opId, :lpId);";
+			SQLQuery query = session.createSQLQuery(sql);
 			query.setParameter("opId", opId);
 			query.setParameter("lpId", lpId);
 			if (query.executeUpdate() > 0) {
+				session.getTransaction().commit();
 				return true;
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -60,6 +63,7 @@ public class CrmOpportunityLeadProjectDaoImpl implements CrmOpportunityLeadProje
 			query.setParameter("opId", opId);
 			query.setParameter("lpId", lpId);
 			if (query.executeUpdate() > 0) {
+				session.getTransaction().commit();
 				return true;
 			}
 		} catch (Exception e) {
@@ -117,11 +121,9 @@ public class CrmOpportunityLeadProjectDaoImpl implements CrmOpportunityLeadProje
 						+ "LP_Name name "
 					+ "FROM "
 						+ "crm_lead_project "
+					+ "LEFT OUTER JOIN crm_opportunity_lead_project ON LP_ID = LPID "
 					+ "WHERE "
-						+ "LP_ID <> (SELECT LPID FROM crm_opportunity_lead_project WHERE OPID = :opId) "
-					+ "OR "
-						+ "(SELECT LPID FROM crm_opportunity_lead_project WHERE OPID = :opId) is NULL; ");
-			query.setParameter("opId", opId);
+						+ "OPID is NULL; ");
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("PROJECT_STARTUP", query.list());
