@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -126,6 +128,12 @@ public class CrmOpportunity implements Serializable{
 	
 	@Transient
 	private MeDataSource meDataSource;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name="crm_opportunity_lead_project", 
+		joinColumns={@JoinColumn(name="OPID")}, 
+		inverseJoinColumns={@JoinColumn(name="LPID")})
+	private List<CrmLeadProject> leadProjects;
 
 	public String getOpId() {
 		return opId;
@@ -345,6 +353,14 @@ public class CrmOpportunity implements Serializable{
 
 	public final void setMeDataSource(MeDataSource meDataSource) {
 		this.meDataSource = meDataSource;
+	}
+
+	public List<CrmLeadProject> getLeadProjects() {
+		return leadProjects;
+	}
+
+	public void setLeadProjects(List<CrmLeadProject> leadProjects) {
+		this.leadProjects = leadProjects;
 	}
 
 }

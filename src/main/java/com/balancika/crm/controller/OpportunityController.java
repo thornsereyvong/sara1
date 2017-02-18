@@ -30,6 +30,7 @@ import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmMessageService;
 import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmOpportunityDetailsService;
+import com.balancika.crm.services.CrmOpportunityLeadProjectService;
 import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CrmOpportunityStageService;
 import com.balancika.crm.services.CrmOpportunityTypeService;
@@ -112,6 +113,9 @@ public class OpportunityController {
 	@Autowired
 	private CrmUserActivity activity;
 	
+	@Autowired
+	private CrmOpportunityLeadProjectService projectService;
+	
 	@RequestMapping(value="/list_all", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listOpportunties(@RequestBody MeDataSource dataSource){
 		
@@ -174,6 +178,7 @@ public class OpportunityController {
 		map.put("ALL_CONTACT", contactService.listSomeFieldsOfContact(dataSource));
 		map.put("OPPORTUNITY_DETAILS", detailsService.listOpportunityDetailsRelatedToOpportunity(opId, dataSource));
 		map.put("OPPORTUNITY_DETAILS_STARTUP", detailsService.startUpPage(dataSource));
+		map.put("LEAD_PROJECT", projectService.startupOpportunityLeadProject(opId, dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 	}

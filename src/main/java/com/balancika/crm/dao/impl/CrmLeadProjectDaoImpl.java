@@ -135,9 +135,10 @@ public class CrmLeadProjectDaoImpl implements CrmLeadProjectDao{
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(CrmLeadProject.class);
 			criteria.setProjection(Projections.projectionList()
-					.add(Projections.property("id"))
-					.add(Projections.property("name")));
+					.add(Projections.property("id"), "id")
+					.add(Projections.property("name"), "name"));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			session.getTransaction().commit();
 			return criteria.list();
 		} catch (Exception e) {
