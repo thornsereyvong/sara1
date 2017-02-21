@@ -100,6 +100,7 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			this.deleteOpportunityQuote(opportunity.getOpId(), opportunity.getMeDataSource());
 			this.deleteOpportunitySaleOrder(opportunity.getOpId(), opportunity.getMeDataSource());
 			this.deleteOpportunityContact(opportunity.getOpId(), opportunity.getMeDataSource());
+			this.deleteOpportunityLeadProject(opportunity.getOpId(),opportunity.getMeDataSource());
 			session.delete(opportunity);
 			session.getTransaction().commit();
 			return true;
@@ -302,11 +303,27 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 			query.setParameter("opId", opId);
 			query.executeUpdate();
 			session.getTransaction().commit();
-			session.close();
 		} catch (HibernateException e) {
 			e.printStackTrace();
+		} finally {
 			session.close();
-		} 
+		}
+	}
+	
+	private void deleteOpportunityLeadProject(String opId, MeDataSource dataSource){
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_lead_project WHERE OPID = :opId ;");
+			query.setParameter("opId", opId);
+			query.executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 	}
 	
 	private double generateDisInvByItem(double netAmt, double persent){

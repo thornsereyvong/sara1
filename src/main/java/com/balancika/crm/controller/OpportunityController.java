@@ -178,7 +178,7 @@ public class OpportunityController {
 		map.put("ALL_CONTACT", contactService.listSomeFieldsOfContact(dataSource));
 		map.put("OPPORTUNITY_DETAILS", detailsService.listOpportunityDetailsRelatedToOpportunity(opId, dataSource));
 		map.put("OPPORTUNITY_DETAILS_STARTUP", detailsService.startUpPage(dataSource));
-		map.put("LEAD_PROJECT", projectService.startupOpportunityLeadProject(opId, dataSource));
+		map.put("OP_PROJECT", projectService.listOpportunityLeadProjectByOpId(opId, dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 	}

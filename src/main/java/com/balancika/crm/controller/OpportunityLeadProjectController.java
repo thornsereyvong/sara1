@@ -36,10 +36,18 @@ public class OpportunityLeadProjectController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/startup", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> startupLeadProject(@RequestBody MeDataSource dataSource){
+		Map<String, Object> map = projectService.startupOpportunityLeadProject(dataSource);
+		map.put("MESSAGE", "SUCCESS");
+		map.put("STATUS", HttpStatus.OK.value());
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/remove/{opId}/{lpId}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> deleteOpportunityLeadProject(@PathVariable("opId") String opId, @PathVariable("lpId") int lpId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(projectService.addOpportunityLeadProject(opId, lpId, dataSource) == true){
+		if(projectService.deleteOpportunityLeadProject(opId, lpId, dataSource) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("OP_PROJECT", projectService.listOpportunityLeadProjectByOpId(opId, dataSource));

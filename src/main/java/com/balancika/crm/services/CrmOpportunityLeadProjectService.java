@@ -9,5 +9,5 @@ public interface CrmOpportunityLeadProjectService {
 	boolean addOpportunityLeadProject(String opId, int lpId, MeDataSource dataSource);
 	boolean deleteOpportunityLeadProject(String opId, int lpId, MeDataSource dataSource);
 	List<Object> listOpportunityLeadProjectByOpId(String opId, MeDataSource dataSource);
-	Map<String, Object> startupOpportunityLeadProject(String opId, MeDataSource dataSource);
+	Map<String, Object> startupOpportunityLeadProject(MeDataSource dataSource);
 }

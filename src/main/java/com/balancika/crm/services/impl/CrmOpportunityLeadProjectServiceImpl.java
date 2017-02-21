@@ -35,8 +35,8 @@ public class CrmOpportunityLeadProjectServiceImpl implements CrmOpportunityLeadP
 	}
 
 	@Override
-	public Map<String, Object> startupOpportunityLeadProject(String opId, MeDataSource dataSource) {
-		return projectDao.startupOpportunityLeadProject(opId, dataSource);
+	public Map<String, Object> startupOpportunityLeadProject(MeDataSource dataSource) {
+		return projectDao.startupOpportunityLeadProject(dataSource);
 	}
 
 }

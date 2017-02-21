@@ -59,7 +59,7 @@ public class CrmOpportunityLeadProjectDaoImpl implements CrmOpportunityLeadProje
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_lead_project WHERE OPID = :opId AND LPID = :lpId; ");
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_lead_project WHERE OPID = :opId AND LPID = :lpId ;");
 			query.setParameter("opId", opId);
 			query.setParameter("lpId", lpId);
 			if (query.executeUpdate() > 0) {
@@ -110,7 +110,7 @@ public class CrmOpportunityLeadProjectDaoImpl implements CrmOpportunityLeadProje
 	}
 
 	@Override
-	public Map<String, Object> startupOpportunityLeadProject(String opId, MeDataSource dataSource) {
+	public Map<String, Object> startupOpportunityLeadProject(MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
@@ -127,7 +127,7 @@ public class CrmOpportunityLeadProjectDaoImpl implements CrmOpportunityLeadProje
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("PROJECT_STARTUP", query.list());
-			map.put("OP_PROJECT", listOpportunityLeadProjectByOpId(opId, dataSource));
+			//map.put("OP_PROJECT", listOpportunityLeadProjectByOpId(opId, dataSource));
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
