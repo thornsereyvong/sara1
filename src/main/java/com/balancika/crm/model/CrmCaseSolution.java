@@ -36,7 +36,7 @@ public class CrmCaseSolution implements Serializable{
 	@JoinColumn(name="CS_StatusID", nullable = false)
 	private CrmCaseStatus status;
 	
-	@Column(name="CS_RosolvedBy")
+	@Column(name="CS_ResolvedBy")
 	private String resolvedBy;
 	
 	@Column(name="CS_Resolution")

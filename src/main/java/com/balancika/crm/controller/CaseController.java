@@ -297,15 +297,8 @@ public class CaseController {
 			art.setMeDataSource(cases.getMeDataSource());
 			
 			if(article.insertCaseArticle(art)){
-	
 				cases.setArticle(art);
-				
-				
-				
 				if(caseService.updateCase(cases) == true){
-					
-					System.out.println(cases.getArticle().getArticleId());
-					
 					activityService.addUserActivity(activity.getActivity(cases.getMeDataSource(), "Update", "Case", cases.getCaseId()));
 					map.put("MESSAGE", "UPDATED");
 					map.put("STATUS", HttpStatus.OK.value());
