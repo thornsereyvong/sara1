@@ -167,7 +167,6 @@ public class CampaignController {
 		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
 		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
 		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
-		map.put("PROJECT",projectService.listLeadProjects(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
