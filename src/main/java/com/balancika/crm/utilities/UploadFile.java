@@ -20,10 +20,10 @@ public class UploadFile {
 		this.files = files;
 	}
 
-public String UploadFiles(MultipartFile file, String savePath,String fileName) {
+public String UploadFiles(MultipartFile file, String savePath,String fileName, String srcFolder) {
 		
 		String filename = file.getOriginalFilename();
-		String pathAndFileName="/resources/upload/img/";
+		String pathAndFileName="/resources/upload/"+srcFolder;
 		if (!file.isEmpty()) {
 			try {				
 				byte[] bytes = file.getBytes();

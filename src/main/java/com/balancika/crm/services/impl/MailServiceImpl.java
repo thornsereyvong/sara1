@@ -27,7 +27,6 @@ public class MailServiceImpl implements MailService{
 			helper.setSubject(mailMessage.getSubject());
 			helper.setText(mailMessage.getMsg());
 			/*helper.addAttachment(mailMessage.getAttachment().getOriginalFilename(), new InputStreamSource() {
-				
 				@Override
 				public InputStream getInputStream() throws IOException {
 					return mailMessage.getAttachment().getInputStream();
