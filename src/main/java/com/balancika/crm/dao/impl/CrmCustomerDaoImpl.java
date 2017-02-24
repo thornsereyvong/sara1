@@ -112,15 +112,11 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM tblcustomer WHERE CustID = :custID");
-			query.setParameter("custID", customer.getCustID());
-			if(query.executeUpdate() > 0){
-				SQLQuery detailsQuery = session.createSQLQuery("DELETE FROM tblshipaddress WHERE moduleid = :custId");
-				detailsQuery.setParameter("custId", customer.getCustID());
-				session.getTransaction().commit();
-				detailsQuery.executeUpdate();
-				return true;
-			}
+			SQLQuery query = session.createSQLQuery("CALL crmDeleteModuleRelatedToCustomer(:custId)");
+			query.setParameter("custId", customer.getCustID());
+			query.executeUpdate();
+			session.getTransaction().commit();
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
@@ -201,6 +197,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 					.add(Projections.property("custID"),"custID")
 					.add(Projections.property("custName"),"custName")
 					.add(Projections.property("priceCode"), "priceCode"));
+			criteria.add(Restrictions.eq("approval", 1));
 			criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			return criteria.list();
 		} catch (Exception e) {

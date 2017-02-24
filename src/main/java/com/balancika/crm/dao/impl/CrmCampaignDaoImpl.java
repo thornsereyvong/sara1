@@ -100,7 +100,7 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_camp WHERE CA_ID = :campID");  
+			SQLQuery query = session.createSQLQuery("CALL crmDeleteModuleRelatedToCampaign(:campID)");  
 			query.setParameter("campID", campID);
 			if(query.executeUpdate() > 0){
 				session.getTransaction().commit();

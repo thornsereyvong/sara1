@@ -42,7 +42,7 @@ public class LeadProjectController {
 		if(projectService.addLeadProject(leadProject) == true){
 			map.put("MESSAGE", "INSERTED");
 			map.put("STATUS", HttpStatus.CREATED.value());
-			map.put("MSG", messageService.getMessage("1000", "Lead Project", leadProject.getId(), leadProject.getDataSource()));
+			map.put("MSG", messageService.getMessage("1000", "Lead Project", leadProject.getId()+"", leadProject.getDataSource()));
 			activityService.addUserActivity(activity.getActivity(leadProject.getDataSource(), "Create", "Lead Project", leadProject.getId()+""));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}
@@ -58,7 +58,7 @@ public class LeadProjectController {
 		if(projectService.updateLeadProject(leadProject) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("MSG", messageService.getMessage("1001", "Lead Project", leadProject.getId(), leadProject.getDataSource()));
+			map.put("MSG", messageService.getMessage("1001", "Lead Project", leadProject.getId()+"", leadProject.getDataSource()));
 			activityService.addUserActivity(activity.getActivity(leadProject.getDataSource(), "Create", "Lead Project", leadProject.getId()+""));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
@@ -74,7 +74,7 @@ public class LeadProjectController {
 		if(projectService.deleteLeadProject(leadProject) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());
-			map.put("MSG", messageService.getMessage("1002", "Lead Project", leadProject.getId(), leadProject.getDataSource()));
+			map.put("MSG", messageService.getMessage("1002", "Lead Project", leadProject.getId()+"", leadProject.getDataSource()));
 			activityService.addUserActivity(activity.getActivity(leadProject.getDataSource(), "Create", "Lead Project", leadProject.getId()+""));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 		}

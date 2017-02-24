@@ -100,7 +100,9 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			session.delete(lead);
+			SQLQuery query = session.createSQLQuery("CALL crmDeleteModuleRelatedToLead(:leadId)");
+			query.setParameter("leadId", lead.getLeadID());
+			query.executeUpdate();
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
@@ -72,6 +73,7 @@ public class CrmLeadProjectDaoImpl implements CrmLeadProjectDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			this.deleteOpportunityLeadProject(leadProject.getId(), leadProject.getDataSource());
 			session.delete(leadProject);
 			session.getTransaction().commit();
 			return true;
@@ -149,6 +151,24 @@ public class CrmLeadProjectDaoImpl implements CrmLeadProjectDao{
 			sessionFactory.close();
 		}
 		return new ArrayList<CrmLeadProject>();
+	}
+	
+	private void deleteOpportunityLeadProject(int id, MeDataSource dataSource){
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_lead_project WHERE LPID = :id ;");
+			query.setParameter("id", id);
+			query.executeUpdate();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
 	}
 
 }
