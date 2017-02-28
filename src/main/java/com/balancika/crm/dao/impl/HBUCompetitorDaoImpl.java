@@ -3,6 +3,8 @@ package com.balancika.crm.dao.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -108,6 +110,7 @@ public class HBUCompetitorDaoImpl extends CrmIdGenerator implements HBUCompetito
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public List<HBUCompetitor> listCompetitors(MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
@@ -127,6 +130,7 @@ public class HBUCompetitorDaoImpl extends CrmIdGenerator implements HBUCompetito
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public List<Object> listItem(MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();

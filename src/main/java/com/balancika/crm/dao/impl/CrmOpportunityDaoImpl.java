@@ -96,14 +96,12 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			detailsService.deleteOpportunityDetails(opportunity.getOpId(), opportunity.getMeDataSource());
-			this.deleteOpportunityQuote(opportunity.getOpId(), opportunity.getMeDataSource());
-			this.deleteOpportunitySaleOrder(opportunity.getOpId(), opportunity.getMeDataSource());
-			this.deleteOpportunityContact(opportunity.getOpId(), opportunity.getMeDataSource());
-			this.deleteOpportunityLeadProject(opportunity.getOpId(),opportunity.getMeDataSource());
-			session.delete(opportunity);
-			session.getTransaction().commit();
-			return true;
+			SQLQuery query = session.createSQLQuery("CALL crmDeleteModuleRelatedToOpportunity(:oppId)");
+			query.setParameter("oppId", opportunity.getOpId());
+			if(query.executeUpdate() > 0){
+				session.getTransaction().commit();
+				return true;
+			}
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
@@ -260,70 +258,6 @@ public class CrmOpportunityDaoImpl extends CrmIdGenerator implements CrmOpportun
 		map.put("ALL_SALE_ORDERS", saleOrderDao.listSomeFieldsOfSaleOrder(opId, dataSource));
 		map.put("ALL_QUOTATIONS", quoteDao.listCustomFieldOfQuotes(opId, dataSource));
 		return map;
-	}
-	
-	private void deleteOpportunityQuote(String opId, MeDataSource dataSource){
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
-		Session session = getSessionFactory().openSession();
-		try {
-			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_quote WHERE OP_ID = :opId ;");
-			query.setParameter("opId", opId);
-			query.executeUpdate();
-			session.getTransaction().commit();
-			session.close();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-		} 
-	}
-	
-	private void deleteOpportunitySaleOrder(String opId, MeDataSource dataSource){
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
-		Session session = getSessionFactory().openSession();
-		try {
-			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_saleorder WHERE OP_ID = :opId ;");
-			query.setParameter("opId", opId);
-			query.executeUpdate();
-			session.getTransaction().commit();
-			session.close();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-		} 
-	}
-	
-	private void deleteOpportunityContact(String opId, MeDataSource dataSource){
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
-		Session session = getSessionFactory().openSession();
-		try {
-			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_contact WHERE OPCON_OPID = :opId ;");
-			query.setParameter("opId", opId);
-			query.executeUpdate();
-			session.getTransaction().commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
-	}
-	
-	private void deleteOpportunityLeadProject(String opId, MeDataSource dataSource){
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
-		Session session = getSessionFactory().openSession();
-		try {
-			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_opportunity_lead_project WHERE OPID = :opId ;");
-			query.setParameter("opId", opId);
-			query.executeUpdate();
-			session.getTransaction().commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
 	}
 	
 	private double generateDisInvByItem(double netAmt, double persent){

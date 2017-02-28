@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
 import org.hibernate.Criteria;
@@ -14,6 +15,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
@@ -91,15 +93,17 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_contact WHERE CO_ID = :conId");
+			SQLQuery query = session.createSQLQuery("CALL crmDeleteModuleRelatedToContact(:conId)");
 			query.setParameter("conId", contact.getConID());
 			if (query.executeUpdate() > 0) {
 				session.getTransaction().commit();
 				return true;
 			}
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} catch (ConstraintViolationException e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.clear();
@@ -111,6 +115,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public List<CrmContact> listContacts(MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
@@ -121,7 +126,6 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			session.clear();
 			session.close();
 			sessionFactory.close();
 		}
@@ -213,6 +217,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		return null;
 	}
 
+	@Transactional()
 	@Override
 	public Map<String, Object> viewContact(String conId, MeDataSource dataSource) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -246,7 +251,7 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
-			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.contact", "con");
+			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.contact", "con", JoinType.LEFT_OUTER_JOIN);
 			criteria.add(Restrictions.eq("con.conID", conId));
 			criteria.setProjection(Projections.projectionList()
 					.add(Projections.property("caseId"), "caseId")
@@ -263,7 +268,6 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		} finally {
-			session.clear();
 			session.close();
 			sessionFactory.close();
 		}

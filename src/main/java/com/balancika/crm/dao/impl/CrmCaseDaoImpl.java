@@ -89,7 +89,7 @@ public class CrmCaseDaoImpl extends CrmIdGenerator implements CrmCaseDao{
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			SQLQuery query = session.createSQLQuery("DELETE FROM crm_case WHERE CS_ID = :caseId");
+			SQLQuery query = session.createSQLQuery("CALL crmDeleteModuleRelatedToCase(:caseId)");
 			query.setParameter("caseId", cases.getCaseId());
 			if(query.executeUpdate() > 0){
 				session.getTransaction().commit();
