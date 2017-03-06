@@ -164,6 +164,14 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	/*Mobile Login URL*/
+	@RequestMapping(value="/login/mobile", method = RequestMethod.POST, produces="application/json")
+	public ResponseEntity<Map<String, Object>> mobileLogin(@RequestBody CrmUserLogin user){
+		Map<String, Object> map = userService.mobileLogin(user);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	/*End Mobile Login URL*/
+	
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces="application/json")
 	public ResponseEntity<Map<String, Object>> addNewUser(@RequestBody CrmUser user){
 	

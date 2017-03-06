@@ -1,5 +1,8 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -45,5 +48,32 @@ public class CompanyDaoImpl implements CompanyDao{
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+
+	@Override
+	public Map<String, Object> listDatabaseForMobile(int pageSize, int pageNumber, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			session.beginTransaction();
+			String sqlCount = "Select count(c.ComID) from tblcompany c";
+			SQLQuery countQuery = session.createSQLQuery(sqlCount);
+			Long countResults = ((Number)countQuery.uniqueResult()).longValue();
+			int totalPageNumber = (int) ((countResults / pageSize));
+			SQLQuery query = session.createSQLQuery("Select c.ComID comId, c.ComName comName, c.DBName dbName From tblcompany c");
+			query.setFirstResult((pageNumber - 1) * pageSize);
+			query.setMaxResults(pageSize);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			map.put("databases", query.list());
+			map.put("totalPages", totalPageNumber);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return map;
 	}
 }

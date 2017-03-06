@@ -1,6 +1,7 @@
 package com.balancika.crm.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.CrmUserLogin;
@@ -18,4 +19,5 @@ public interface CrmUserDao {
 	CrmUserLogin webLogin(CrmUserLogin user);
 	String checkChildOfUser(String username, MeDataSource dataSource);
 	List<Object> listAllUsernameAndId(MeDataSource dataSource);
+	Map<String , Object> mobileLogin(CrmUserLogin user);
 }

@@ -1,5 +1,7 @@
 package com.balancika.crm.services.impl;
 
+import java.util.Map;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,10 @@ public class CompanyServiceImpl implements CompanyService{
 	public Object listDatabases(MeDataSource dataSource) {
 		return configurationDao.listDatabases(dataSource);
 	}
-	
+
+	@Override
+	public Map<String, Object> listDatabaseForMobile(int pageSize, int pageNumber, MeDataSource dataSource) {
+		return configurationDao.listDatabaseForMobile(pageSize, pageNumber, dataSource);
+	}
 
 }

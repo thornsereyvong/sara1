@@ -1,6 +1,8 @@
 package com.balancika.crm.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -13,6 +15,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
@@ -264,6 +267,45 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			sessionFactory.close();
 		}
 		return null;
+	}
+
+	@Override
+	public Map<String, Object> mobileLogin(CrmUserLogin user) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(user.getDataSource()));
+		Session session = getSessionFactory().openSession();
+		Map<String, Object> map =  new HashMap<String, Object>();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmUserLogin.class);
+			Criterion userName = Restrictions.eq("username", user.getUsername());
+			Criterion userId = Restrictions.eq("userID", user.getUsername());
+			criteria.add(Restrictions.or(userName, userId));
+			criteria.add(Restrictions.eq("status", 1));
+			session.getTransaction().commit();
+			CrmUserLogin userLogin = (CrmUserLogin)criteria.uniqueResult();
+			if(userLogin != null){
+				if(!userLogin.getPassword().equals(new PasswordEncrypt().BalEncrypt(user.getPassword()))){
+					map.put("msg", "Invalid password!");
+					map.put("status", HttpStatus.NOT_FOUND.value());
+				}else if(!userLogin.getAppId().equals("CRM")){
+					map.put("msg","You have no permission! Please contact to your administrator!");
+					map.put("status", HttpStatus.NOT_FOUND.value());
+				}else{
+					map.put("msg", "success");
+					map.put("status", HttpStatus.OK.value());
+				}
+			} else {
+				map.put("msg", "Invalid username!");
+				map.put("status", HttpStatus.NOT_FOUND.value());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return map;
 	}
 
 }

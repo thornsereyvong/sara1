@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -71,5 +72,10 @@ public class CrmUserServiceImpl implements CrmUserService{
 	@Override
 	public List<Object> listAllUsernameAndId(MeDataSource dataSource) {
 		return userDao.listAllUsernameAndId(dataSource);
+	}
+
+	@Override
+	public Map<String, Object> mobileLogin(CrmUserLogin user) {
+		return userDao.mobileLogin(user);
 	}
 }
