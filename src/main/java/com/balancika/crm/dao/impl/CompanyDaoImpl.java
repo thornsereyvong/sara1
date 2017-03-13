@@ -76,4 +76,25 @@ public class CompanyDaoImpl implements CompanyDao{
 		}
 		return map;
 	}
+
+	@Override
+	public Map<String, Object> searchCompanyNameSuggestion(String str, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			session.beginTransaction();
+			String sql = "Select c.ComID comId, c.ComName comName, c.DBName dbName From tblcompany c where LOWER(c.ComName) Like LOWER('%"+str+"%'); ";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			map.put("databases", query.list());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return map;
+	}
 }

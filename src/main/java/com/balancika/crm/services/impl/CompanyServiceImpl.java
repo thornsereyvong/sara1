@@ -28,4 +28,9 @@ public class CompanyServiceImpl implements CompanyService{
 		return configurationDao.listDatabaseForMobile(pageSize, pageNumber, dataSource);
 	}
 
+	@Override
+	public Map<String, Object> searchCompanyNameSuggestion(String str, MeDataSource dataSource) {
+		return configurationDao.searchCompanyNameSuggestion(str, dataSource);
+	}
+
 }

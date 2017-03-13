@@ -34,6 +34,11 @@ public class CompanyController {
 		map.put("MESSAGE", "OK");	
 		map.put("DATABASE", companyService.listDatabases(meDataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
-		
+	}
+	
+	@RequestMapping(value = "/database/search/{str}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> searchCompanyNameSuggestion(@PathVariable("str") String str, @RequestBody MeDataSource dataSource){
+		Map<String, Object>  map = companyService.searchCompanyNameSuggestion(str, dataSource);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
