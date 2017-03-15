@@ -115,6 +115,11 @@ public class CrmCustomer implements Serializable{
 	@Transient
 	private List<CrmShipAddress> shipAddresses;
 	
+	@Transient
+	private List<Quote> quotes;
+
+	@Transient
+	private List<SaleOrder> saleOrders;
 	
 	@Transient
 	private MeDataSource meDataSource;
@@ -346,6 +351,23 @@ public class CrmCustomer implements Serializable{
 
 	public void setShipAddresses(List<CrmShipAddress> shipAddresses) {
 		this.shipAddresses = shipAddresses;
+	}
+	
+
+	public List<Quote> getQuotes() {
+		return quotes;
+	}
+
+	public void setQuotes(List<Quote> quotes) {
+		this.quotes = quotes;
+	}
+
+	public List<SaleOrder> getSaleOrders() {
+		return saleOrders;
+	}
+
+	public void setSaleOrders(List<SaleOrder> saleOrders) {
+		this.saleOrders = saleOrders;
 	}
 
 	public String getCreateFrom() {

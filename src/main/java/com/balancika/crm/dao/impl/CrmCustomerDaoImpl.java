@@ -1,4 +1,5 @@
 package com.balancika.crm.dao.impl;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +26,8 @@ import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.CrmShipAddress;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.PriceCode;
+import com.balancika.crm.model.Quote;
+import com.balancika.crm.model.SaleOrder;
 import com.balancika.crm.utilities.CrmIdGenerator;
 import com.balancika.crm.utilities.DateTimeOperation;
 
@@ -256,21 +260,12 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			Criteria criteria = session.createCriteria(CrmCustomer.class);
 			criteria.add(Restrictions.eq("custID", custId));
 			CrmCustomer customer = (CrmCustomer)criteria.uniqueResult();
-			List<CrmContact> contacts = getContactRelatedToCustomer(custId, dataSource);
-			if(contacts != null){
-				customer.setContacts(contacts);
-			}
-			
-			List<CrmCase> cases = getCasesRelatedToCustomer(custId, dataSource);
-			if(cases != null){
-				customer.setCases(cases);
-			}
-			
-			List<CrmOpportunity> opportunities = getOpportunityRelatedToCustomer(custId, dataSource);
-			if(opportunities != null){
-				customer.setOpportunities(opportunities);
-			}
+			customer.setContacts(getContactRelatedToCustomer(custId, dataSource));
+			customer.setCases(getCasesRelatedToCustomer(custId, dataSource));
+			customer.setOpportunities( getOpportunityRelatedToCustomer(custId, dataSource));
 			customer.setShipAddresses(listShipAdressesByCustId(custId,dataSource));
+			customer.setQuotes(listQuoteRelatedToCustomer(custId, dataSource));
+			customer.setSaleOrders(listSaleOrderRelatedToCustomer(custId, dataSource));
 			return customer;
 		} catch (HibernateException e) {
 			e.printStackTrace();
@@ -308,7 +303,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			session.close();
 			sessionFactory.close();
 		}
-		return null;
+		return new ArrayList<CrmContact>();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -316,14 +311,17 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
 		try {
-			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.customer", "cust");
+			Criteria criteria = session.createCriteria(CrmCase.class, "case")
+					.createAlias("case.customer", "cust")
+					.createAlias("case.item", "item",JoinType.LEFT_OUTER_JOIN);
 			criteria.add(Restrictions.eq("cust.custID", custId));
 			criteria.setProjection(Projections.projectionList()
 					.add(Projections.property("caseId"), "caseId")
 					.add(Projections.property("createDate"), "createDate")
 					.add(Projections.property("subject"), "subject")
 					.add(Projections.property("status"), "status")
-					.add(Projections.property("priority"), "priority"));
+					.add(Projections.property("priority"), "priority")
+					.add(Projections.property("case.item"), "item"));
 			criteria.setResultTransformer(Transformers.aliasToBean(CrmCase.class));
 			List<CrmCase> cases = criteria.list();
 			for(CrmCase cs : cases){
@@ -337,7 +335,7 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			session.close();
 			sessionFactory.close();
 		}
-		return null;
+		return new ArrayList<CrmCase>();
 	}
 	
 	
@@ -363,8 +361,48 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			session.close();
 			sessionFactory.close();
 		}
-		return null;
+		return new ArrayList<CrmOpportunity>();
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private List<Quote> listQuoteRelatedToCustomer(String custId, MeDataSource dataSource){
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crmListQuoteRelateToCustomer(:custId)");
+			query.setParameter("custId", custId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return new ArrayList<Quote>();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<SaleOrder> listSaleOrderRelatedToCustomer(String custId, MeDataSource dataSource){
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crmListSaleOrderRelatedToCustomer(:custId)");
+			query.setParameter("custId", custId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return new ArrayList<SaleOrder>();
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> creditInfo(String custId, MeDataSource dataSource) {
