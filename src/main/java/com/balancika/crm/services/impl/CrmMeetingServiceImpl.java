@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -62,6 +63,11 @@ public class CrmMeetingServiceImpl implements CrmMeetingService{
 	@Override
 	public List<CrmMeeting> listMeetingsRelatedToModule(String moduleId, MeDataSource dataSource) {
 		return meetingDao.listMeetingsRelatedToModule(moduleId, dataSource);
+	}
+
+	@Override
+	public Map<String, Object> listMeetingsForMobile(int rowNum, int pageNum, MeDataSource dataSource) {
+		return meetingDao.listMeetingsForMobile(rowNum, pageNum, dataSource);
 	}
 	
 	

@@ -60,7 +60,7 @@ public class CompanyDaoImpl implements CompanyDao{
 			String sqlCount = "Select count(c.ComID) from tblcompany c";
 			SQLQuery countQuery = session.createSQLQuery(sqlCount);
 			Long countResults = ((Number)countQuery.uniqueResult()).longValue();
-			int totalPageNumber = (int) ((countResults / pageSize));
+			int totalPageNumber = (int) (Math.ceil((double)countResults / pageSize));
 			SQLQuery query = session.createSQLQuery("Select c.ComID comId, c.ComName comName, c.DBName dbName From tblcompany c");
 			query.setFirstResult((pageNumber - 1) * pageSize);
 			query.setMaxResults(pageSize);

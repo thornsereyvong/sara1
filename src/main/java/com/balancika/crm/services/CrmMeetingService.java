@@ -1,6 +1,7 @@
 package com.balancika.crm.services;
 
 import java.util.List;
+import java.util.Map;
 
 import com.balancika.crm.model.CrmMeeting;
 import com.balancika.crm.model.MeDataSource;
@@ -15,4 +16,5 @@ public interface CrmMeetingService {
 	List<CrmMeeting> listMeetingsRelatedToLead(String leadId, MeDataSource dataSource);
 	List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId, MeDataSource dataSource);
 	List<CrmMeeting> listMeetingsRelatedToModule(String moduleId, MeDataSource dataSource);
+	Map<String, Object> listMeetingsForMobile(int rowNum, int pageNum, MeDataSource dataSource);
 }
