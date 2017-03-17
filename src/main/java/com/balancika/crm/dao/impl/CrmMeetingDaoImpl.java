@@ -259,7 +259,11 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 			query.setMaxResults(rowNum);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 			session.getTransaction().commit();
-			map.put("meetings", query.list());
+			if(query.list().isEmpty()){
+				map.put("meetings", null);
+			} else {
+				map.put("meetings", query.list());
+			}
 			map.put("totalPage", totalPageNumber);
 			map.put("status", HttpStatus.OK.value());
 		}catch(Exception e){
