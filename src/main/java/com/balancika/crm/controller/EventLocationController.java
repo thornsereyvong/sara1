@@ -87,7 +87,7 @@ public class EventLocationController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/edit", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateEventLocation(@RequestBody CrmEventLocation location){
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(locationService.updateEventLocation(location) == true){

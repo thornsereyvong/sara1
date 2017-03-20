@@ -235,22 +235,15 @@ public class CustomerController {
 	}
 	
 	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> updateCustomer(@RequestBody CrmCustomer customer){
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		for(int i=0; i<customer.getShipAddresses().size(); i++){
-			System.out.println(customer.getShipAddresses().get(i).getShipId());
-		}		
-		
+	public ResponseEntity<Map<String, Object>> updateCustomer(@RequestBody CrmCustomer customer){		
+		Map<String, Object> map = new HashMap<String, Object>();			
 		if(customerService.updateCustomer(customer) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("MSG", messageService.getMessage("1001", "customer", customer.getCustID(), customer.getMeDataSource()));
 			activityService.addUserActivity(activity.getActivity(customer.getMeDataSource(), "Update", "Customer", customer.getCustID()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
-		}
-		
+		}		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		map.put("MSG", messageService.getMessage("1004", "customer", customer.getCustID(), customer.getMeDataSource()));
