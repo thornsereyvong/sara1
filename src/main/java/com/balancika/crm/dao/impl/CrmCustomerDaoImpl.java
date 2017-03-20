@@ -89,13 +89,15 @@ public class CrmCustomerDaoImpl extends CrmIdGenerator implements CrmCustomerDao
 			SQLQuery query = session.createSQLQuery("DELETE FROM tblshipaddress WHERE docid = :custId");
 			query.setParameter("custId", customer.getCustID());
 			query.executeUpdate();
-			for(int i = 0; i < customer.getShipAddresses().size(); i++){
-				customer.getShipAddresses().get(i).setModuleId("MT-CUS");
-				customer.getShipAddresses().get(i).setDocId(customer.getCustID());
-				session.save(customer.getShipAddresses().get(i));
-				if(i % 20 == 0){
-					session.flush();
-			        session.clear();
+			if(customer.getShipAddresses() != null){
+				for(int i = 0; i < customer.getShipAddresses().size(); i++){
+					customer.getShipAddresses().get(i).setModuleId("MT-CUS");
+					customer.getShipAddresses().get(i).setDocId(customer.getCustID());
+					session.save(customer.getShipAddresses().get(i));
+					if(i % 20 == 0){
+						session.flush();
+				        session.clear();
+					}
 				}
 			}
 			session.getTransaction().commit();
