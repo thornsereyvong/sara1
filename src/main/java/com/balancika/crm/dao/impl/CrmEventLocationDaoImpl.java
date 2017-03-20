@@ -44,6 +44,7 @@ public class CrmEventLocationDaoImpl extends CrmIdGenerator implements CrmEventL
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			session.getTransaction().rollback();
 		} finally {
 			session.clear();

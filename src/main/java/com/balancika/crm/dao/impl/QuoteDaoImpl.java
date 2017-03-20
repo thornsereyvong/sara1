@@ -52,6 +52,7 @@ public class QuoteDaoImpl extends CrmIdGenerator implements QuoteDao{
 					.add(Projections.property("termCreditLimit"), "termCreditLimit")
 					.add(Projections.property("termNetDueIn"), "termNetDueIn")
 					.add(Projections.property("cust.priceCode"),"priceCode"));
+			criteria.add(Restrictions.eq("approval", 1));
 			criteria.setResultTransformer(Transformers.aliasToBean(CrmCustomer.class));
 			SQLQuery query = session.createSQLQuery("SELECT ClassID, Des AS ClassName FROM tblclass WHERE Inactive = 0;");
 			SQLQuery emp = session.createSQLQuery("SELECT EmpID, EmpName FROM tblemployee;");
