@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
@@ -223,7 +225,9 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public Map<String, Object> listMeetingsForMobile(int rowNum, int pageNum, MeDataSource dataSource) {
 		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
 		Session session = getSessionFactory().openSession();
@@ -242,30 +246,27 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 						+ "DATE_FORMAT(M.M_EndDate,'%d/%m/%Y %h:%i %p') meetingEndDate,"
 						+ "M.M_Duration meetingDuration, "
 						+ "M.M_StatusID statusId, "
-						+ "(SELECT MS_Name FROM crm_meeting_status WHERE MS_ID = M.M_StatusID) statusName,"
+						+ "COALESCE((SELECT MS_Name FROM crm_meeting_status WHERE MS_ID = M.M_StatusID),'') statusName,"
 						+ "M.M_RToType meetingRelatedToModuleType,"
 						+ "M.M_RToID meetingRelatedToModuleId,"
 						+ "M.M_Location meetingLocation,"
-						+ "M.M_ATo userID,"
-						+ "(SELECT UName FROM tbluser WHERE UID = M.M_ATo) username,"
-						+ "M.M_CBy meetingCreateBy, "
 						+ "DATE_FORMAT(M.M_CDate,'%d/%m/%Y %h:%i %p') meetingCreateDate, "
-						+ "M.M_MBy meetingModifiedBy, "
 						+ "CAST(M.M_MDate AS date) meetingModifiedDate "
-					+ "FROM "
+					+ " FROM "
 						+ "crm_meeting M "
 					+ "WHERE M.M_ATo = '"+dataSource.getUserid()+"' OR M.M_CBy = '"+dataSource.getUserid()+"'");
 			query.setFirstResult((pageNum -1) * rowNum);
 			query.setMaxResults(rowNum);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			session.getTransaction().commit();
-			if(query.list().isEmpty()){
+			List<Object> meetings = query.list();
+			if(meetings.isEmpty()){
 				map.put("meetings", null);
 			} else {
-				map.put("meetings", query.list());
+				map.put("meetings", meetings);
 			}
 			map.put("totalPage", totalPageNumber);
 			map.put("status", HttpStatus.OK.value());
+			session.getTransaction().commit();
 		}catch(Exception e){
 			e.printStackTrace();
 		} finally {
