@@ -41,8 +41,7 @@ public class CrmCampaign implements Serializable {
 
 	/* relationship Many to one between table crm_camp and crm_camp_status */
 	@ManyToOne(optional = false, targetEntity = CrmCampaignStatus.class)
-	@JoinColumn(name = "CA_StatusID",
-				nullable = false)
+	@JoinColumn(name = "CA_StatusID", nullable = false)
 	private CrmCampaignStatus status;
 
 	/* relationship one to one between table crm_camp and crm_camp_type */

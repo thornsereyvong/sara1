@@ -19,15 +19,6 @@ public class PriceCode implements Serializable{
 	
 	@Column(name="Description")
 	private String des;
-	
-	@Column(name = "ReportPrice")
-	private int reportPrice;
-	
-	@Column(name="DefaultPrice")
-	private int defaultPrice;
-	
-	@Column(name="SpecialPrice")
-	private int specialPrice;
 
 	public String getPriceCode() {
 		return priceCode;
@@ -43,29 +34,5 @@ public class PriceCode implements Serializable{
 
 	public void setDes(String des) {
 		this.des = des;
-	}
-
-	public int getReportPrice() {
-		return reportPrice;
-	}
-
-	public void setReportPrice(int reportPrice) {
-		this.reportPrice = reportPrice;
-	}
-
-	public int getDefaultPrice() {
-		return defaultPrice;
-	}
-
-	public void setDefaultPrice(int defaultPrice) {
-		this.defaultPrice = defaultPrice;
-	}
-
-	public int getSpecialPrice() {
-		return specialPrice;
-	}
-
-	public void setSpecialPrice(int specialPrice) {
-		this.specialPrice = specialPrice;
 	}
 }

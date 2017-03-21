@@ -30,7 +30,7 @@ public class CrmShipAddress implements Serializable{
 	private String shipName;
 	
 	@Column(name = "inactive")
-	private short inactive;
+	private Short inactive;
 	
 	@Transient
 	private MeDataSource dataSource;
@@ -59,11 +59,11 @@ public class CrmShipAddress implements Serializable{
 		this.shipName = shipName;
 	}
 
-	public short getInactive() {
+	public Short getInactive() {
 		return inactive;
 	}
 
-	public void setInactive(short inactive) {
+	public void setInactive(Short inactive) {
 		this.inactive = inactive;
 	}
 

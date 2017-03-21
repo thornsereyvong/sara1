@@ -35,10 +35,10 @@ public class Quote implements Serializable{
 	private Date saleDate;
 	
 	@Column(name="PeriodM")
-	private int periodM;
+	private Integer periodM;
 	
 	@Column(name="PeriodY")
-	private int periodY;
+	private Integer periodY;
 	
 	@Column(name="CustID")
 	private String custId;
@@ -53,25 +53,25 @@ public class Quote implements Serializable{
 	private String empId;
 	
 	@Column(name="TotalAmt")
-	private double totalAmt;
+	private Double totalAmt;
 	
 	@Column(name="DisInvDol")
-	private double disInvDol;
+	private Double disInvDol;
 	
 	@Column(name="DisInvPer")
-	private double disInvPer;
+	private Double disInvPer;
 	
 	@Column(name="TotalDis")
-	private double totalDis;
+	private Double totalDis;
 	
 	@Column(name="TotalSTax")
-	private double totalSTax;
+	private Double totalSTax;
 	
 	@Column(name="TotalVTax")
-	private double totalVTax;
+	private Double totalVTax;
 	
 	@Column(name="NetTotalAmt")
-	private double netTotalAmt;
+	private Double netTotalAmt;
 	
 	@Column(name="Remark")
 	private String remark;
@@ -143,19 +143,19 @@ public class Quote implements Serializable{
 		this.saleDate = saleDate;
 	}
 
-	public int getPeriodM() {
+	public Integer getPeriodM() {
 		return periodM;
 	}
 
-	public void setPeriodM(int periodM) {
+	public void setPeriodM(Integer periodM) {
 		this.periodM = periodM;
 	}
 
-	public int getPeriodY() {
+	public Integer getPeriodY() {
 		return periodY;
 	}
 
-	public void setPeriodY(int periodY) {
+	public void setPeriodY(Integer periodY) {
 		this.periodY = periodY;
 	}
 
@@ -192,59 +192,59 @@ public class Quote implements Serializable{
 		this.empId = empId;
 	}
 
-	public double getTotalAmt() {
+	public Double getTotalAmt() {
 		return totalAmt;
 	}
 
-	public void setTotalAmt(double totalAmt) {
+	public void setTotalAmt(Double totalAmt) {
 		this.totalAmt = totalAmt;
 	}
 
-	public double getDisInvDol() {
+	public Double getDisInvDol() {
 		return disInvDol;
 	}
 
-	public void setDisInvDol(double disInvDol) {
+	public void setDisInvDol(Double disInvDol) {
 		this.disInvDol = disInvDol;
 	}
 
-	public double getDisInvPer() {
+	public Double getDisInvPer() {
 		return disInvPer;
 	}
 
-	public void setDisInvPer(double disInvPer) {
+	public void setDisInvPer(Double disInvPer) {
 		this.disInvPer = disInvPer;
 	}
 
-	public double getTotalDis() {
+	public Double getTotalDis() {
 		return totalDis;
 	}
 
-	public void setTotalDis(double totalDis) {
+	public void setTotalDis(Double totalDis) {
 		this.totalDis = totalDis;
 	}
 
-	public double getTotalSTax() {
+	public Double getTotalSTax() {
 		return totalSTax;
 	}
 
-	public void setTotalSTax(double totalSTax) {
+	public void setTotalSTax(Double totalSTax) {
 		this.totalSTax = totalSTax;
 	}
 
-	public double getTotalVTax() {
+	public Double getTotalVTax() {
 		return totalVTax;
 	}
 
-	public void setTotalVTax(double totalVTax) {
+	public void setTotalVTax(Double totalVTax) {
 		this.totalVTax = totalVTax;
 	}
 
-	public double getNetTotalAmt() {
+	public Double getNetTotalAmt() {
 		return netTotalAmt;
 	}
 
-	public void setNetTotalAmt(double netTotalAmt) {
+	public void setNetTotalAmt(Double netTotalAmt) {
 		this.netTotalAmt = netTotalAmt;
 	}
 

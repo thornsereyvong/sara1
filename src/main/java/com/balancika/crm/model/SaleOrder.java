@@ -33,11 +33,11 @@ public class SaleOrder implements Serializable{
 	@Column(name="SalDate", columnDefinition = "DATETIME")
 	private Date saleDate;
 	
-	@Column(name="PeriodM")
-	private int periodM;
+	@Column(name="PeriodM", nullable=false, columnDefinition="int default 0")
+	private Integer periodM;
 	
-	@Column(name="PeriodY")
-	private int periodY;
+	@Column(name="PeriodY", nullable=false, columnDefinition="int default 0")
+	private Integer periodY;
 	
 	@Column(name="CustID")
 	private String custId;
@@ -51,8 +51,8 @@ public class SaleOrder implements Serializable{
 	@Column(name="PmtStatus")
 	private String pmtStatus;
 	
-	@Column(name="JID")
-	private int jId;
+	@Column(name="JID", nullable=false, columnDefinition="int default 0")
+	private Integer jId;
 	
 	@Column(name="PmtSchID")
 	private String pmtSchId;
@@ -60,44 +60,44 @@ public class SaleOrder implements Serializable{
 	@Column(name="EmpID")
 	private String empId;
 	
-	@Column(name="TotalAmt")
-	private double totalAmount;
+	@Column(name="TotalAmt", nullable=false, columnDefinition="Double default 0.00")
+	private Double totalAmount;
 	
-	@Column(name="DisInvDol")
-	private double disInvDol;
+	@Column(name="DisInvDol" , nullable=false, columnDefinition="Double default 0")
+	private Double disInvDol;
 	
-	@Column(name="DisInvPer")
-	private double disInvPer;
+	@Column(name="DisInvPer", nullable=false, columnDefinition="Double default 0")
+	private Double disInvPer;
 	
-	@Column(name="TotalDis")
-	private double totalDis;
+	@Column(name="TotalDis", nullable=false, columnDefinition="Double default 0")
+	private Double totalDis;
 	
-	@Column(name="TotalSTax")
-	private double totalSTax;
+	@Column(name="TotalSTax", nullable=false, columnDefinition="Double default 0")
+	private Double totalSTax;
 	
-	@Column(name="TotalVTax")
-	private double totalVTax;
+	@Column(name="TotalVTax", nullable=false, columnDefinition="Double default 0")
+	private Double totalVTax;
 	
-	@Column(name="NetTotalAmt")
-	private double netTotalAmt;
+	@Column(name="NetTotalAmt", nullable=false, columnDefinition="Double default 0")
+	private Double netTotalAmt;
 	
-	@Column(name="PmtToDate")
-	private double pmtToDate;
+	@Column(name="PmtToDate", nullable=false, columnDefinition="Double default 0")
+	private Double pmtToDate;
 	
-	@Column(name="cash")
-	private double cash;
+	@Column(name="cash", nullable=false, columnDefinition="Double default 0")
+	private Double cash;
 	
-	@Column(name="CashCard")
-	private double cashCard;
+	@Column(name="CashCard", nullable=false, columnDefinition="Double default 0")
+	private Double cashCard;
 	
-	@Column(name="CreditCard")
-	private double creditCard;
+	@Column(name="CreditCard", nullable=false, columnDefinition="Double default 0")
+	private Double creditCard;
 	
-	@Column(name="OtherSetAmt")
-	private double otherSetAmt;
+	@Column(name="OtherSetAmt", columnDefinition="Double default 0")
+	private Double otherSetAmt;
 	
-	@Column(name="ReceiveAR")
-	private double receiveAR;
+	@Column(name="ReceiveAR", nullable=false, columnDefinition="Double default 0")
+	private Double receiveAR;
 	
 	@Type(type="date")
 	@Column(name="PmtDisDate", columnDefinition = "DATETIME")
@@ -126,7 +126,7 @@ public class SaleOrder implements Serializable{
 	private String shipTo;
 	
 	@Column(name="IsRead")
-	private short isRead;
+	private Short isRead;
 	
 	@Transient
 	private List<SaleOrderDetails> saleOrderDetails;
@@ -238,107 +238,107 @@ public class SaleOrder implements Serializable{
 		this.empId = empId;
 	}
 
-	public double getTotalAmount() {
+	public Double getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(double totalAmount) {
+	public void setTotalAmount(Double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public double getDisInvDol() {
+	public Double getDisInvDol() {
 		return disInvDol;
 	}
 
-	public void setDisInvDol(double disInvDol) {
+	public void setDisInvDol(Double disInvDol) {
 		this.disInvDol = disInvDol;
 	}
 
-	public double getDisInvPer() {
+	public Double getDisInvPer() {
 		return disInvPer;
 	}
 
-	public void setDisInvPer(double disInvPer) {
+	public void setDisInvPer(Double disInvPer) {
 		this.disInvPer = disInvPer;
 	}
 
-	public double getTotalDis() {
+	public Double getTotalDis() {
 		return totalDis;
 	}
 
-	public void setTotalDis(double totalDis) {
+	public void setTotalDis(Double totalDis) {
 		this.totalDis = totalDis;
 	}
 
-	public double getTotalSTax() {
+	public Double getTotalSTax() {
 		return totalSTax;
 	}
 
-	public void setTotalSTax(double totalSTax) {
+	public void setTotalSTax(Double totalSTax) {
 		this.totalSTax = totalSTax;
 	}
 
-	public double getTotalVTax() {
+	public Double getTotalVTax() {
 		return totalVTax;
 	}
 
-	public void setTotalVTax(double totalVTax) {
+	public void setTotalVTax(Double totalVTax) {
 		this.totalVTax = totalVTax;
 	}
 
-	public double getNetTotalAmt() {
+	public Double getNetTotalAmt() {
 		return netTotalAmt;
 	}
 
-	public void setNetTotalAmt(double netTotalAmt) {
+	public void setNetTotalAmt(Double netTotalAmt) {
 		this.netTotalAmt = netTotalAmt;
 	}
 
-	public double getPmtToDate() {
+	public Double getPmtToDate() {
 		return pmtToDate;
 	}
 
-	public void setPmtToDate(double pmtToDate) {
+	public void setPmtToDate(Double pmtToDate) {
 		this.pmtToDate = pmtToDate;
 	}
 
-	public double getCash() {
+	public Double getCash() {
 		return cash;
 	}
 
-	public void setCash(double cash) {
+	public void setCash(Double cash) {
 		this.cash = cash;
 	}
 
-	public double getCashCard() {
+	public Double getCashCard() {
 		return cashCard;
 	}
 
-	public void setCashCard(double cashCard) {
+	public void setCashCard(Double cashCard) {
 		this.cashCard = cashCard;
 	}
 
-	public double getCreditCard() {
+	public Double getCreditCard() {
 		return creditCard;
 	}
 
-	public void setCreditCard(double creditCard) {
+	public void setCreditCard(Double creditCard) {
 		this.creditCard = creditCard;
 	}
 
-	public double getOtherSetAmt() {
+	public Double getOtherSetAmt() {
 		return otherSetAmt;
 	}
 
-	public void setOtherSetAmt(double otherSetAmt) {
+	public void setOtherSetAmt(Double otherSetAmt) {		
 		this.otherSetAmt = otherSetAmt;
 	}
 
-	public double getReceiveAR() {
+	public Double getReceiveAR() {
 		return receiveAR;
 	}
 
-	public void setReceiveAR(double receiveAR) {
+	public void setReceiveAR(Double receiveAR) {
 		this.receiveAR = receiveAR;
 	}
 
@@ -405,11 +405,11 @@ public class SaleOrder implements Serializable{
 		this.shipTo = shipTo;
 	}
 
-	public short getIsRead() {
+	public Short getIsRead() {
 		return isRead;
 	}
 
-	public void setIsRead(short isRead) {
+	public void setIsRead(Short isRead) {
 		this.isRead = isRead;
 	}
 

@@ -20,10 +20,10 @@ public class AmeClass implements Serializable{
 	@Column(name="Des")
 	private String des;
 	
-	@Column(name="Inactive")
+	@Column(name="Inactive", nullable=false, columnDefinition="int default 0")
 	private short inactive;
 	
-	@Column(name="SortOr")
+	@Column(name="SortOr", nullable=false, columnDefinition="int default 0")
 	private int sortOr;
 
 	public String getClassId() {

@@ -69,10 +69,10 @@ public class CrmCustomer implements Serializable{
 	
 	
 	@Column(name = "TermCreditLimit", updatable=false)
-	private double termCreditLimit;
+	private Double termCreditLimit;
 	
-	@Column(name="TermNetDueIn", columnDefinition = "int default 0")
-	private int termNetDueIn;
+	@Column(name="TermNetDueIn", columnDefinition = "Integer default 0")
+	private Integer termNetDueIn;
 	
 	@Fetch(FetchMode.JOIN)
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = CrmIndustry.class)
@@ -95,7 +95,7 @@ public class CrmCustomer implements Serializable{
 	private CustomerGroup custGroup;
 	
 	@Column(name="CrmApproval")
-	private int approval;
+	private Integer approval;
 	
 	@Column(name="CrmImageName")
 	private String imageName;
@@ -125,11 +125,11 @@ public class CrmCustomer implements Serializable{
 	private MeDataSource meDataSource;
 	
 	
-	public double getTermCreditLimit() {
+	public Double getTermCreditLimit() {
 		return termCreditLimit;
 	}
 
-	public void setTermCreditLimit(double termCreditLimit) {
+	public void setTermCreditLimit(Double termCreditLimit) {
 		this.termCreditLimit = termCreditLimit;
 	}
 	
@@ -266,14 +266,14 @@ public class CrmCustomer implements Serializable{
 	/**
 	 * @return the approval
 	 */
-	public int getApproval() {
+	public Integer getApproval() {
 		return approval;
 	}
 
 	/**
 	 * @param approval the approval to set
 	 */
-	public void setApproval(int approval) {
+	public void setApproval(Integer approval) {
 		this.approval = approval;
 	}
 
@@ -337,11 +337,11 @@ public class CrmCustomer implements Serializable{
 		this.aId = aId;
 	}
 
-	public int getTermNetDueIn() {
+	public Integer getTermNetDueIn() {
 		return termNetDueIn;
 	}
 
-	public void setTermNetDueIn(int termNetDueIn) {
+	public void setTermNetDueIn(Integer termNetDueIn) {
 		this.termNetDueIn = termNetDueIn;
 	}
 
