@@ -17,6 +17,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 
@@ -24,6 +25,7 @@ import com.balancika.crm.utilities.LocalDateTimePersistenceConverter;
 @Table(name="crm_case_article")
 @DynamicInsert
 @DynamicUpdate
+@SelectBeforeUpdate
 public class CrmCaseArticle implements Serializable{
 
 	private static final long serialVersionUID = 1L;
