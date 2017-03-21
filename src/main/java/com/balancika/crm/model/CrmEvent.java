@@ -41,7 +41,7 @@ public class CrmEvent implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name="EV_LocationID", nullable = true)
-	private CrmEventLocation evlocation;
+	private CrmEventLocation evLocation;
 	
 	@Convert(converter = LocalDateTimePersistenceConverter.class)
 	@Column(name="EV_StartDate")
@@ -111,12 +111,12 @@ public class CrmEvent implements Serializable{
 		this.evName = evName;
 	}
 
-	public CrmEventLocation getEvlocation() {
-		return evlocation;
+	public CrmEventLocation getEvLocation() {
+		return evLocation;
 	}
 
-	public void setEvlocation(CrmEventLocation evlocation) {
-		this.evlocation = evlocation;
+	public void setEvLocation(CrmEventLocation evLocation) {
+		this.evLocation = evLocation;
 	}
 
 	public LocalDateTime getEvStartDate() {
