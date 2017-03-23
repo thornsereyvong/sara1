@@ -26,9 +26,9 @@ public class AmeItem implements Serializable{
 	@Column(name="ItemName")
 	private String itemName;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name="UOMID")
+	@JoinColumn(name="UOMID", nullable = false)
 	private AmeUom itemUom;
 	
 	public String getItemId() {
