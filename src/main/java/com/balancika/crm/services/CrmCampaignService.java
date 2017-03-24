@@ -19,4 +19,5 @@ public interface CrmCampaignService {
 	List<Object> listCampaignParents(MeDataSource dataSource);
 	List<Object> listIdAndNameOfCompaign(MeDataSource dataSource);
 	List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource);
+	List<Object> getLeadRelateToCampaign(String camId, MeDataSource dataSource);
 }

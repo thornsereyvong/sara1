@@ -269,4 +269,25 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getLeadRelateToCampaign(String camId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		try {
+			SQLQuery query = session.createSQLQuery("CALL crm_lead_by_campaign(:campID)");
+			query.setParameter("campID", camId);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			return query.list();
+			
+		} catch (HibernateException e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return null;
+	}
 }

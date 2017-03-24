@@ -73,4 +73,9 @@ public class CrmCampaignServiceImpl implements CrmCampaignService{
 	public List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource) {
 		return dao.getOpportunitiesRelatedToCampaign(campID, dataSource);
 	}
+
+	@Override
+	public List<Object> getLeadRelateToCampaign(String camId, MeDataSource dataSource) {		
+		return dao.getLeadRelateToCampaign(camId, dataSource);
+	}
 }

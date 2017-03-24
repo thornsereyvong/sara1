@@ -3,6 +3,7 @@ package com.balancika.crm.dao;
 import java.util.List;
 
 import com.balancika.crm.model.CrmCampaign;
+import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.MeDataSource;
 
@@ -18,4 +19,5 @@ public interface CrmCampaignDao {
 	List<Object> listCampaignParents(MeDataSource dataSource);
 	List<Object> listIdAndNameOfCompaign(MeDataSource dataSource);
 	List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource);
+	List<Object> getLeadRelateToCampaign(String camId, MeDataSource dataSource);
 }
