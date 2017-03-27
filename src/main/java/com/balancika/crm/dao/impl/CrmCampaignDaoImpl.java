@@ -1,7 +1,11 @@
 package com.balancika.crm.dao.impl;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -19,6 +23,7 @@ import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.DBConnection;
 
 @Repository
 public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao {
@@ -39,7 +44,6 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		Session session = getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			System.err.println(cmp.getCampName());
 			cmp.setCampID(IdAutoGenerator("CA", cmp.getMeDataSource()));
 			cmp.setCreatedDate(new Date());
 			session.save(cmp);
@@ -266,6 +270,18 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 			session.clear();
 			session.close();
 			sessionFactory.close();
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> viewCampaign(String campId, MeDataSource dataSource) {
+		try (Connection con = DBConnection.getConnection(dataSource)){
+			CallableStatement cs = con.prepareCall("{call crmViewCampaign(?)}");
+			cs.setString(1, campId);
+			ResultSet rs = cs.executeQuery();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
