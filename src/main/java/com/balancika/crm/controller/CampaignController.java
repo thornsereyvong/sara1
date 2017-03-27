@@ -161,6 +161,7 @@ public class CampaignController {
 		map.put("CAMP_STATUS", statusService.listAllCampaignStatus(dataSource));
 		map.put("CAMP_TYPE", typeService.listAllCampaignType(dataSource));
 		map.put("OPPORTUNITIES", campaignService.getOpportunitiesRelatedToCampaign(campID, dataSource));
+		map.put("LEAD", campaignService.getLeadRelateToCampaign(campID, dataSource));
 		map.put("EVENT_LOCATION", locationService.listEventLocations(dataSource));
 		map.put("CALL_STATUS", callStatusService.listCallStatus(dataSource));
 		map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));

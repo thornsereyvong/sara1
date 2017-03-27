@@ -9,6 +9,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -117,6 +118,7 @@ public class HBUCompetitorDaoImpl extends CrmIdGenerator implements HBUCompetito
 		try {
 			Criteria criteria  = session.createCriteria(HBUCompetitor.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			criteria.addOrder(Order.desc("comId"));
 			return criteria.list();
 		} catch (Exception e) {
 			e.printStackTrace();

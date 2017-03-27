@@ -303,5 +303,4 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 		}
 		return null;
 	}
-	
 }
