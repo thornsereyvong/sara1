@@ -1,6 +1,7 @@
 package com.balancika.crm.services;
 
 import java.util.List;
+import java.util.Map;
 
 import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.model.CrmOpportunity;
@@ -19,4 +20,5 @@ public interface CrmCampaignService {
 	List<Object> listCampaignParents(MeDataSource dataSource);
 	List<Object> listIdAndNameOfCompaign(MeDataSource dataSource);
 	List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource);
+	Map<String, Object> viewCampaign(String campId,String userId, MeDataSource dataSource);
 }

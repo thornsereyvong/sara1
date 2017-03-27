@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import com.balancika.crm.dao.CrmCampaignDao;
 import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.utilities.AppUtilities;
 import com.balancika.crm.utilities.CrmIdGenerator;
 import com.balancika.crm.utilities.DBConnection;
 
@@ -275,14 +277,31 @@ public class CrmCampaignDaoImpl extends CrmIdGenerator implements CrmCampaignDao
 	}
 
 	@Override
-	public Map<String, Object> viewCampaign(String campId, MeDataSource dataSource) {
+	public Map<String, Object> viewCampaign(String campId,String userId, MeDataSource dataSource) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		try (Connection con = DBConnection.getConnection(dataSource)){
-			CallableStatement cs = con.prepareCall("{call crmViewCampaign(?)}");
+			CallableStatement cs = con.prepareCall("{call crmViewCampaignById(?,?)}");
 			cs.setString(1, campId);
-			ResultSet rs = cs.executeQuery();
+			cs.setString(2, userId);
+			boolean isResultSet = cs.execute();
+			int rsCount = 0;
+			String[] key = {"TASKS","TASK_STATUS","EVENTS","EVENT_LOCATION","CALLS","CALL_STATUS","MEETINGS","MEETING_STATUS","PARENT_CAMPAIGNS","CONTACTS","NOTES","ASSIGN_TO","TAG_TO","OPPORTUNITIES","LEADS"}; // 
+			while(isResultSet){
+				ResultSet rs = cs.getResultSet();
+				map.put(key[rsCount], AppUtilities.aliasToMaps(rs));
+				rs.close();
+				isResultSet = cs.getMoreResults();
+				rsCount++;
+			}
+			
+			CallableStatement cst = con.prepareCall("{call findCrmCampaignById(?)}");
+			cst.setString(1, campId);
+			map.put("CAMPAIGN", AppUtilities.aliasToSingleMap(cst.executeQuery()));
+			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
 }

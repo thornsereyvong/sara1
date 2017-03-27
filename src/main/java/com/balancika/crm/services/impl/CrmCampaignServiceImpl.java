@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,5 +73,10 @@ public class CrmCampaignServiceImpl implements CrmCampaignService{
 	@Override
 	public List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource) {
 		return dao.getOpportunitiesRelatedToCampaign(campID, dataSource);
+	}
+
+	@Override
+	public Map<String, Object> viewCampaign(String campId,String userId, MeDataSource dataSource) {
+		return dao.viewCampaign(campId,userId, dataSource);
 	}
 }

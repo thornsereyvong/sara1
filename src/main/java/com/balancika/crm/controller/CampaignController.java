@@ -145,13 +145,13 @@ public class CampaignController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/view/{campID}/{username}", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> viewCampaignById(@PathVariable("campID") String campID, @PathVariable("username") String username, @RequestBody MeDataSource dataSource){
+	@RequestMapping(value="/view/{campID}/{userId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> viewCampaignById(@PathVariable("campID") String campID, @PathVariable("userId") String userId, @RequestBody MeDataSource dataSource){
 	
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("CAMPAIGN", campaignService.findCampaignById(campID, dataSource));
+		Map<String, Object> map = campaignService.viewCampaign(campID,userId, dataSource);
+		//map.put("CAMPAIGN", campaignService.findCampaignById(campID, dataSource));
 		map.put("COLLABORATIONS", collaborationService.listCollaborations(campID, dataSource));
-		map.put("NOTES", noteService.listNoteRelatedToEachModule(campID, dataSource));
+		/*map.put("NOTES", noteService.listNoteRelatedToEachModule(campID, dataSource));
 		map.put("TASKS", taskService.listTasksRelatedToModule(campID, dataSource));
 		map.put("EVENTS", eventService.listEventsRelatedToModule(campID, dataSource));
 		map.put("CALLS", callService.listCallsRelatedToModule(campID, dataSource));
@@ -166,9 +166,16 @@ public class CampaignController {
 		map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
 		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
 		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
-		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
+		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));*/
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
+	
+	/*@RequestMapping(value="/view/{campID}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> viewCampaign(@PathVariable("campID") String campID, @RequestBody MeDataSource dataSource){
+	
+		return new ResponseEntity<Map<String,Object>>(campaignService.viewCampaign(campID, dataSource), HttpStatus.OK);
+	}*/
+	
 	
 	@RequestMapping(value="/list/{campID}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> findCampaignById(@PathVariable("campID") String campID, @RequestBody MeDataSource dataSource){

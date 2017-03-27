@@ -19,5 +19,5 @@ public interface CrmCampaignDao {
 	List<Object> listCampaignParents(MeDataSource dataSource);
 	List<Object> listIdAndNameOfCompaign(MeDataSource dataSource);
 	List<CrmOpportunity> getOpportunitiesRelatedToCampaign(String campID, MeDataSource dataSource);
-	Map<String, Object> viewCampaign(String campId, MeDataSource dataSource);
+	Map<String, Object> viewCampaign(String campId, String userId, MeDataSource dataSource);
 }
