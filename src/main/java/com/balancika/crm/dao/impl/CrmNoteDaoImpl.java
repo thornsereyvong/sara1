@@ -186,6 +186,7 @@ public class CrmNoteDaoImpl extends CrmIdGenerator implements CrmNoteDao {
 		try {
 			Criteria criteria = session.createCriteria(CrmNote.class);
 			criteria.add(Restrictions.eq("noteRelatedToModuleId", moduleId));
+			criteria.addOrder(Order.desc("noteCreateDate"));
 			List<CrmNote> notes = criteria.list();
 			for(CrmNote note : notes){
 				note.setCreateDate(new DateTimeOperation().reverseLocalDateTimeToFormate(note.getNoteCreateDate(), "d-MM-YYYY"));
