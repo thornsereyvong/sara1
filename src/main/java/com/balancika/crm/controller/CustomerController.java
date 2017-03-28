@@ -122,38 +122,10 @@ public class CustomerController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/view/{custId}/{username}", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> viewCustomer(@PathVariable("custId") String custId, @PathVariable("username") String username, @RequestBody MeDataSource dataSource){
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		CrmCustomer customer = customerService.viewCustomerDetails(custId, dataSource);
-		
-		if(customer != null){
-			map.put("MESSAGE", "SUCCESS");
-			map.put("STATUS", HttpStatus.OK.value());
-			map.put("CUSTOMER", customer);
-			map.put("NOTES", noteService.listNoteRelatedToEachModule(custId, dataSource));
-			map.put("COLLABORATIONS", collaborationService.listCollaborations(custId, dataSource));
-			map.put("GROUP", groupService.listCustomerGroups(dataSource));
-			map.put("PRICE_CODE", customerService.listPriceCode(dataSource));
-			map.put("INDUSTRY", industryService.listIndustries(dataSource));
-			map.put("TYPE", typeService.listAccountTypes(dataSource));
-			map.put("CALLS",callService.listCallsRelatedToModule(custId, dataSource));
-			map.put("EVENTS", eventService.listEventsRelatedToModule(custId, dataSource));
-			map.put("TASKS", taskService.listTasksRelatedToModule(custId, dataSource));
-			map.put("MEETINGS", meetingService.listMeetingsRelatedToModule(custId, dataSource));
-			map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username,dataSource));
-			map.put("EVENT_LOCATION", locationService.listEventLocations(dataSource));
-			map.put("CALL_STATUS", callStatusService.listCallStatus(dataSource));
-			map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
-			map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
-			map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
-			map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
-		}
-		
-		map.put("MESSAGE", "FAILED");
-		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+	@RequestMapping(value="/view/{custId}/{userId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewCustomer(@PathVariable("custId") String custId, @PathVariable("userId") String userId, @RequestBody MeDataSource dataSource){
+		Map<String, Object> map = customerService.viewCustomerById(custId, userId, dataSource);
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(custId, dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
