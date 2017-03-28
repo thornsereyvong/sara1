@@ -58,11 +58,6 @@ public class CrmCustomerServiceImpl implements CrmCustomerService{
 	}
 
 	@Override
-	public CrmCustomer viewCustomerDetails(String custId, MeDataSource dataSource) {
-		return customerDao.viewCustomerDetails(custId, dataSource);
-	}
-
-	@Override
 	public List<AmeClass> listAmeClasses(MeDataSource dataSource) {
 		return customerDao.listAmeClasses(dataSource);
 	}
@@ -75,6 +70,11 @@ public class CrmCustomerServiceImpl implements CrmCustomerService{
 	@Override
 	public Map<String, Object> creditInfoByCustomer(String custId, MeDataSource dataSource) {
 		return customerDao.creditInfoByCustomer(custId, dataSource);
+	}
+
+	@Override
+	public Map<String, Object> viewCustomerById(String custId, String userId, MeDataSource dataSource) {
+		return customerDao.viewCustomerById(custId, userId, dataSource);
 	}
 
 }

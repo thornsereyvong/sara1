@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -194,37 +193,6 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 		return null;
 	}
 
-	@Override
-	public Map<String,Object> viewActivitiesOfLeadById(String leadId, MeDataSource dataSource) {
-		Map<String, Object> leadMap = new HashMap<String, Object>();
-		leadMap.put("CALLS", callDao.listCallsRelatedToLead(leadId, dataSource));
-		leadMap.put("METTINGS", meetingDao.listMeetingsRelatedToLead(leadId, dataSource));
-		leadMap.put("EVENTS", eventDao.listEventsRelatedToLead(leadId, dataSource));
-		leadMap.put("TASKS", taskDao.listTasksRelatedToLead(leadId, dataSource));
-		leadMap.put("NOTES", noteDao.listNoteRelatedToLead(leadId,dataSource));
-		leadMap.put("LEAD", findLeadById(leadId, dataSource));
-		leadMap.put("ALL_ACTIVITIES", listActivitesRelatedToLead(leadId,dataSource));
-		return leadMap;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private List<Object> listActivitesRelatedToLead(String leadId, MeDataSource dataSource) {
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
-		Session session = getSessionFactory().openSession();
-		try {
-			SQLQuery query = session.createSQLQuery("CALL listAllActivitiesRelatedToLead(:leadId)");
-				query.setParameter("leadId", leadId);
-				query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-				return query.list();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		} finally {
-			session.clear();
-			session.close();
-			sessionFactory.close();
-		}
-		return null;
-	}
 
 	@Override
 	public boolean updateLeadStatusToConverted(String leadID, String custId, String opId, MeDataSource dataSource) {
@@ -269,6 +237,82 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 			CallableStatement cst = con.prepareCall("{call findCrmLeadById(?)}");
 			cst.setString(1, leadId);
 			map.put("LEAD", AppUtilities.aliasToSingleMap(cst.executeQuery()));
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> convertLeadStartup(String leadId, String userId, MeDataSource dataSource) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try(Connection con = DBConnection.getConnection(dataSource)){
+			CallableStatement cs = con.prepareCall("{call crmConvertLeadStartup(?,?)}");
+			cs.setString(1, leadId);
+			cs.setString(2, userId);
+			boolean isResultSet = cs.execute();
+			int rsCount = 0;
+			String[] key = {"CONTACT","ASSIGN_TO","CAMPAIGN","INDUSTRY","LEAD_STATUS","LEAD_SOURCE","GROUP","PRICE_CODE","CUSTOMER","CUSTOMER_TYPE","OPP_STAGES","OPP_TYPES"}; // 
+			while(isResultSet){
+				ResultSet rs = cs.getResultSet();
+				map.put(key[rsCount], AppUtilities.aliasToMaps(rs));
+				rs.close();
+				isResultSet = cs.getMoreResults();
+				rsCount++;
+			}
+			CallableStatement cst = con.prepareCall("{call findCrmLeadById(?)}");
+			cst.setString(1, leadId);
+			map.put("LEAD", AppUtilities.aliasToSingleMap(cst.executeQuery()));
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> editLeadStartup(String leadId, String userId, MeDataSource dataSource) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try(Connection con = DBConnection.getConnection(dataSource)){
+			CallableStatement cs = con.prepareCall("{call crmEditOrAddLeadStartup(?)}");
+			cs.setString(1, userId);
+			boolean isResultSet = cs.execute();
+			int rsCount = 0;
+			String[] key = {"CAMPAIGN","INDUSTRY","LEAD_STATUS","LEAD_SOURCE","ASSIGN_TO"}; // 
+			while(isResultSet){
+				ResultSet rs = cs.getResultSet();
+				map.put(key[rsCount], AppUtilities.aliasToMaps(rs));
+				rs.close();
+				isResultSet = cs.getMoreResults();
+				rsCount++;
+			}
+			CallableStatement cst = con.prepareCall("{call findCrmLeadById(?)}");
+			cst.setString(1, leadId);
+			map.put("LEAD", AppUtilities.aliasToSingleMap(cst.executeQuery()));
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> createLeadStartup(String userId, MeDataSource dataSource) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try(Connection con = DBConnection.getConnection(dataSource)){
+			CallableStatement cs = con.prepareCall("{call crmEditOrAddLeadStartup(?)}");
+			cs.setString(1, userId);
+			boolean isResultSet = cs.execute();
+			int rsCount = 0;
+			String[] key = {"CAMPAIGN","INDUSTRY","LEAD_STATUS","LEAD_SOURCE","ASSIGN_TO"}; // 
+			while(isResultSet){
+				ResultSet rs = cs.getResultSet();
+				map.put(key[rsCount], AppUtilities.aliasToMaps(rs));
+				rs.close();
+				isResultSet = cs.getMoreResults();
+				rsCount++;
+			}
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();

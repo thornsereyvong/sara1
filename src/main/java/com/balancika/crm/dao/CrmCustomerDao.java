@@ -18,7 +18,7 @@ public interface CrmCustomerDao {
 	List<Object> listCustomerIdAndName(MeDataSource dataSource);
 	List<PriceCode> listPriceCode(MeDataSource dataSource);
 	List<AmeClass> listAmeClasses(MeDataSource dataSource);
-	CrmCustomer viewCustomerDetails(String custId, MeDataSource dataSource);
 	List<Object> creditInfo(String custId, MeDataSource dataSource);
 	Map<String, Object> creditInfoByCustomer(String custId, MeDataSource dataSource);
+	Map<String, Object> viewCustomerById(String custId, String userId, MeDataSource dataSource);
 }

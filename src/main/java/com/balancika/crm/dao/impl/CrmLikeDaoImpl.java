@@ -82,6 +82,7 @@ public class CrmLikeDaoImpl implements CrmLikeDao{
 			Criteria criteria = session.createCriteria(CrmLike.class);
 			criteria.setProjection(Projections.property("likeId"));
 			criteria.add(Restrictions.eq("collapId", collapId));
+			criteria.add(Restrictions.ne("username", dataSource.getUserid()));
 			criteria.setProjection(Projections.rowCount());
 			return ((Number)criteria.uniqueResult()).intValue();
 		} catch (HibernateException e) {
