@@ -15,7 +15,9 @@ public interface CrmLeadService {
 	public List<CrmLead> getLeadBySpecificUser(String username, MeDataSource dataSource);
 	public Object findLeadById(String leadID, MeDataSource dataSource);
 	CrmLead findLeadDetailById(String leadID, MeDataSource dataSource);
-	Map<String,Object> viewActivitiesOfLeadById(String leadId, MeDataSource dataSource);
 	boolean updateLeadStatusToConverted(String leadID, String custId, String opId, MeDataSource dataSource);
 	Map<String, Object> viewLeadById(String leadId, String userId, MeDataSource dataSource);
+	Map<String, Object> convertLeadStartup(String leadId, String userId, MeDataSource dataSource);
+	Map<String, Object> editLeadStartup(String leadId, String userId, MeDataSource dataSource);
+	Map<String, Object> createLeadStartup(String userId, MeDataSource dataSource);
 }

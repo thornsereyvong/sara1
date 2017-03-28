@@ -58,11 +58,6 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 	}
 
 	@Override
-	public Map<String, Object> viewActivitiesOfLeadById(String leadId, MeDataSource dataSource) {
-		return dao.viewActivitiesOfLeadById(leadId, dataSource);
-	}
-
-	@Override
 	public boolean updateLeadStatusToConverted(String leadID, String custId, String opId, MeDataSource dataSource) {
 		return dao.updateLeadStatusToConverted(leadID,custId,opId,dataSource);
 	}
@@ -70,6 +65,21 @@ public class CrmLeadServiceImpl implements CrmLeadService {
 	@Override
 	public Map<String, Object> viewLeadById(String leadId, String userId, MeDataSource dataSource) {
 		return dao.viewLeadById(leadId, userId, dataSource);
+	}
+
+	@Override
+	public Map<String, Object> convertLeadStartup(String leadId, String userId, MeDataSource dataSource) {
+		return dao.convertLeadStartup(leadId, userId, dataSource);
+	}
+
+	@Override
+	public Map<String, Object> editLeadStartup(String leadId, String userId, MeDataSource dataSource) {
+		return dao.editLeadStartup(leadId, userId, dataSource);
+	}
+
+	@Override
+	public Map<String, Object> createLeadStartup(String userId, MeDataSource dataSource) {
+		return dao.createLeadStartup(userId, dataSource);
 	}
 
 }
