@@ -1,5 +1,8 @@
 package com.balancika.crm.dao.impl;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +25,9 @@ import com.balancika.crm.dao.CrmNoteDao;
 import com.balancika.crm.dao.CrmTaskDao;
 import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.utilities.AppUtilities;
 import com.balancika.crm.utilities.CrmIdGenerator;
+import com.balancika.crm.utilities.DBConnection;
 
 @Repository
 public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
@@ -241,5 +246,33 @@ public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
 			sessionFactory.close();
 		}
 		return false;
+	}
+
+	@Override
+	public Map<String, Object> viewLeadById(String leadId, String userId, MeDataSource dataSource) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try(Connection con = DBConnection.getConnection(dataSource)){
+			CallableStatement cs = con.prepareCall("{call crmViewLeadById(?,?)}");
+			cs.setString(1, leadId);
+			cs.setString(2, userId);
+			boolean isResultSet = cs.execute();
+			int rsCount = 0;
+			String[] key = {"TASKS","TASK_STATUS","EVENTS","EVENT_LOCATION","CALLS","CALL_STATUS","METTINGS","MEETING_STATUS","CONTACTS","NOTES","ASSIGN_TO","TAG_TO","CAMPAIGN","INDUSTRY","LEAD_STATUS","LEAD_SOURCE"}; // 
+			while(isResultSet){
+				ResultSet rs = cs.getResultSet();
+				map.put(key[rsCount], AppUtilities.aliasToMaps(rs));
+				rs.close();
+				isResultSet = cs.getMoreResults();
+				rsCount++;
+			}
+			
+			CallableStatement cst = con.prepareCall("{call findCrmLeadById(?)}");
+			cst.setString(1, leadId);
+			map.put("LEAD", AppUtilities.aliasToSingleMap(cst.executeQuery()));
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

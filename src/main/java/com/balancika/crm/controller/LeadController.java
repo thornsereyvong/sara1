@@ -184,11 +184,12 @@ public class LeadController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/view/{leadId}/{username}", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> viewActivitiesOfLeadById(@RequestBody MeDataSource dataSource, @PathVariable("leadId") String leadId, @PathVariable("username") String username){
+	@RequestMapping(value = "/view/{leadId}/{userId}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> viewActivitiesOfLeadById(@RequestBody MeDataSource dataSource, @PathVariable("leadId") String leadId, @PathVariable("userId") String userId){
 		
-		Map<String, Object> map = leadService.viewActivitiesOfLeadById(leadId, dataSource);
-		map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus(dataSource));
+		Map<String, Object> map = leadService.viewLeadById(leadId, userId, dataSource);//leadService.viewActivitiesOfLeadById(leadId, dataSource);
+		map.put("COLLABORATIONS", collaborationService.listCollaborations(leadId, dataSource));
+		/*map.put("LEAD_STATUS", leadStatusService.getAllLeadStatus(dataSource));
 		map.put("LEAD_SOURCE", leadSourceService.getAllLeadSource(dataSource));
 		map.put("INDUSTRY", industryService.listIndustries(dataSource));
 		map.put("CAMPAIGN", campaignService.listIdAndNameOfCompaign(dataSource));
@@ -197,9 +198,8 @@ public class LeadController {
 		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
 		map.put("EVENT_LOCATION", locationService.listEventLocations(dataSource));
 		map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
-		map.put("COLLABORATIONS", collaborationService.listCollaborations(leadId, dataSource));
 		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
-		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
+		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));*/
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

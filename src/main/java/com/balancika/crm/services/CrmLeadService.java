@@ -17,4 +17,5 @@ public interface CrmLeadService {
 	CrmLead findLeadDetailById(String leadID, MeDataSource dataSource);
 	Map<String,Object> viewActivitiesOfLeadById(String leadId, MeDataSource dataSource);
 	boolean updateLeadStatusToConverted(String leadID, String custId, String opId, MeDataSource dataSource);
+	Map<String, Object> viewLeadById(String leadId, String userId, MeDataSource dataSource);
 }
