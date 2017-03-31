@@ -234,7 +234,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try{
 			session.beginTransaction();
-			String sqlCount = "Select count(m.M_ID) from crm_meeting m";
+			String sqlCount = "Select count(m.M_ID) from crm_meeting m WHERE (M.M_ATo = '"+dataSource.getUserid()+"' OR M.M_CBy = '"+dataSource.getUserid()+"') AND (M.M_StatusID is NULL OR M.M_StatusID = (SELECT MS_ID FROM crm_meeting_status WHERE MS_Name ='Planned'))";
 			SQLQuery countQuery = session.createSQLQuery(sqlCount);
 			Long countResults = ((Number)countQuery.uniqueResult()).longValue();
 			int totalPageNumber = (int) Math.ceil((double)countResults / rowNum);
@@ -254,7 +254,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 						+ "CAST(M.M_MDate AS date) meetingModifiedDate "
 					+ " FROM "
 						+ "crm_meeting M "
-					+ "WHERE M.M_ATo = '"+dataSource.getUserid()+"' OR M.M_CBy = '"+dataSource.getUserid()+"'");
+					+ "WHERE (M.M_ATo = '"+dataSource.getUserid()+"' OR M.M_CBy = '"+dataSource.getUserid()+"') AND (M.M_StatusID is NULL OR M.M_StatusID = (SELECT MS_ID FROM crm_meeting_status WHERE MS_Name ='Planned'))");
 			query.setFirstResult((pageNum -1) * rowNum);
 			query.setMaxResults(rowNum);
 			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);

@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -20,15 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartResolver;
 
 @RestController
 @RequestMapping("/api/upload")
 public class FileUploadController {
 
-	@Autowired
-	private MultipartResolver multipartResolver;
-	
 	@RequestMapping(value="/{srcFolder}",method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> upload(@RequestParam(value = "file", required = false) MultipartFile[] files,HttpServletRequest request, @PathVariable("srcFolder") String srcFolder){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -48,8 +43,10 @@ public class FileUploadController {
 				fileNames.add(pathAndFilename+"/"+randomFileName);
 			} catch (IOException e) {
 				e.printStackTrace();
+				map.put("msg", "failed");
 			}
         map.put("fileNames", fileNames);
+        map.put("msg", "success");
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
