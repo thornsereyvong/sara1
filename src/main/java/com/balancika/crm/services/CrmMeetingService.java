@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.balancika.crm.model.CrmMeeting;
+import com.balancika.crm.model.CrmMeetingCheckin;
 import com.balancika.crm.model.MeDataSource;
 
 public interface CrmMeetingService {
@@ -17,4 +18,5 @@ public interface CrmMeetingService {
 	List<CrmMeeting> listMeetingsRelatedToOpportunity(String opId, MeDataSource dataSource);
 	List<CrmMeeting> listMeetingsRelatedToModule(String moduleId, MeDataSource dataSource);
 	Map<String, Object> listMeetingsForMobile(int rowNum, int pageNum, MeDataSource dataSource);
+	Map<String, Object> meetingCheckIn(CrmMeetingCheckin checkin);
 }

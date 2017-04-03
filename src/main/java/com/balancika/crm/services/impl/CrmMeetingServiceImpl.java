@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.balancika.crm.dao.CrmMeetingDao;
 import com.balancika.crm.model.CrmMeeting;
+import com.balancika.crm.model.CrmMeetingCheckin;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMeetingService;
 
@@ -68,6 +69,11 @@ public class CrmMeetingServiceImpl implements CrmMeetingService{
 	@Override
 	public Map<String, Object> listMeetingsForMobile(int rowNum, int pageNum, MeDataSource dataSource) {
 		return meetingDao.listMeetingsForMobile(rowNum, pageNum, dataSource);
+	}
+
+	@Override
+	public Map<String, Object> meetingCheckIn(CrmMeetingCheckin checkin) {
+		return meetingDao.meetingCheckIn(checkin);
 	}
 	
 	

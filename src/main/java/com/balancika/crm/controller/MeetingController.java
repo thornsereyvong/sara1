@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.balancika.crm.model.CrmMeeting;
+import com.balancika.crm.model.CrmMeetingCheckin;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmMeetingService;
@@ -182,5 +183,10 @@ public class MeetingController {
 		map.put("STATUS", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		map.put("MSG", messageService.getMessage("1005", "meeting", meeting.getMeetingId(), meeting.getMeDataSource()));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/checkin", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> meetingCheckin(@RequestBody CrmMeetingCheckin checkin){
+		return new ResponseEntity<Map<String,Object>>(meetingService.meetingCheckIn(checkin), HttpStatus.OK);
 	}
 }

@@ -22,6 +22,8 @@ import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmMeetingDao;
 import com.balancika.crm.model.Company;
 import com.balancika.crm.model.CrmMeeting;
+import com.balancika.crm.model.CrmMeetingCheckin;
+import com.balancika.crm.model.CrmMeetingStatus;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.DateTimeOperation;
 import com.balancika.crm.utilities.CrmIdGenerator;
@@ -114,7 +116,9 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		Session session = getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			session.delete(meeting);
+			SQLQuery query = session.createSQLQuery("CALL crmDeleteMeeting(:meetId)");
+			query.setParameter("meetId", meeting.getMeetingId());
+			query.executeUpdate();
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
@@ -271,6 +275,31 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 			e.printStackTrace();
 		} finally {
 			session.clear();
+			session.close();
+			sessionFactory.close();
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> meetingCheckIn(CrmMeetingCheckin checkin) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(checkin.getDataSource()));
+		Session session = getSessionFactory().openSession();
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(CrmMeetingStatus.class);
+			criteria.add(Restrictions.eq("statusName", "Held"));
+			CrmMeetingStatus status = (CrmMeetingStatus)criteria.uniqueResult();
+			checkin.setStatusId(status.getStatusId());
+			session.update(checkin);
+			map.put("msg", "success");
+			map.put("status", HttpStatus.OK.value());
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("msg", "failed");
+			map.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		} finally {
 			session.close();
 			sessionFactory.close();
 		}

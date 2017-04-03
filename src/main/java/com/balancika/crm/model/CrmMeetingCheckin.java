@@ -1,44 +1,52 @@
 package com.balancika.crm.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
-import javax.persistence.SecondaryTables;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity(name="CrmMeetingCheckin")
 @Table(name="crm_meeting")
-@SecondaryTables({
-		@SecondaryTable(name="crm_meeting_audio", pkJoinColumns = @PrimaryKeyJoinColumn(name="M_ID")),
-		@SecondaryTable(name="crm_meeting_image", pkJoinColumns = @PrimaryKeyJoinColumn(name="M_ID"))
-	})
 public class CrmMeetingCheckin implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name="MS_ID")
+	@Column(name="M_ID")
 	private String meetId; 
 	
-	@Column(name="M_CheckIn_Coordonation")
-	private String meetCoordonation;
+	@Column(name="M_CheckIn_Longitude")
+	private String meetLongitude;
 	
-	@Column(table="crm_meeting_audio",name="AU_ID")
-	private int audioId;
+	@Column(name="M_CheckIn_Latitude")
+	private String meetLatitude;
 	
-	@Column(table="crm_meeting_audio", name="AU_Path")
-	private String audioPath;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="M_ID", nullable = false)
+	private List<CrmMeetingAudio> audio;
 	
-	@Column(table="crm_meeting_image",name="IMG_ID")
-	private int imgId;
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name="M_ID", nullable = false)
+	private List<CrmMeetingImage> images;
 	
-	@Column(table="crm_meeting_image", name="IMG_Path")
-	private String imgPath;
+	@Column(name="M_StatusID")
+	private int statusId;
+	
+	@Column(name="M_Des")
+	private String des;
 	
 	@Transient
 	private MeDataSource dataSource;
@@ -51,44 +59,52 @@ public class CrmMeetingCheckin implements Serializable{
 		this.meetId = meetId;
 	}
 
-	public String getMeetCoordonation() {
-		return meetCoordonation;
+	public String getMeetLongitude() {
+		return meetLongitude;
 	}
 
-	public void setMeetCoordonation(String meetCoordonation) {
-		this.meetCoordonation = meetCoordonation;
+	public void setMeetLongitude(String meetLongitude) {
+		this.meetLongitude = meetLongitude;
 	}
 
-	public int getAudioId() {
-		return audioId;
+	public String getMeetLatitude() {
+		return meetLatitude;
 	}
 
-	public void setAudioId(int audioId) {
-		this.audioId = audioId;
+	public void setMeetLatitude(String meetLatitude) {
+		this.meetLatitude = meetLatitude;
 	}
 
-	public String getAudioPath() {
-		return audioPath;
+	public List<CrmMeetingAudio> getAudio() {
+		return audio;
 	}
 
-	public void setAudioPath(String audioPath) {
-		this.audioPath = audioPath;
+	public void setAudio(List<CrmMeetingAudio> audio) {
+		this.audio = audio;
 	}
 
-	public int getImgId() {
-		return imgId;
+	public List<CrmMeetingImage> getImages() {
+		return images;
 	}
 
-	public void setImgId(int imgId) {
-		this.imgId = imgId;
+	public void setImages(List<CrmMeetingImage> images) {
+		this.images = images;
 	}
 
-	public String getImgPath() {
-		return imgPath;
+	public int getStatusId() {
+		return statusId;
 	}
 
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
+	public void setStatusId(int statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getDes() {
+		return des;
+	}
+
+	public void setDes(String des) {
+		this.des = des;
 	}
 
 	public MeDataSource getDataSource() {
@@ -98,4 +114,5 @@ public class CrmMeetingCheckin implements Serializable{
 	public void setDataSource(MeDataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+
 }
