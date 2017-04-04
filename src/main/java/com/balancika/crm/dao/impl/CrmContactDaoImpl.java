@@ -1,5 +1,8 @@
 package com.balancika.crm.dao.impl;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,18 +18,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmContactDao;
-import com.balancika.crm.model.CrmCase;
 import com.balancika.crm.model.CrmContact;
-import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.MeDataSource;
+import com.balancika.crm.utilities.AppUtilities;
 import com.balancika.crm.utilities.CrmIdGenerator;
-import com.balancika.crm.utilities.DateTimeOperation;
+import com.balancika.crm.utilities.DBConnection;
 
 @Repository
 public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
@@ -217,63 +217,35 @@ public class CrmContactDaoImpl extends CrmIdGenerator implements CrmContactDao {
 		return null;
 	}
 
-	@Transactional()
+	@Transactional
 	@Override
-	public Map<String, Object> viewContact(String conId, MeDataSource dataSource) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("CASES", getCasesRelatedToContact(conId, dataSource));
-		map.put("CONTACT", findContactById(conId, dataSource));
-		map.put("OPPORTUNITIES", getOpportunityRelatedToContact(conId, dataSource));
-		return map;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private List<CrmOpportunity> getOpportunityRelatedToContact(String conId, MeDataSource dataSource){
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
-		Session session = getSessionFactory().openSession();
-		try {
-			SQLQuery query = session.createSQLQuery("CALL listOpportunitiesRelatedToContact(:conId)");
-			query.setParameter("conId",conId);
-			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-			return query.list();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		} finally {
-			session.clear();
-			session.close();
-			sessionFactory.close();
-		}
-		return null;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private List<CrmCase> getCasesRelatedToContact(String conId, MeDataSource dataSource){
-		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
-		Session session = getSessionFactory().openSession();
-		try {
-			Criteria criteria = session.createCriteria(CrmCase.class, "case").createAlias("case.contact", "con", JoinType.LEFT_OUTER_JOIN);
-			criteria.add(Restrictions.eq("con.conID", conId));
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.property("caseId"), "caseId")
-					.add(Projections.property("createDate"), "createDate")
-					.add(Projections.property("subject"), "subject")
-					.add(Projections.property("status"), "status")
-					.add(Projections.property("priority"), "priority"));
-			criteria.setResultTransformer(Transformers.aliasToBean(CrmCase.class));
-			List<CrmCase> cases = criteria.list();
-			for(CrmCase cs : cases){
-				cs.setConvertCreateDate(new DateTimeOperation().reverseLocalDateTimeToString(cs.getCreateDate()));
+	public Map<String, Object> viewContact(String conId, String userId, MeDataSource dataSource) {
+		Map<String, Object> map = new HashMap<String, Object>(); 
+		try(Connection con = DBConnection.getConnection(dataSource)){
+			CallableStatement cs= con.prepareCall("{call crmViewContactById(?,?)}");
+			cs.setString(1, conId);
+			cs.setString(2, userId);
+			boolean isResultSet = cs.execute();
+			int rsCount = 0;
+			String[] key = {"TASKS","TASK_STATUS","EVENTS","EVENT_LOCATION","CALLS","CALL_STATUS","MEETINGS","MEETING_STATUS","NOTES","ASSIGN_TO","TAG_TO","LEAD_SOURCE","OPPORTUNITIES","CASES","CONTACTS","REPORT_TO","CUSTOMERS"}; // 
+			while(isResultSet){
+				ResultSet rs = cs.getResultSet();
+				map.put(key[rsCount], AppUtilities.aliasToMaps(rs));
+				rs.close();
+				isResultSet = cs.getMoreResults();
+				rsCount++;
 			}
-			return cases;
-		} catch (HibernateException e) {
+			CallableStatement cst = con.prepareCall("{call findCrmContactById(?)}");
+			cst.setString(1, conId);
+			map.put("CONTACT", AppUtilities.aliasToSingleMap(cst.executeQuery()));
+			return map;
+		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			session.close();
-			sessionFactory.close();
 		}
 		return null;
 	}
-
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CrmContact> listSomeFieldsOfContact(MeDataSource dataSource) {

@@ -173,7 +173,6 @@ public class MeetingController {
 		if(meetingService.deleteMeeting(meeting) == true){
 			map.put("MESSAGE", "DELETED");
 			map.put("STATUS", HttpStatus.OK.value());			
-			
 			map.put("MSG", messageService.getMessage("1002", "meeting", meeting.getMeetingId(), meeting.getMeDataSource()));
 			activityService.addUserActivity(activity.getActivity(meeting.getMeDataSource(), "Delete", "Meeting", meeting.getMeetingId()));
 			

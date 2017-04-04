@@ -13,9 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 @Entity(name="CrmMeetingCheckin")
 @Table(name="crm_meeting")
 public class CrmMeetingCheckin implements Serializable{
@@ -32,13 +29,11 @@ public class CrmMeetingCheckin implements Serializable{
 	@Column(name="M_CheckIn_Latitude")
 	private String meetLatitude;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Fetch(FetchMode.JOIN)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="M_ID", nullable = false)
 	private List<CrmMeetingAudio> audio;
 	
-	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-	@Fetch(FetchMode.JOIN)
+	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="M_ID", nullable = false)
 	private List<CrmMeetingImage> images;
 	

@@ -16,6 +16,6 @@ public interface CrmContactDao {
 	CrmContact findContactDetailsById(String conId, MeDataSource dataSource);
 	List<Object> listContactRelatedToModule(MeDataSource dataSource);
 	List<Object> listParentOfContact(MeDataSource dataSource);
-	Map<String, Object> viewContact(String conId, MeDataSource dataSource);
+	Map<String, Object> viewContact(String conId, String userId,MeDataSource dataSource);
 	List<CrmContact> listSomeFieldsOfContact(MeDataSource dataSource);
 }

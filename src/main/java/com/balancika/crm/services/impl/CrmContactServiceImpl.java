@@ -62,8 +62,8 @@ public class CrmContactServiceImpl implements CrmContactService{
 	}
 
 	@Override
-	public Map<String, Object> viewContact(String conId, MeDataSource dataSource) {
-		return contactDao.viewContact(conId, dataSource);
+	public Map<String, Object> viewContact(String conId,String userId, MeDataSource dataSource) {
+		return contactDao.viewContact(conId, userId, dataSource);
 	}
 
 	@Override

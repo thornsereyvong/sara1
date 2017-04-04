@@ -288,13 +288,24 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			session.beginTransaction();
+			
+			//Clear all meeting image and meeting audio that related to this meeting id
+			SQLQuery query = session.createSQLQuery("CALL crmDeleteMeetingImageAndAudio(:meetId)");
+			query.setParameter("meetId", checkin.getMeetId());
+			query.executeUpdate();
+			//end
+			
+			//get meeting status id by meeting status name to insert to CrmMeetingCheckin object
 			Criteria criteria = session.createCriteria(CrmMeetingStatus.class);
 			criteria.add(Restrictions.eq("statusName", "Held"));
 			CrmMeetingStatus status = (CrmMeetingStatus)criteria.uniqueResult();
 			checkin.setStatusId(status.getStatusId());
+			//end
+			
 			session.update(checkin);
 			map.put("msg", "success");
 			map.put("status", HttpStatus.OK.value());
+			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("msg", "failed");

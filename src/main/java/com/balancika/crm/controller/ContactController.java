@@ -88,72 +88,49 @@ public class ContactController {
 	@Autowired
 	private CrmUserActivity activity;
 	
-	
+	//List all contact
 	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listContacts(@RequestBody MeDataSource dataSource){
-	
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		List<CrmContact> arrContact = contactService.listContacts(dataSource);
 		if( arrContact == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
-		
 		map.put("MESSAGE", "SUCCESS");
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("DATA", arrContact);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	//Find Contact details with specific id
 	@RequestMapping(value="/list/{conId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findContactById(@PathVariable("conId") String conId, @RequestBody MeDataSource dataSource){
-	
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		Object contact = contactService.findContactById(conId, dataSource);
 		if( contact == null){
 			map.put("MESSAGE", "FAILED");
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
-		
 		map.put("MESSAGE", "SUCCESS");
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("DATA", contact);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/view/{conId}/{username}", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> viewContact(@PathVariable("conId") String conId, @PathVariable("username") String username, @RequestBody MeDataSource dataSource){
-	
-		Map<String, Object> map = new HashMap<String, Object>();
-		map = contactService.viewContact(conId, dataSource);
-		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
-		map.put("LEAD_SOURCE", sourceService.getAllLeadSource(dataSource));
-		map.put("REPORT_TO", contactService.listParentOfContact(dataSource));
+	//View Contact Controller
+	@RequestMapping(value="/view/{conId}/{userId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewContact(@PathVariable("conId") String conId, @PathVariable("userId") String userId, @RequestBody MeDataSource dataSource){
+		Map<String, Object> map = contactService.viewContact(conId,userId, dataSource);
 		map.put("COLLABORATIONS", collaborationService.listCollaborations(conId, dataSource));
-		map.put("NOTES", noteService.listNoteRelatedToEachModule(conId, dataSource));
-		map.put("CALLS", callService.listCallsRelatedToModule(conId, dataSource));
-		map.put("TASKS", taskService.listTasksRelatedToModule(conId, dataSource));
-		map.put("METTINGS", meetingService.listMeetingsRelatedToModule(conId, dataSource));
-		map.put("EVENTS", eventService.listEventsRelatedToModule(conId, dataSource));
-		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
-		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
-		map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
-		map.put("CALL_STATUS", callStatusService.listCallStatus(dataSource));
-		map.put("EVENT_LOCATION", eventLocationService.listEventLocations(dataSource));
-		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/details/{conId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findContactDetailsById(@PathVariable("conId") String conId, @RequestBody MeDataSource dataSource){
-	
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		CrmContact contact = contactService.findContactDetailsById(conId, dataSource);
 		if( contact == null){
 			map.put("MESSAGE", "FAILED");
@@ -161,18 +138,17 @@ public class ContactController {
 			map.put("MSG", "NOT_FOUND");
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
-		
 		map.put("MESSAGE", "SUCCESS");
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("DATA", contact);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	
+	// Require information to create new contact
 	@RequestMapping(value="/startup/{username}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addStartupPage(@PathVariable("username") String username, @RequestBody MeDataSource dataSource){
-	
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
 		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
 		map.put("LEAD_SOURCE", sourceService.getAllLeadSource(dataSource));
@@ -180,9 +156,9 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	//Create new contact controller
 	@RequestMapping(value="/add", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> addContact(@RequestBody CrmContact contact){
-	
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(contactService.insertContact(contact) == false){
 			map.put("MESSAGE", "FAILED");			
@@ -190,16 +166,15 @@ public class ContactController {
 			map.put("MSG", messageService.getMessage("1003", "contact", "", contact.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
-		
 		map.put("MESSAGE", "INSERTED");
 		map.put("STATUS", HttpStatus.CREATED.value());		
 		map.put("MSG", messageService.getMessage("1000", "contact", contact.getConID(), contact.getMeDataSource()));
-		
 		activityService.addUserActivity(activity.getActivity(contact.getMeDataSource(), "Create", "Contact", contact.getConID()));
 		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
 	}
 
+	//Require information to update existing contact
 	@RequestMapping(value="/startup/{username}/{conId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> editStartupPage(@PathVariable("username") String username, @PathVariable("conId") String conId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -211,6 +186,8 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 
+	
+	//Update contact controller
 	@RequestMapping(value="/edit", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateContact(@RequestBody CrmContact contact){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -228,9 +205,10 @@ public class ContactController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	
+	//Delete contact controller
 	@RequestMapping(value="/remove", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> deleteContact(@RequestBody CrmContact contact){
-	
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(contactService.deleteContact(contact) == false){
 			map.put("MESSAGE", "FAILED");
@@ -238,7 +216,6 @@ public class ContactController {
 			map.put("MSG", messageService.getMessage("1005", "contact", contact.getConID(), contact.getMeDataSource()));
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK); 
 		}
-		
 		map.put("MESSAGE", "DELETED");
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("MSG", messageService.getMessage("1002", "contact", contact.getConID(), contact.getMeDataSource()));
