@@ -153,36 +153,10 @@ public class CaseController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/view/{caseId}/{username}", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> viewCaseById(@PathVariable("caseId") String caseId, @PathVariable("username") String username, @RequestBody MeDataSource dataSource){
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("CASE", caseService.findCaseById(caseId, dataSource));
-		map.put("CASE_STATUS", statusService.listCaseStatus(dataSource));
-		map.put("CASE_TYPE", typeService.listCaseTypes(dataSource));
-		map.put("CASE_ORIGIN", originService.listCaseOrigins(dataSource));
-		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
-		map.put("CONTACTS", contactService.listContactRelatedToModule(dataSource));
-		map.put("ITEMS", itemService.listItems(dataSource));
-		map.put("CASE_PRIORITY", priorityService.listCasePriorities(dataSource));
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
-		map.put("ALL_USERS", userService.listAllUsers(dataSource));
-		map.put("ARTICLES", articleService.listCasesArticle(dataSource));
+	@RequestMapping(value = "/view/{caseId}/{userId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> viewCaseById(@PathVariable("caseId") String caseId, @PathVariable("userId") String userId, @RequestBody MeDataSource dataSource){
+		Map<String, Object> map = caseService.viewCaseById(caseId, userId, dataSource);
 		map.put("COLLABORATIONS", collaborationService.listCollaborations(caseId,dataSource));
-		map.put("EVENTS", eventService.listEventsRelatedToModule(caseId, dataSource));
-		map.put("NOTES", noteService.listNoteRelatedToEachModule(caseId, dataSource));
-		map.put("CALLS", callService.listCallsRelatedToModule(caseId, dataSource));
-		map.put("MEETINGS", meetingService.listMeetingsRelatedToModule(caseId, dataSource));
-		map.put("TASKS", taskService.listTasksRelatedToModule(caseId, dataSource));
-		map.put("EVENT_LOCATION", locationService.listEventLocations(dataSource));
-		map.put("CALL_STATUS", callStatusService.listCallStatus(dataSource));
-		map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
-		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
-		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
-		map.put("CONTACTS", contactService.listSomeFieldsOfContact(dataSource));
-		
-		//System.out.println(userService.listAllUsers(dataSource).size());
-		
-		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	

@@ -57,11 +57,6 @@ public class CrmOpportunityServiceImpl implements CrmOpportunityService{
 	}
 
 	@Override
-	public Map<String, Object> listInformationRelateToOpportunity(String opId, MeDataSource dataSource) {
-		return opDao.listInformationRelateToOpportunity(opId, dataSource);
-	}
-
-	@Override
 	public List<Object> listContactsRelatedToOpportuntiy(String opId, MeDataSource dataSource) {
 		return opDao.listContactsRelatedToOpportuntiy(opId, dataSource);
 	}
@@ -79,6 +74,11 @@ public class CrmOpportunityServiceImpl implements CrmOpportunityService{
 	@Override
 	public boolean updateCustomFieldsOfOpprotunity(CrmOpportunity opp) {
 		return opDao.updateCustomFieldsOfOpprotunity(opp);
+	}
+
+	@Override
+	public Map<String, Object> viewOpportunityById(String opId, String userId, MeDataSource dataSource) {
+		return opDao.viewOpportunityById(opId, userId, dataSource);
 	}
 
 }

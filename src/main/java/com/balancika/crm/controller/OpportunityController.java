@@ -152,35 +152,11 @@ public class OpportunityController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/view/{opId}/{username}", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Map<String, Object>> listInformationRelatedToOpportunity(@RequestBody MeDataSource dataSource, @PathVariable("opId") String opId, @PathVariable("username") String username){
-		
-		Map<String, Object> map = opService.listInformationRelateToOpportunity(opId, dataSource);
-		map.put("OPPORTUNITY", opService.findOpportunityById(opId, dataSource));
-		map.put("CALLS", callService.listCallsRelatedToOpportunity(opId, dataSource));
-		map.put("TASKS", taskService.listTasksRelatedToOpportunity(opId, dataSource));
-		map.put("MEETINGS",meetingService.listMeetingsRelatedToOpportunity(opId, dataSource));
-		map.put("NOTES", noteService.listNotesRelatedToOpportunity(opId, dataSource));
-		map.put("EVENTS", eventService.listEventsRelatedToOpportunity(opId, dataSource));
-		map.put("ASSIGN_TO", userService.listSubordinateUserByUsername(username, dataSource));
-		map.put("OPP_TYPES", typeService.listOpportunityTypes(dataSource));
-		map.put("OPP_STAGES", stageService.listOpportunityStages(dataSource));
-		map.put("CUSTOMERS", customerService.listCustomerIdAndName(dataSource));
-		map.put("PRICE_CODE", customerService.listPriceCode(dataSource));
-		map.put("CAMPAIGNS", campaignService.listIdAndNameOfCompaign(dataSource));
-		map.put("LEAD_SOURCE", sourceService.getAllLeadSource(dataSource));
-		map.put("CALL_STATUS", callStatusService.listCallStatus(dataSource));
-		map.put("TASK_STATUS", taskStatusService.lisTaskStatus(dataSource));
-		map.put("MEETING_STATUS", meetingStatusService.listMeetingStatus(dataSource));
-		map.put("EVENT_LOCATION", locationService.listEventLocations(dataSource));
-		map.put("COLLABORATIONS", collaborationService.listCollaborations(opId, dataSource));
-		map.put("TAG_TO", userService.listAllUsernameAndId(dataSource));
-		map.put("ALL_CONTACT", contactService.listSomeFieldsOfContact(dataSource));
+	@RequestMapping(value="/view/{opId}/{userId}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Map<String, Object>> listInformationRelatedToOpportunity(@RequestBody MeDataSource dataSource, @PathVariable("opId") String opId, @PathVariable("userId") String userId){
+		Map<String, Object> map = opService.viewOpportunityById(opId, userId, dataSource);
 		map.put("OPPORTUNITY_DETAILS", detailsService.listOpportunityDetailsRelatedToOpportunity(opId, dataSource));
-		map.put("OPPORTUNITY_DETAILS_STARTUP", detailsService.startUpPage(dataSource));
-		map.put("OP_PROJECT", projectService.listOpportunityLeadProjectByOpId(opId, dataSource));
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
-		
 	}
 	
 	@RequestMapping(value="/list/{opId}", method = RequestMethod.POST, produces = "application/json")

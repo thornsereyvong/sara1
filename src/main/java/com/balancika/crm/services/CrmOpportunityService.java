@@ -14,9 +14,9 @@ public interface CrmOpportunityService {
 	Object findOpportunityById(String opId, MeDataSource dataSource);
 	List<CrmOpportunity> listOpportunities(MeDataSource dataSource);
 	List<Object> listOpportunitiesWithSpecificUser(String username, MeDataSource dataSource);
-	Map<String, Object> listInformationRelateToOpportunity(String opId, MeDataSource dataSource);
 	List<Object> listContactsRelatedToOpportuntiy(String opId, MeDataSource dataSource);
 	List<Object> listQuotationsRelatedToOpportuntiy(String opId, MeDataSource dataSource);
 	List<Object> listSaleOrdersRelatedToOpportuntiy(String opId, MeDataSource dataSource);
 	boolean updateCustomFieldsOfOpprotunity(CrmOpportunity opp);
+	Map<String, Object> viewOpportunityById(String opId, String userId, MeDataSource dataSource);
 }

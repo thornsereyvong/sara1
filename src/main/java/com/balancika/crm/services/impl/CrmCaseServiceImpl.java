@@ -1,6 +1,7 @@
 package com.balancika.crm.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -58,5 +59,10 @@ public class CrmCaseServiceImpl implements CrmCaseService{
 	@Override
 	public boolean updateCase(CrmCaseSolution cases) {
 		return caseDao.updateCase(cases);
+	}
+
+	@Override
+	public Map<String, Object> viewCaseById(String caseId, String userId, MeDataSource dataSource) {
+		return caseDao.viewCaseById(caseId, userId, dataSource);
 	}
 }
