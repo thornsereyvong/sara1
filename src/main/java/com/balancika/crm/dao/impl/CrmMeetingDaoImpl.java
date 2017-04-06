@@ -265,11 +265,12 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 			List<Object> meetings = query.list();
 			if(meetings.isEmpty()){
 				map.put("meetings", null);
+				map.put("status", HttpStatus.NOT_FOUND.value());
 			} else {
 				map.put("meetings", meetings);
+				map.put("status", HttpStatus.OK.value());
 			}
 			map.put("totalPage", totalPageNumber);
-			map.put("status", HttpStatus.OK.value());
 			session.getTransaction().commit();
 		}catch(Exception e){
 			e.printStackTrace();
@@ -313,6 +314,55 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} finally {
 			session.close();
 			sessionFactory.close();
+		}
+		return map;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, Object> searchMeeting(int rowNum, int pageNum, String str, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			session.beginTransaction();
+			String sqlCount = "Select count(m.M_ID) from crm_meeting m WHERE (M.M_ATo = '"+dataSource.getUserid()+"' OR M.M_CBy = '"+dataSource.getUserid()+"') AND (M.M_StatusID is NULL OR M.M_StatusID = (SELECT MS_ID FROM crm_meeting_status WHERE MS_Name ='Planned')) AND (M.M_ID LIKE '"+str+"%' OR M.M_Subject LIKE '"+str+"%')";
+			SQLQuery countQuery = session.createSQLQuery(sqlCount);
+			Long countResults = ((Number)countQuery.uniqueResult()).longValue();
+			int totalPageNumber = (int) Math.ceil((double)countResults / rowNum);
+			SQLQuery query = session.createSQLQuery(""
+					+ "SELECT "
+						+ "M.M_ID meetingId,"
+						+ "M.M_Subject meetingSubject, "
+						+ "DATE_FORMAT(M.M_StartDate,'%d/%m/%Y %h:%i %p') meetingStartDate,"
+						+ "DATE_FORMAT(M.M_EndDate,'%d/%m/%Y %h:%i %p') meetingEndDate,"
+						+ "M.M_Duration meetingDuration, "
+						+ "M.M_StatusID statusId, "
+						+ "COALESCE((SELECT MS_Name FROM crm_meeting_status WHERE MS_ID = M.M_StatusID),'') statusName,"
+						+ "M.M_RToType meetingRelatedToModuleType,"
+						+ "M.M_RToID meetingRelatedToModuleId,"
+						+ "M.M_Location meetingLocation,"
+						+ "DATE_FORMAT(M.M_CDate,'%d/%m/%Y %h:%i %p') meetingCreateDate, "
+						+ "CAST(M.M_MDate AS date) meetingModifiedDate "
+					+ " FROM "
+						+ "crm_meeting M "
+					+ "WHERE (M.M_ATo = '"+dataSource.getUserid()+"' OR M.M_CBy = '"+dataSource.getUserid()+"') AND (M.M_StatusID is NULL OR M.M_StatusID = (SELECT MS_ID FROM crm_meeting_status WHERE MS_Name ='Planned')) AND (M.M_ID LIKE '"+str+"%' OR M.M_Subject LIKE '"+str+"%')");
+			query.setFirstResult((pageNum -1) * rowNum);
+			query.setMaxResults(rowNum);
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			List<Object> meetings = query.list();
+			if(meetings.isEmpty()){
+				map.put("meetings", null);
+				map.put("status", HttpStatus.NOT_FOUND.value());
+			} else {
+				map.put("meetings", meetings);
+				map.put("status", HttpStatus.OK.value());
+			}
+			map.put("totalPage", totalPageNumber);
+			session.getTransaction().commit();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return map;
 	}

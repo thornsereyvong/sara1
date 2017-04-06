@@ -31,4 +31,9 @@ public class MeetingMobileController {
 	public ResponseEntity<Map<String, Object>> meetingCheckin(@RequestBody CrmMeetingCheckin checkin){
 		return new ResponseEntity<Map<String,Object>>(meetingService.meetingCheckIn(checkin), HttpStatus.OK);
 	}
+	
+	@RequestMapping(value="/search/{rowNum}/{pageNum}/{str}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> searchMeetings(@PathVariable("rowNum") int rowNum, @PathVariable("pageNum") int pageNum,@PathVariable("str") String str, @RequestBody MeDataSource dataSource){
+		return new ResponseEntity<Map<String,Object>>(meetingService.searchMeeting(rowNum, pageNum, str, dataSource), HttpStatus.OK);
+	}
 }

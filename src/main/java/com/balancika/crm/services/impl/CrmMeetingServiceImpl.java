@@ -75,6 +75,11 @@ public class CrmMeetingServiceImpl implements CrmMeetingService{
 	public Map<String, Object> meetingCheckIn(CrmMeetingCheckin checkin) {
 		return meetingDao.meetingCheckIn(checkin);
 	}
+
+	@Override
+	public Map<String, Object> searchMeeting(int rowNum, int pageNum, String str, MeDataSource dataSource) {
+		return meetingDao.searchMeeting(rowNum, pageNum, str, dataSource);
+	}
 	
 	
 }
