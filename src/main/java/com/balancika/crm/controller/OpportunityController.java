@@ -308,10 +308,8 @@ public class OpportunityController {
 		if(opService.isUpdateOpportunity(opportunity) == true){
 			map.put("MESSAGE", "UPDATED");
 			map.put("STATUS", HttpStatus.OK.value());
-			
 			map.put("MSG", messageService.getMessage("1001", "opportunity", opportunity.getOpId(), opportunity.getMeDataSource()));
 			activityService.addUserActivity(activity.getActivity(opportunity.getMeDataSource(), "Update", "Opportunity", opportunity.getOpId()));
-			
 			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
 		

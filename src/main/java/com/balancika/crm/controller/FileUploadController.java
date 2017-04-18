@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -21,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/upload")
+@RequestMapping("/api")
 public class FileUploadController {
 
-	@RequestMapping(value="/{srcFolder}",method = RequestMethod.POST)
+	@RequestMapping(value="/upload/{srcFolder}",method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> upload(@RequestParam(value = "file", required = false) MultipartFile[] files,HttpServletRequest request, @PathVariable("srcFolder") String srcFolder){
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<String> fileNames= new ArrayList<String>();
@@ -47,6 +48,28 @@ public class FileUploadController {
 			}
         map.put("fileNames", fileNames);
         map.put("msg", "success");
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value="/file/remove", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> removeExistFile(@RequestParam("srcFolder") String srcFolder,@RequestParam("fileName") String fileName, HttpServletRequest request){
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			String realPath = request.getSession().getServletContext().getRealPath("/");
+			File fileToDelete = FileUtils.getFile(realPath+"/resources/"+srcFolder+"/"+fileName);
+			boolean success = FileUtils.deleteQuietly(fileToDelete);
+			if(success){
+				map.put("msg", "removed"); 
+				map.put("status", HttpStatus.OK.value());
+			}else{
+				map.put("msg", "failed");
+				map.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 }
