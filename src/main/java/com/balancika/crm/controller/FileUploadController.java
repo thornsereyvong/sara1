@@ -72,4 +72,6 @@ public class FileUploadController {
 		
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
+	
+	
 }

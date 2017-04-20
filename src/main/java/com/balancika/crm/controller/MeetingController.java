@@ -37,8 +37,6 @@ public class MeetingController {
 	@Autowired
 	private CrmUserActivity activity;
 	
-	
-	
 	@RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listMeetings(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
