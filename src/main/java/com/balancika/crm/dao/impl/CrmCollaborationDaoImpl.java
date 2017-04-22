@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmCollaborationDao;
-import com.balancika.crm.dao.CrmCollaborationTagsDao;
 import com.balancika.crm.dao.CrmLikeDao;
 import com.balancika.crm.model.CrmCollaboration;
 import com.balancika.crm.model.CrmCollaborationDetails;
@@ -26,9 +25,6 @@ import com.balancika.crm.utilities.DateTimeOperation;
 
 @Repository
 public class CrmCollaborationDaoImpl implements CrmCollaborationDao{
-	
-	@Autowired
-	private CrmCollaborationTagsDao tagsDao;
 	
 	@Autowired
 	private CrmLikeDao likeDao;

@@ -80,6 +80,11 @@ public class CrmMeetingServiceImpl implements CrmMeetingService{
 	public Map<String, Object> searchMeeting(int rowNum, int pageNum, String str, MeDataSource dataSource) {
 		return meetingDao.searchMeeting(rowNum, pageNum, str, dataSource);
 	}
+
+	@Override
+	public Map<String, Object> findImagesAndAudioRelatedToMeeting(String meetId, MeDataSource dataSource) {
+		return meetingDao.findImagesAndAudioRelatedToMeeting(meetId, dataSource);
+	}
 	
 	
 }

@@ -12,16 +12,10 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
-import com.balancika.crm.dao.CrmCallDao;
-import com.balancika.crm.dao.CrmEventDao;
 import com.balancika.crm.dao.CrmLeadDao;
-import com.balancika.crm.dao.CrmMeetingDao;
-import com.balancika.crm.dao.CrmNoteDao;
-import com.balancika.crm.dao.CrmTaskDao;
 import com.balancika.crm.model.CrmLead;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.utilities.AppUtilities;
@@ -30,22 +24,6 @@ import com.balancika.crm.utilities.DBConnection;
 
 @Repository
 public class CrmLeadDaoImpl extends CrmIdGenerator implements CrmLeadDao {
-
-	@Autowired
-	private CrmNoteDao noteDao;
-	
-	@Autowired
-	private CrmEventDao eventDao;
-	
-	@Autowired
-	private CrmCallDao callDao;
-	
-	@Autowired
-	private CrmTaskDao taskDao; 
-	
-	@Autowired
-	private CrmMeetingDao meetingDao;
-
 	
 	private SessionFactory sessionFactory;
 	

@@ -52,19 +52,16 @@ public class MeetingController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/list/{meetingId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> findMeetingById(@PathVariable("meetingId") String meetingId, @RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
-		Object meeting = meetingService.findMeetingById(meetingId, dataSource);
-		if(meeting != null){
-			map.put("MESSAGE", "SUCCESS");
-			map.put("STATUS", HttpStatus.OK.value());
-			map.put("DATA", meeting);
-			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
-		}
-		map.put("MESSAGE", "FAILED");
-		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
+		Map<String, Object> map1 = meetingService.findImagesAndAudioRelatedToMeeting(meetingId, dataSource);
+		map1.putAll((Map<String, Object>)meetingService.findMeetingById(meetingId, dataSource));
+		map.put("MESSAGE", "SUCCESS");
+		map.put("STATUS", HttpStatus.OK.value());
+		map.put("DATA", map1);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/list/lead/{leadId}", method = RequestMethod.POST, produces = "application/json")

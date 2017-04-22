@@ -20,4 +20,5 @@ public interface CrmMeetingService {
 	Map<String, Object> listMeetingsForMobile(int rowNum, int pageNum, MeDataSource dataSource);
 	Map<String, Object> meetingCheckIn(CrmMeetingCheckin checkin);
 	Map<String, Object> searchMeeting(int rowNum, int pageNum, String str, MeDataSource dataSource);
+	Map<String, Object> findImagesAndAudioRelatedToMeeting(String meetId, MeDataSource dataSource);
 }

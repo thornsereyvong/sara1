@@ -9,7 +9,6 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
@@ -17,7 +16,6 @@ import com.balancika.crm.dao.CrmDashboardDao;
 import com.balancika.crm.model.CrmConfDashboard;
 import com.balancika.crm.model.CrmUser;
 import com.balancika.crm.model.MeDataSource;
-import com.balancika.crm.services.CrmConfDashboardService;
 
 @Repository
 public class CrmDashboardDaoImpl implements CrmDashboardDao{
@@ -32,9 +30,6 @@ public class CrmDashboardDaoImpl implements CrmDashboardDao{
 		this.sessionFactory = sessionFactory;
 	}
 	
-	@Autowired
-	private CrmConfDashboardService confService;
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object viewDashboard(String username, MeDataSource dataSource) {

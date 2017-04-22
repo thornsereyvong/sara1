@@ -14,13 +14,11 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import com.balancika.crm.configuration.HibernateSessionFactory;
 import com.balancika.crm.dao.CrmMeetingDao;
-import com.balancika.crm.model.Company;
 import com.balancika.crm.model.CrmMeeting;
 import com.balancika.crm.model.CrmMeetingCheckin;
 import com.balancika.crm.model.CrmMeetingStatus;
@@ -31,9 +29,6 @@ import com.balancika.crm.utilities.CrmIdGenerator;
 @Repository
 public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 
-	@Autowired
-	private Company config;
-	
 	private SessionFactory sessionFactory;
 
 	public final SessionFactory getSessionFactory() {
@@ -363,6 +358,32 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> findImagesAndAudioRelatedToMeeting(String meetId, MeDataSource dataSource) {
+		setSessionFactory(new HibernateSessionFactory().getSessionFactory(dataSource));
+		Session session = getSessionFactory().openSession();
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			session.beginTransaction();
+			SQLQuery image = session.createSQLQuery("SELECT IMG_ID imgId, IMG_Path imgPath FROM crm_meeting_image WHERE M_ID = :meetId");
+			image.setParameter("meetId", meetId);
+			image.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			map.put("images", image.list());
+			
+			SQLQuery audio = session.createSQLQuery("SELECT AU_ID audioId, AU_Path audioPath FROM crm_meeting_audio WHERE M_ID = :meetId");
+			audio.setParameter("meetId", meetId);
+			audio.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			map.put("audio", audio.list());
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+			sessionFactory.close();
 		}
 		return map;
 	}
