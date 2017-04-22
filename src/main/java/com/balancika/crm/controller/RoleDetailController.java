@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmRoleDetail;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.CrmRoleDetailService;
-import com.balancika.crm.utilities.CrmModule;
 
 @RestController
 @RequestMapping("/api/role_detail")
@@ -24,9 +23,6 @@ public class RoleDetailController {
 
 	@Autowired
 	private CrmRoleDetailService roleDetailService;
-	
-	@Autowired
-	private CrmModule moduleService;
 	
 	@RequestMapping(value = "/list/role/{roleId}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listRoleDetails(@RequestBody MeDataSource dataSource, @PathVariable("roleId") String roleId){

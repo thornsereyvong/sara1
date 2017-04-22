@@ -307,6 +307,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 			map.put("msg", "failed");
 			map.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		} finally {
+			session.clear();
 			session.close();
 			sessionFactory.close();
 		}
@@ -358,6 +359,10 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.clear();
+			session.close();
+			sessionFactory.close();
 		}
 		return map;
 	}
@@ -382,6 +387,7 @@ public class CrmMeetingDaoImpl extends CrmIdGenerator implements CrmMeetingDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			session.clear();
 			session.close();
 			sessionFactory.close();
 		}

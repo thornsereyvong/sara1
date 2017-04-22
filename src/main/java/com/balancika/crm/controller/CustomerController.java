@@ -18,23 +18,11 @@ import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.model.PriceCode;
 import com.balancika.crm.services.CrmAccountTypeService;
-import com.balancika.crm.services.CrmCallService;
-import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCollaborationService;
-import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
-import com.balancika.crm.services.CrmEventLocationService;
-import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmIndustryService;
-import com.balancika.crm.services.CrmMeetingService;
-import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmMessageService;
-import com.balancika.crm.services.CrmNoteService;
-import com.balancika.crm.services.CrmOpportunityService;
-import com.balancika.crm.services.CrmTaskService;
-import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserActivityService;
-import com.balancika.crm.services.CrmUserService;
 import com.balancika.crm.services.CustomerGroupService;
 
 
@@ -55,45 +43,8 @@ public class CustomerController {
 	private CrmAccountTypeService typeService;
 	
 	@Autowired
-	private CrmNoteService noteService;
-	
-	@Autowired
 	private CrmCollaborationService collaborationService;
-	
-	@Autowired
-	private CrmOpportunityService opportunityService;
-	
-	@Autowired
-	private CrmCallService callService;
-	
-	@Autowired
-	private CrmTaskService taskService;
-	
-	@Autowired
-	private CrmEventService eventService;
-	
-	@Autowired
-	private CrmMeetingService meetingService;
-	
-	@Autowired
-	private CrmUserService userService;
-	
-	@Autowired
-	private CrmTaskStatusService taskStatusService;
-	
-	@Autowired
-	private CrmCallStatusService callStatusService;
-	
-	@Autowired
-	private CrmMeetingStatusService meetingStatusService;
-	
-	@Autowired
-	private CrmEventLocationService locationService;
-	
-	@Autowired
-	private CrmContactService contactService;
-	
-	
+
 	@Autowired
 	private CrmMessageService messageService;
 	

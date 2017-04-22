@@ -12,13 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.HBUItem;
 import com.balancika.crm.model.HBUItemCompetitor;
 import com.balancika.crm.model.HBUItemCustomer;
 import com.balancika.crm.model.MeDataSource;
-import com.balancika.crm.services.CrmMessageService;
-import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.HBUItemService;
 
 @RestController
@@ -27,15 +24,6 @@ public class HBUItemController {
 	
 	@Autowired
 	private HBUItemService itemService;
-	
-	@Autowired
-	private CrmMessageService messageService;
-	
-	@Autowired
-	private CrmUserActivityService activityService;
-	
-	@Autowired
-	private CrmUserActivity activity;
 	
 	@RequestMapping(value = "/view/{itemId}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> listCompetitors(@RequestBody MeDataSource dataSource, @PathVariable("itemId") String itemId){

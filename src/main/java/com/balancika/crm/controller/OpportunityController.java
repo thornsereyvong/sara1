@@ -16,29 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmOpportunity;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
-import com.balancika.crm.services.CrmCallService;
-import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
-import com.balancika.crm.services.CrmCollaborationService;
-import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
-import com.balancika.crm.services.CrmEventLocationService;
-import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmLeadSourceService;
-import com.balancika.crm.services.CrmMeetingService;
-import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmMessageService;
-import com.balancika.crm.services.CrmNoteService;
 import com.balancika.crm.services.CrmOpportunityDetailsService;
-import com.balancika.crm.services.CrmOpportunityLeadProjectService;
 import com.balancika.crm.services.CrmOpportunityService;
 import com.balancika.crm.services.CrmOpportunityStageService;
 import com.balancika.crm.services.CrmOpportunityTypeService;
-import com.balancika.crm.services.CrmTaskService;
-import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/opportunity")
@@ -46,21 +33,6 @@ public class OpportunityController {
 	
 	@Autowired
 	private CrmOpportunityService opService;
-	
-	@Autowired
-	private CrmNoteService noteService;
-	
-	@Autowired
-	private CrmTaskService taskService;
-	
-	@Autowired
-	private CrmEventService eventService;
-	
-	@Autowired
-	private CrmCallService callService;
-	
-	@Autowired
-	private CrmMeetingService meetingService;
 	
 	@Autowired
 	private CrmUserService userService;
@@ -81,28 +53,7 @@ public class OpportunityController {
 	private CrmLeadSourceService sourceService;
 	
 	@Autowired
-	private CrmTaskStatusService taskStatusService;
-	
-	@Autowired
-	private CrmCallStatusService callStatusService;
-	
-	@Autowired
-	private CrmMeetingStatusService meetingStatusService;
-	
-	@Autowired
-	private CrmCollaborationService collaborationService;
-	
-	@Autowired
-	private CrmEventLocationService locationService;
-	
-	@Autowired
-	private CrmContactService contactService;
-	
-	@Autowired
 	private CrmOpportunityDetailsService detailsService;
-	
-	@Autowired
-	private ObjectMapper mapper;
 	
 	@Autowired
 	private CrmMessageService messageService;
@@ -112,9 +63,6 @@ public class OpportunityController {
 	
 	@Autowired
 	private CrmUserActivity activity;
-	
-	@Autowired
-	private CrmOpportunityLeadProjectService projectService;
 	
 	@RequestMapping(value="/list_all", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Map<String, Object>> listOpportunties(@RequestBody MeDataSource dataSource){

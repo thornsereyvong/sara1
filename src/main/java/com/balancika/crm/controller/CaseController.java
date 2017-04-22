@@ -20,8 +20,6 @@ import com.balancika.crm.model.CrmCaseSolution;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
 import com.balancika.crm.services.AmeItemService;
-import com.balancika.crm.services.CrmCallService;
-import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCaseArticleService;
 import com.balancika.crm.services.CrmCaseOriginService;
 import com.balancika.crm.services.CrmCasePriorityService;
@@ -31,14 +29,7 @@ import com.balancika.crm.services.CrmCaseTypeService;
 import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
-import com.balancika.crm.services.CrmEventLocationService;
-import com.balancika.crm.services.CrmEventService;
-import com.balancika.crm.services.CrmMeetingService;
-import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmMessageService;
-import com.balancika.crm.services.CrmNoteService;
-import com.balancika.crm.services.CrmTaskService;
-import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 
@@ -51,9 +42,6 @@ public class CaseController {
 	
 	@Autowired
 	private CrmUserService userService;
-	
-	@Autowired
-	private CrmCaseArticleService articleService;
 	
 	@Autowired
 	private CrmCustomerService customerService;
@@ -71,34 +59,7 @@ public class CaseController {
 	private CrmCasePriorityService priorityService;
 	
 	@Autowired
-	private CrmNoteService noteService;
-	
-	@Autowired
 	private CrmCollaborationService collaborationService;
-	
-	@Autowired
-	private CrmCallService callService;
-	
-	@Autowired
-	private CrmTaskService taskService;
-	
-	@Autowired
-	private CrmMeetingService meetingService;
-	
-	@Autowired
-	private CrmEventService eventService;
-	
-	@Autowired
-	private CrmTaskStatusService taskStatusService;
-	
-	@Autowired
-	private CrmCallStatusService callStatusService;
-	
-	@Autowired
-	private CrmMeetingStatusService meetingStatusService;
-	
-	@Autowired
-	private CrmEventLocationService locationService;
 	
 	@Autowired
 	private AmeItemService itemService;

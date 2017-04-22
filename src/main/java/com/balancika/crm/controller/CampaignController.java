@@ -17,22 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmCampaign;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
-import com.balancika.crm.services.CrmCallService;
-import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCampaignService;
 import com.balancika.crm.services.CrmCampaignStatusService;
 import com.balancika.crm.services.CrmCampaignTypeService;
 import com.balancika.crm.services.CrmCollaborationService;
-import com.balancika.crm.services.CrmContactService;
-import com.balancika.crm.services.CrmEventLocationService;
-import com.balancika.crm.services.CrmEventService;
-import com.balancika.crm.services.CrmLeadProjectService;
-import com.balancika.crm.services.CrmMeetingService;
-import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmMessageService;
-import com.balancika.crm.services.CrmNoteService;
-import com.balancika.crm.services.CrmTaskService;
-import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
  
@@ -55,35 +44,6 @@ public class CampaignController {
 	@Autowired
 	private CrmCollaborationService collaborationService;
 	
-	@Autowired
-	private CrmNoteService noteService;
-	
-	@Autowired
-	private CrmTaskService taskService;
-	
-	@Autowired
-	private CrmEventService eventService;
-	
-	@Autowired
-	private CrmCallService callService;
-	
-	@Autowired
-	private CrmMeetingService meetingService;
-	
-	@Autowired
-	private CrmTaskStatusService taskStatusService;
-	
-	@Autowired
-	private CrmCallStatusService callStatusService;
-	
-	@Autowired
-	private CrmMeetingStatusService meetingStatusService;
-	
-	@Autowired
-	private CrmEventLocationService locationService;
-	
-	@Autowired
-	private CrmContactService contactService;
 	
 	@Autowired
 	private CrmMessageService messageService;
@@ -93,9 +53,6 @@ public class CampaignController {
 	
 	@Autowired
 	private CrmUserActivity activity;
-	
-	@Autowired
-	private CrmLeadProjectService projectService;
 	
 	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> allCampaign(@RequestBody MeDataSource dataSource){

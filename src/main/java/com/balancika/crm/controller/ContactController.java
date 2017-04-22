@@ -16,20 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.balancika.crm.model.CrmContact;
 import com.balancika.crm.model.CrmUserActivity;
 import com.balancika.crm.model.MeDataSource;
-import com.balancika.crm.services.CrmCallService;
-import com.balancika.crm.services.CrmCallStatusService;
 import com.balancika.crm.services.CrmCollaborationService;
 import com.balancika.crm.services.CrmContactService;
 import com.balancika.crm.services.CrmCustomerService;
-import com.balancika.crm.services.CrmEventLocationService;
-import com.balancika.crm.services.CrmEventService;
 import com.balancika.crm.services.CrmLeadSourceService;
-import com.balancika.crm.services.CrmMeetingService;
-import com.balancika.crm.services.CrmMeetingStatusService;
 import com.balancika.crm.services.CrmMessageService;
-import com.balancika.crm.services.CrmNoteService;
-import com.balancika.crm.services.CrmTaskService;
-import com.balancika.crm.services.CrmTaskStatusService;
 import com.balancika.crm.services.CrmUserActivityService;
 import com.balancika.crm.services.CrmUserService;
 
@@ -51,33 +42,6 @@ public class ContactController {
 	
 	@Autowired
 	private CrmCollaborationService collaborationService;
-	
-	@Autowired
-	private CrmNoteService noteService;
-	
-	@Autowired
-	private CrmCallService callService;
-	
-	@Autowired
-	private CrmTaskService taskService;
-	
-	@Autowired
-	private CrmEventService eventService;
-	
-	@Autowired
-	private CrmMeetingService meetingService;
-	
-	@Autowired
-	private CrmTaskStatusService taskStatusService;
-	
-	@Autowired
-	private CrmCallStatusService callStatusService;
-	
-	@Autowired
-	private CrmMeetingStatusService meetingStatusService;
-	
-	@Autowired
-	private CrmEventLocationService eventLocationService;
 	
 	@Autowired
 	private CrmMessageService messageService;
