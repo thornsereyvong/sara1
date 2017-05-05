@@ -284,7 +284,7 @@ public class CrmUserDaoImpl extends CrmIdGenerator implements CrmUserDao{
 			session.getTransaction().commit();
 			CrmUserLogin userLogin = (CrmUserLogin)criteria.uniqueResult();
 			if(userLogin != null){
-				if(!userLogin.getPassword().equals(new PasswordEncrypt().BalEncrypt(user.getPassword()))){
+				if(!user.getPassword().equals(new PasswordEncrypt().BalDecrypt(userLogin.getPassword()))){
 					map.put("msg", "Invalid password!");
 					map.put("status", HttpStatus.NOT_FOUND.value());
 				}else if(!userLogin.getAppId().equals("CRM")){
